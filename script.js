@@ -16,11 +16,14 @@ const condition = urlParams.get('cond');
 
 const speakerContainer = document.getElementById('speakers');
 
-// Age gating
+// Age gating with improved parsing & trimming
 document.getElementById("age-form").addEventListener("submit", function(e) {
   e.preventDefault();
-  const age = parseInt(document.getElementById("age").value);
-  if (age >= 3 && age <= 17) {
+  const ageInput = document.getElementById("age").value.trim();
+  const age = parseInt(ageInput, 10);
+  console.log("Age entered:", age);  // Debug log
+  
+  if (!isNaN(age) && age >= 3 && age <= 17) {
     document.getElementById("age-form").style.display = "none";
     document.getElementById("task").style.display = "block";
     loadCondition();
@@ -36,6 +39,9 @@ function loadCondition() {
     speakerContainer.innerHTML = `<p>Invalid or missing condition: ${condition}</p>`;
     return;
   }
+
+  // Clear any existing speakers (important if reloading)
+  speakerContainer.innerHTML = '';
 
   speakers.forEach(initials => {
     const div = document.createElement('div');
@@ -82,4 +88,3 @@ function setupDrag() {
 function submitData() {
   alert(`Thanks! (Condition: ${condition}). Data saving coming next.`);
 }
-
