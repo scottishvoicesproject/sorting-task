@@ -1,24 +1,64 @@
 body {
-  font-family: sans-serif;
-  padding: 20px;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
 }
 
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+#instructions {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#age-form, #task {
+  max-width: 700px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+#grid {
+  width: 700px;
+  height: 500px;
+  background-color: #e0e0e0;
+  border: 2px dashed #aaa;
+  margin: 20px auto;
+  position: relative;
 }
 
 .draggable {
-  background: black;
+  width: 80px;
+  height: 40px;
+  background-color: black;
   color: white;
-  width: 60px;
-  height: 60px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 5px;
+  position: absolute;
+  cursor: grab;
   user-select: none;
+  transition: background-color 0.3s, border 0.3s;
 }
+
+.draggable.playing {
+  border: 3px solid #007BFF;
+  background-color: #D0E8FF;
+  color: black;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
