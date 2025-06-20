@@ -16,7 +16,6 @@ body {
 #age-form, #task {
   max-width: 700px;
   margin: 20px auto;
-  text-align: center;
 }
 
 #grid {
@@ -42,6 +41,7 @@ body {
   cursor: grab;
   user-select: none;
   transition: background-color 0.3s, border 0.3s;
+  box-sizing: border-box;
 }
 
 .draggable.playing {
@@ -61,4 +61,3 @@ button:hover {
   background-color: #007BFF;
   color: white;
 }
-
