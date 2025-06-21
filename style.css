@@ -1,4 +1,4 @@
-/* Global styles */ 
+/* Global styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -6,9 +6,10 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling - restored compact look */
+/* Intro box styling - now responsive and narrower for phones */
 .intro-box {
-  width: 360px;
+  width: 90%;
+  max-width: 340px;
   margin: 100px auto;
   background: white;
   padding: 30px;
@@ -84,6 +85,8 @@ select {
 
 /* Task wrapper layout */
 #task-wrapper {
+  position: relative;
+  width: 100%;
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -93,7 +96,7 @@ select {
 
 /* Speaker list on the left */
 #speaker-list {
-  position: relative; /* so absolute positioning works if needed */
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -102,15 +105,18 @@ select {
   border: 1px solid #ccc;
   border-radius: 10px;
   height: 400px;
-  width: 140px; /* width enough for 2 columns of 60px + gap */
+  width: 140px;
   overflow-y: auto;
+  z-index: 20;
 }
 
-/* Sorting grid in the center */
+/* Sorting grid in the background */
 #sorting-container {
-  position: relative;
-  width: 800px;    /* wider */
-  height: 400px;   /* less tall */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -118,14 +124,13 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  overflow: hidden;
+  pointer-events: none;
   z-index: 0;
-  pointer-events: none; /* grid won’t block clicks on icons */
 }
 
-/* Draggable icon */
+/* Draggable icon - free to move anywhere on screen */
 .draggable {
-  position: relative; /* changed from absolute */
+  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
