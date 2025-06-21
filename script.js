@@ -70,20 +70,25 @@ function initSorting(conditionKey) {
 
   interact('.draggable').draggable({
     inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: '#sorting-container',
+        endOnly: true
+      })
+    ],
     listeners: {
       start(event) {
-        // Move dragged element to drag-layer container on drag start
-        const dragLayer = document.getElementById('drag-layer');
-        dragLayer.style.display = 'block';
-        dragLayer.appendChild(event.target);
+        // No drag-layer stuff needed; just keep normal flow
         event.target.style.position = 'absolute';
-        event.target.style.zIndex = '1000';
         const rect = event.target.getBoundingClientRect();
         event.target.style.left = `${rect.left}px`;
         event.target.style.top = `${rect.top}px`;
+        event.target.style.zIndex = '1000';
         event.target.style.transform = 'none';
         event.target.setAttribute('data-x', 0);
         event.target.setAttribute('data-y', 0);
+        // Append directly to sorting container so it stays inside
+        document.getElementById('sorting-container').appendChild(event.target);
       },
       move(event) {
         const target = event.target;
@@ -94,18 +99,25 @@ function initSorting(conditionKey) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        // Move back to speaker list on drag end (snap back)
-        const speakerList = document.getElementById('speaker-list');
-        speakerList.appendChild(event.target);
-        event.target.style.position = 'relative';
-        event.target.style.left = '';
-        event.target.style.top = '';
-        event.target.style.transform = '';
-        event.target.setAttribute('data-x', 0);
-        event.target.setAttribute('data-y', 0);
+        // Keep the icon where dropped (no snapping)
+        // Just update the style so transform is applied as absolute left/top
 
-        const dragLayer = document.getElementById('drag-layer');
-        dragLayer.style.display = 'none';
+        const target = event.target;
+        const x = parseFloat(target.getAttribute('data-x')) || 0;
+        const y = parseFloat(target.getAttribute('data-y')) || 0;
+
+        // Calculate final absolute position based on current left/top + transform
+        const currentLeft = parseFloat(target.style.left) || 0;
+        const currentTop = parseFloat(target.style.top) || 0;
+        const finalLeft = currentLeft + x;
+        const finalTop = currentTop + y;
+
+        target.style.left = `${finalLeft}px`;
+        target.style.top = `${finalTop}px`;
+        target.style.transform = 'none';
+        target.setAttribute('data-x', 0);
+        target.setAttribute('data-y', 0);
+        target.style.zIndex = 'auto'; // reset z-index
       }
     }
   });
