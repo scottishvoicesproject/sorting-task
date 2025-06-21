@@ -70,7 +70,7 @@ input[type="text"] {
   text-align: center;
 }
 
-/* Sorting screen styles below - minimal for now */
+/* Sorting screen styles */
 
 #sorting-section {
   max-width: 1200px;
@@ -90,22 +90,40 @@ input[type="text"] {
   gap: 20px;
 }
 
+/* Left container for speakers */
 #speaker-list {
   border: 1px solid #ccc;
   width: 150px;
   min-height: 400px;
   padding: 8px;
-  position: relative; /* needed for absolutely positioned children */
+  position: relative; /* Needed for absolute children */
   overflow-y: auto;
   background: #fafafa;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  display: flex;
-  flex-wrap: wrap;
   height: 500px;
+
+  /* Remove flexbox to allow absolute positioning */
+  display: block;
 }
 
+/* Right container with dashed grid */
+#sorting-container {
+  border: 2px dashed #666;
+  width: 800px;
+  height: 500px;
+  position: relative;
+  background: white;
+
+  /* Grid lines */
+  background-image:
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Draggable speaker boxes */
 .draggable {
-  position: absolute; /* so we can place speakers exactly */
+  position: absolute;
   width: 50px;
   height: 35px;
   background-color: #111;
@@ -129,61 +147,7 @@ input[type="text"] {
   box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
-#sorting-container {
-  border: 2px dashed #666;
-  width: 800px;
-  height: 500px;
-  position: relative;
-  background: white;
-
-  /* Grid lines */
-  background-image:
-    linear-gradient(to right, #ddd 1px, transparent 1px),
-    linear-gradient(to bottom, #ddd 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.draggable {
-  cursor: grab;
-  user-select: none;
-  background-color: black;
-  color: white;
-  padding: 8px;
-  margin: 4px 0;
-  text-align: center;
-  width: 100px;
-  border-radius: 4px;
-}
-
-.draggable:active {
-  cursor: grabbing;
-}
-
-/* Speaker rectangles */
-
-.draggable {
-  width: 50px;
-  height: 35px;
-  background-color: #111;
-  color: white;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: grab;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  user-select: none;
-  touch-action: none;
-  margin: 0;
-}
-
-.draggable:active {
-  cursor: grabbing;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-}
-
+/* Button inside each speaker */
 .speaker-button {
   width: 100%;
   height: 100%;
@@ -200,4 +164,3 @@ input[type="text"] {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
-
