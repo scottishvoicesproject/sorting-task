@@ -59,18 +59,32 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  // Clear previous speakers
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
+
+  const colLeft = 20;   // X position for left column
+  const colRight = 90;  // X position for right column
+  const rowHeight = 45; // Y space between items
+  let rowLeft = 0;
+  let rowRight = 0;
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-
-    // Initial positioning on the left side
     speakerDiv.style.position = 'absolute';
-    speakerDiv.style.left = '20px';
-    speakerDiv.style.top = `${20 + i * 45}px`;
+
+    if (i % 2 === 0) {
+      // Left column
+      speakerDiv.style.left = `${colLeft}px`;
+      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      rowLeft++;
+    } else {
+      // Right column
+      speakerDiv.style.left = `${colRight}px`;
+      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      rowRight++;
+    }
 
     taskWrapper.appendChild(speakerDiv);
   }
