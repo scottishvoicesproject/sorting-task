@@ -23,13 +23,30 @@
       </div>
     </section>
 
-<section id="sorting-section" style="display:none">
-  <h2>Instructions</h2>
-  <p>
-    On the next slide, you will see a large grid with grid lines and 12 black rectangles with the initials of 12 speakers who all are saying the same sentence. Once you click on a rectangle you can hear the speaker. Your task is to listen to all speakers and move the rectangles anywhere on the grid to group them by how similar they sound in how they speak. You can listen as often as you want and build as few or many groupings as you like.
-  </p>
-  <div id="sorting-container" aria-label="Speaker sorting grid" tabindex="0"></div>
-</section>
+#speaker-list {
+  border: 1px solid #ccc;
+  width: 150px;
+  min-height: 400px;
+  padding: 8px;
+  position: relative;
+  overflow-y: auto;
+  background: #fafafa;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+#sorting-container {
+  border: 2px dashed #666;
+  width: 800px;
+  height: 500px;
+  position: relative;
+  background: white;
+
+  /* Add grid lines */
+  background-image:
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  background-size: 40px 40px; /* grid cell size */
+}
 
   <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
   <script src="script.js"></script>
