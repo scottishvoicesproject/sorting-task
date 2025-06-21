@@ -56,7 +56,7 @@ function createSpeakerDiv(initials) {
 
   // reset positioning for list placement
   div.style.position = 'absolute';
-  div.style.transform = 'none';
+  div.style.transform = '';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
 
@@ -124,32 +124,5 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-document.getElementById('age-gender-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  hideError();
+document.getElementById('age-gender-form').addEventListener('submit', (e
 
-  const ageInput = document.getElementById('age');
-  const genderInput = document.getElementById('gender');
-  const age = parseInt(ageInput.value, 10);
-  const gender = genderInput.value.trim();
-
-  if (isNaN(age) || age < 4 || age > 17) {
-    showError('Please enter a valid age between 4 and 17.');
-    ageInput.focus();
-    return;
-  }
-
-  if (!gender) {
-    showError('Please enter your gender.');
-    genderInput.focus();
-    return;
-  }
-
-  // Hide intro, show sorting
-  document.getElementById('intro-section').style.display = 'none';
-  document.getElementById('sorting-section').style.display = 'block';
-
-  // Init sorting page with condition
-  const condition = getConditionFromUrl();
-  initSorting(condition);
-});
