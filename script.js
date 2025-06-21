@@ -57,7 +57,6 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // No position transform initially
   div.style.transform = 'none';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
@@ -93,18 +92,14 @@ function initSorting(conditionKey) {
       move(event) {
         const target = event.target;
 
-        // Calculate new positions from previous data-x/y plus delta
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-        // Apply transform to move element
         target.style.transform = `translate(${x}px, ${y}px)`;
 
-        // Save new positions
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
 
-        // If element currently inside speaker-list, move it to sorting-container to enable dragging on grid
         if (target.parentElement.id === 'speaker-list') {
           document.getElementById('sorting-container').appendChild(target);
           target.style.position = 'absolute';
@@ -125,6 +120,41 @@ function showError(msg) {
 
 // Hide error message
 function hideError() {
- 
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = '';
+  errEl.style.display = 'none';
+}
+
+// Form submit handler
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  hideError();
+
+  const ageInput = document.getElementById('age');
+  const genderInput = document.getElementById('gender');
+  const age = parseInt(ageInput.value, 10);
+  const gender = genderInput.value.trim();
+
+  if (isNaN(age) || age < 4 || age > 17) {
+    showError('Please enter a valid age between 4 and 17.');
+    ageInput.focus();
+    return;
+  }
+
+  if (!gender) {
+    showError('Please enter your gender.');
+    genderInput.focus();
+    return;
+  }
+
+  // Hide intro, show sorting
+  document.getElementById('intro-section').style.display = 'none';
+  document.getElementById('sorting-section').style.display = 'block';
+
+  // Initialize sorting with random or URL condition
+  const condition = getConditionFromUrl();
+  initSorting(condition);
+});
+
 
 
