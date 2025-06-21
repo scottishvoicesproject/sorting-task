@@ -1,14 +1,14 @@
-/* Global styles */
+/* Global styles */ 
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f4f4;
-  overflow-x: hidden;
 }
 
+/* Intro box styling - restored compact look */
 .intro-box {
-  width: 300px;
+  width: 360px;
   margin: 100px auto;
   background: white;
   padding: 30px;
@@ -16,6 +16,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Form elements */
 h1 {
   margin-top: 0;
   font-size: 1.8rem;
@@ -38,6 +39,7 @@ select {
   box-sizing: border-box;
 }
 
+/* Start button styling */
 .blue-button {
   display: block;
   width: 100%;
@@ -51,32 +53,12 @@ select {
   cursor: pointer;
 }
 
+/* Error message */
 #error-message {
   color: red;
   margin-top: 15px;
   font-size: 0.95rem;
   text-align: center;
-}
-
-/* Rotate warning - centered and mobile-portrait only */
-#rotate-warning {
-  display: none; /* Controlled entirely by JS */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #fff;
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-  font-size: 1.5rem;
-  color: #333;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  flex-direction: column;
 }
 
 /* Sorting section */
@@ -87,7 +69,7 @@ select {
   gap: 20px;
 }
 
-/* Instructions box */
+/* Instructions styling */
 #instructions {
   max-width: 800px;
   margin: 0 auto;
@@ -98,33 +80,37 @@ select {
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: left;
-  display: none;
 }
 
-/* Task layout container */
+/* Task wrapper layout */
 #task-wrapper {
-  position: relative;
-  width: 960px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+/* Speaker list on the left */
+#speaker-list {
+  position: relative; /* so absolute positioning works if needed */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   height: 400px;
-  margin: 0 auto;
-  overflow: hidden;
+  width: 140px; /* width enough for 2 columns of 60px + gap */
+  overflow-y: auto;
 }
 
-/* Responsive scale for smaller screens */
-@media screen and (max-width: 1024px) {
-  #task-wrapper {
-    transform: scale(0.85);
-    transform-origin: top center;
-  }
-}
-
-/* Sorting grid container */
+/* Sorting grid in the center */
 #sorting-container {
-  position: absolute;
-  top: 0;
-  left: 160px;
-  width: 800px;
-  height: 400px;
+  position: relative;
+  width: 800px;    /* wider */
+  height: 400px;   /* less tall */
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -133,13 +119,11 @@ select {
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
   overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
 }
 
-/* Draggable items */
+/* Draggable icon */
 .draggable {
-  position: absolute;
+  position: relative; /* changed from absolute */
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -152,11 +136,10 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 10;
-  touch-action: none; /* Added for improved touch dragging */
-  transform: translate(0, 0);
+  z-index: 2;
 }
 
+/* Speaker button inside draggable */
 .speaker-button {
   all: unset;
   width: 100%;
@@ -167,6 +150,7 @@ select {
   cursor: pointer;
 }
 
+/* Hide unused container */
 #drag-layer {
   display: none;
 }
