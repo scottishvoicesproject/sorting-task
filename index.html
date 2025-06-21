@@ -12,32 +12,26 @@
   <div id="instructions">
     <h1>Group the Speakers by How They Sound</h1>
     <p>
-      You will see 12 speaker icons. Click each icon to listen to a speaker say the same sentence.
-      Drag the icons into the grid on the right to group speakers by how similar they sound.
+      On the next screen, you will see rectangles representing speakers. 
+      Click each rectangle to listen to the speaker. Drag them onto the grid to group by similarity.
     </p>
     <button id="start-button">Start Task</button>
   </div>
 
-  <form id="age-gender-form" style="display:none; text-align:center; margin-top:30px;">
-    <label for="age">Enter your age (4-17): </label>
+  <form id="demographics-form" style="display:none; text-align:center; margin-top:30px;">
+    <label for="age">Please enter your age (4-17): </label>
     <input type="number" id="age" min="4" max="17" required />
     <br /><br />
-    <label for="gender">Enter your gender (optional): </label>
-    <input type="text" id="gender" placeholder="e.g. Male, Female, Non-binary" />
+    <label for="gender">Please enter your gender: </label>
+    <input type="text" id="gender" required />
     <br /><br />
     <button type="submit">Submit</button>
   </form>
 
   <div id="task" style="display:none;">
-    <div id="container">
-      <div id="speakers" class="speakers-container">
-        <!-- Speakers will be loaded here -->
-      </div>
-      <div id="grid" class="dropzone">
-        <!-- Dropzone grid -->
-      </div>
-    </div>
-    <button id="submit-btn">Submit</button>
+    <div id="audio-container"></div>
+    <div id="grid" class="dropzone"></div>
+    <button id="submit-btn" style="margin-top: 20px;">Submit</button>
   </div>
 
   <script src="script.js"></script>
