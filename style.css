@@ -164,3 +164,12 @@ input[type="text"] {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
+#sorting-container {
+  position: relative; /* keep this */
+  z-index: 1;         /* add this, make sure it is below draggable */
+}
+
+.draggable {
+  z-index: 1000;      /* increase so it's above the grid */
+}
+
