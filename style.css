@@ -1,4 +1,4 @@
-/* General body and html setup */
+/* ===== First Page (Intro) Styles ===== */
 body, html {
   height: 100%;
   margin: 0;
@@ -7,10 +7,8 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
-/* Intro box styling */
 .intro-box {
   background: white;
   padding: 2rem 3rem;
@@ -22,14 +20,8 @@ body, html {
 
 h1 {
   font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.intro-box p {
-  font-size: 1rem;
   margin-bottom: 1.5rem;
-  color: #555;
+  color: #333;
 }
 
 label {
@@ -42,7 +34,6 @@ label {
 }
 
 input[type="number"],
-input[type="text"],
 select {
   width: 100%;
   padding: 0.5rem;
@@ -79,81 +70,71 @@ select {
   text-align: center;
 }
 
-/* Instructions styling - visible on sorting section */
-#instructions {
-  max-width: 700px;
-  margin: 0 auto 1rem auto;
-  padding: 1rem 1.5rem;
-  background-color: #e9f0ff;
-  border-radius: 8px;
-  color: #333;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-/* Sorting screen styles */
+/* ===== Sorting Task Styles ===== */
 
 #sorting-section {
-  max-width: 1200px;
-  margin: 2rem auto 2rem auto;
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  max-width: 1100px;
+  margin: 1rem auto 2rem auto;
+  padding: 0 2rem;
   font-family: Arial, sans-serif;
   color: #222;
   box-sizing: border-box;
-  width: 90vw;
-  min-height: 80vh;
 }
 
+/* Instructions at top */
+.instructions {
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #222;
+  padding: 0 10px;
+}
+
+/* Main task wrapper - flex container */
 #task-wrapper {
   display: flex;
-  gap: 20px;
-  flex-grow: 1;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 450px;
 }
 
+/* Speaker list on left: fixed width, grid of 2 columns */
 #speaker-list {
+  width: 140px;
+  /* height to fit all icons spaced */
+  min-height: 440px;
   border: 1px solid #ccc;
-  width: 150px;
-  min-height: 300px;
-  padding: 8px;
-  position: relative;
-}
-
-#sorting-container {
-  border: 2px dashed #666;
-  width: 600px;
-  height: 400px;
-  position: relative;
-}
-
-#drag-layer {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 5000;
-}
-
-.draggable {
-  cursor: grab;
+  padding: 10px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 40px;
+  gap: 10px 20px;
+  background-color: #fafafa;
+  border-radius: 6px;
   user-select: none;
-  background-color: #111;
-  color: white;
-  padding: 8px;
-  margin: 4px 0;
-  text-align: center;
+}
+
+/* Individual draggable speaker icons */
+.draggable {
   width: 50px;
   height: 35px;
+  background-color: #111;
+  color: white;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 1rem;
+  cursor: grab;
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  user-select: none;
   touch-action: none;
-  position: absolute; /* important for dragging */
+  margin: 0 auto;
+  position: relative; /* so button fits inside */
 }
 
 .draggable:active {
@@ -161,6 +142,7 @@ select {
   box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
+/* Button inside each draggable */
 .speaker-button {
   width: 100%;
   height: 100%;
@@ -171,10 +153,30 @@ select {
   font-size: 1rem;
   cursor: pointer;
   user-select: none;
+  position: absolute;
+  top: 0; left: 0;
 }
 
+/* Focus style for accessibility */
 .speaker-button:focus {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
 
+/* Sorting grid to the right */
+#sorting-container {
+  position: relative;
+  width: 700px;
+  height: 440px;
+  border: 2px solid #666;
+  border-radius: 8px;
+  background-color: #fff;
+  box-sizing: border-box;
+  /* Grid lines background using CSS grid lines pattern */
+  background-image:
+    linear-gradient(to right, #ccc 1px, transparent 1px),
+    linear-gradient(to bottom, #ccc 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-repeat: repeat;
+  user-select: none;
+}
