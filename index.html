@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Speaker Sorting Task</title>
 <style>
-  /* Your CSS styles here, as you wrote them */
+  /* Your original CSS */
   body, html {
     height: 100%;
     margin: 0;
@@ -69,6 +69,7 @@
     display: none;
     text-align: center;
   }
+
   #sorting-section {
     max-width: 1200px;
     margin: 20px auto;
@@ -79,7 +80,78 @@
     height: 600px;
     box-sizing: border-box;
   }
-  /* Add your other styles as needed */
+
+  #task-wrapper {
+    display: flex;
+    gap: 20px;
+  }
+
+  #speaker-list {
+    border: 1px solid #ccc;
+    width: 150px;
+    min-height: 400px;
+    padding: 8px;
+    position: relative;
+    overflow-y: auto;
+    background: #fafafa;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    height: 500px;
+  }
+
+  #sorting-container {
+    border: 2px dashed #666;
+    width: 800px;
+    height: 500px;
+    position: relative;
+    background: white;
+
+    background-image:
+      linear-gradient(to right, #ddd 1px, transparent 1px),
+      linear-gradient(to bottom, #ddd 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .draggable {
+    position: absolute;
+    width: 50px;
+    height: 35px;
+    background-color: #111;
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: grab;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    user-select: none;
+    touch-action: none;
+    margin: 0;
+    z-index: 10;
+  }
+
+  .draggable:active {
+    cursor: grabbing;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+  }
+
+  .speaker-button {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .speaker-button:focus {
+    outline: 2px solid #2a85ff;
+    outline-offset: 2px;
+  }
 </style>
 </head>
 <body>
@@ -103,16 +175,126 @@
 <section id="sorting-section" aria-label="Speaker sorting task">
   <h2>Instructions</h2>
   <p>Drag the speaker icons from the left into the grid area on the right and arrange them as you prefer.</p>
-  <!-- Your sorting container here -->
+
+  <div id="task-wrapper">
+    <div id="speaker-list"></div>
+    <div id="sorting-container"></div>
+  </div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Replace this with your actual condition list or logic
   const conditions = {
-    example: ['A', 'B', 'C'] // simplified example
+    M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
+    M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
+    M_SSEvsL1: ['US','TK','MB','KN','EQ','MF','GI','TV','QN','FI','DM','RU'],
+    M_SSEvsL2: ['TD','DG','KD','EK','QE','XU','VI','HS','WI','EL','PP','WW'],
+    F_SSEvsP1: ['XL','WN','KY','GQ','YR','VW','RX','BN','KX','BK','MP','PM'],
+    F_SSEvsP2: ['IT','KZ','JS','RN','MW','XN','RF','LM','ZY','DI','PR','HG'],
+    F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
+    F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
   };
+
+  let audioPlaying = null;
+
+  function getConditionFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cond = urlParams.get('cond');
+    if (cond && conditions[cond]) return cond;
+    const keys = Object.keys(conditions);
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  function setupAudioControl(button, audio) {
+    button.addEventListener('click', () => {
+      if (audioPlaying && audioPlaying !== audio) {
+        audioPlaying.pause();
+        audioPlaying.currentTime = 0;
+      }
+      if (audio.paused) {
+        audio.play();
+        audioPlaying = audio;
+      } else {
+        audio.pause();
+        audioPlaying = null;
+      }
+    });
+  }
+
+  function createSpeakerDiv(initials) {
+    const div = document.createElement('div');
+    div.className = 'draggable';
+    div.dataset.id = initials;
+
+    const audio = document.createElement('audio');
+    audio.src = `audio/${initials}.wav`;
+    audio.preload = 'none';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = initials;
+    btn.className = 'speaker-button';
+
+    setupAudioControl(btn, audio);
+
+    div.appendChild(btn);
+    div.appendChild(audio);
+
+    div.style.position = 'absolute';
+    div.style.transform = '';
+    div.setAttribute('data-x', 0);
+    div.setAttribute('data-y', 0);
+
+    return div;
+  }
+
+  function initSorting(conditionKey) {
+    const speakers = conditions[conditionKey];
+    const container = document.getElementById('sorting-container');
+    const speakerList = document.getElementById('speaker-list');
+
+    // Clear previous content
+    speakerList.innerHTML = '';
+    container.innerHTML = '';
+
+    const colWidth = 60;
+    const rowHeight = 40;
+
+    // Position speakers in two vertical columns on left (#speaker-list)
+    speakers.forEach((initials, index) => {
+      const speakerDiv = createSpeakerDiv(initials);
+
+      const col = index % 2;
+      const row = Math.floor(index / 2);
+
+      const x = col * colWidth;
+      const y = row * rowHeight;
+
+      speakerDiv.style.left = `${x}px`;
+      speakerDiv.style.top = `${y}px`;
+
+      speakerDiv.setAttribute('data-x', x);
+      speakerDiv.setAttribute('data-y', y);
+
+      speakerList.appendChild(speakerDiv);
+    });
+
+    // Enable dragging on all .draggable elements, free movement anywhere on page
+    interact('.draggable').draggable({
+      inertia: true,
+      listeners: {
+        move(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+      }
+    });
+  }
 
   function showError(msg) {
     const errEl = document.getElementById('error-message');
@@ -124,12 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errEl = document.getElementById('error-message');
     errEl.textContent = '';
     errEl.style.display = 'none';
-  }
-
-  function initSorting(conditionKey) {
-    // Your existing sorting init code here (omitted for brevity)
-    console.log('Initializing sorting for condition:', conditionKey);
-    // Show sorting-section here if needed (already done in form submit)
   }
 
   document.getElementById('age-gender-form').addEventListener('submit', (e) => {
@@ -153,20 +329,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Hide intro, show sorting
     document.getElementById('intro-section').style.display = 'none';
     document.getElementById('sorting-section').style.display = 'block';
 
-    // Get condition from URL or random fallback
-    const urlParams = new URLSearchParams(window.location.search);
-    const condParam = urlParams.get('cond');
-    const conditionKey = (condParam && conditions[condParam]) ? condParam : Object.keys(conditions)[0];
-
-    initSorting(conditionKey);
-
-    console.log('Form submitted successfully');
+    const condition = getConditionFromUrl();
+    initSorting(condition);
   });
-});
 </script>
 
 </body>
