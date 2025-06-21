@@ -136,6 +136,9 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
 
+  // *** Add this line to mark main content active ***
+  document.body.classList.add('main-active');
+
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
