@@ -93,17 +93,54 @@ input[type="text"] {
 #speaker-list {
   border: 1px solid #ccc;
   width: 150px;
-  min-height: 300px;
+  min-height: 400px;
   padding: 8px;
-  /* Important: allow children to be draggable */
-  position: relative;
+  position: relative; /* needed for absolutely positioned children */
+  overflow-y: auto;
+  background: #fafafa;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  height: 500px;
+}
+
+.draggable {
+  position: absolute; /* so we can place speakers exactly */
+  width: 50px;
+  height: 35px;
+  background-color: #111;
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: grab;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  user-select: none;
+  touch-action: none;
+  margin: 0;
+  z-index: 10;
+}
+
+.draggable:active {
+  cursor: grabbing;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
 #sorting-container {
   border: 2px dashed #666;
-  width: 600px;
-  height: 400px;
-  position: relative; /* This is needed for absolute positioning inside */
+  width: 800px;
+  height: 500px;
+  position: relative;
+  background: white;
+
+  /* Grid lines */
+  background-image:
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .draggable {
