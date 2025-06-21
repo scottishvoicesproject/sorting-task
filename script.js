@@ -90,12 +90,21 @@ function initSorting(conditionKey) {
   }
 
   interact('.draggable').draggable({
-    inertia: true,
+    inertia: false, // Disabled inertia for smoother dragging
+
+    modifiers: [
+      interact.modifiers.restrict({
+        restriction: 'parent',
+        endOnly: true,
+      })
+    ],
+
     listeners: {
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
@@ -135,9 +144,6 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
-
-  // *** Add this line to mark main content active ***
-  document.body.classList.add('main-active');
 
   const cond = getConditionFromUrl();
   initSorting(cond);
