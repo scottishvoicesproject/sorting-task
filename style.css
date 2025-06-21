@@ -58,7 +58,7 @@ select {
   text-align: center;
 }
 
-/* Rotate warning - hidden by default, centered via flex */
+/* Rotate warning - centered and mobile-portrait only */
 #rotate-warning {
   display: none; /* Controlled entirely by JS */
   position: fixed;
@@ -79,6 +79,7 @@ select {
   flex-direction: column;
 }
 
+/* Sorting section */
 #sorting-section {
   padding: 20px;
   display: flex;
@@ -86,6 +87,7 @@ select {
   gap: 20px;
 }
 
+/* Instructions box */
 #instructions {
   max-width: 800px;
   margin: 0 auto;
@@ -99,6 +101,7 @@ select {
   display: none;
 }
 
+/* Task layout container */
 #task-wrapper {
   position: relative;
   width: 960px;
@@ -115,6 +118,7 @@ select {
   }
 }
 
+/* Sorting grid container */
 #sorting-container {
   position: absolute;
   top: 0;
@@ -133,6 +137,7 @@ select {
   pointer-events: none;
 }
 
+/* Draggable items */
 .draggable {
   position: absolute;
   width: 60px;
@@ -148,7 +153,7 @@ select {
   cursor: grab;
   user-select: none;
   z-index: 10;
-  touch-action: none;
+  touch-action: none; /* Added for improved touch dragging */
   transform: translate(0, 0);
 }
 
