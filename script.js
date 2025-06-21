@@ -11,6 +11,7 @@ const conditions = {
 
 let audioPlaying = null; // current playing audio element
 
+// Get condition key from URL or random
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -19,6 +20,7 @@ function getConditionFromUrl() {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
+// Setup audio play/pause toggle on button click
 function setupAudioControl(button, audio) {
   button.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
@@ -35,7 +37,8 @@ function setupAudioControl(button, audio) {
   });
 }
 
-function createSpeakerDiv(initials, idx) {
+// Create draggable speaker div with audio button
+function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
   div.dataset.id = initials;
@@ -54,28 +57,30 @@ function createSpeakerDiv(initials, idx) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // Vertical stack with left padding, 90px vertical gap
-  const gapY = 90;
-  const x = 20;
-  const y = idx * gapY + 20;
-
-  div.style.transform = `translate(${x}px, ${y}px)`;
-  div.setAttribute('data-x', x);
-  div.setAttribute('data-y', y);
+  // No position here; initially stacked in #speaker-list container
+  div.style.transform = 'none';
+  div.setAttribute('data-x', 0);
+  div.setAttribute('data-y', 0);
 
   return div;
 }
 
+// Initialize the sorting task UI
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const container = document.getElementById('sorting-container');
-  container.innerHTML = '';
 
-  speakers.forEach((initials, idx) => {
-    const speakerDiv = createSpeakerDiv(initials, idx);
-    container.appendChild(speakerDiv);
+  const speakerList = document.getElementById('speaker-list');
+  const container = document.getElementById('sorting-container');
+  speakerList.innerHTML = '';
+  container.innerHTML = ''; // empty grid to start
+
+  // Create speaker divs stacked in speakerList (left sidebar)
+  speakers.forEach((initials) => {
+    const speakerDiv = createSpeakerDiv(initials);
+    speakerList.appendChild(speakerDiv);
   });
 
+  // Setup interact.js draggable for all .draggable
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
@@ -87,63 +92,35 @@ function initSorting(conditionKey) {
     listeners: {
       move(event) {
         const target = event.target;
-        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
+        // Calculate new positions from previous data-x/y plus delta
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        // Apply transform to move element
         target.style.transform = `translate(${x}px, ${y}px)`;
+
+        // Save new positions
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+
+        // If currently inside speaker-list (no positioning), remove it and append to sorting-container
+        if (target.parentElement.id === 'speaker-list') {
+          document.getElementById('sorting-container').appendChild(target);
+
+          // Fix position after moving out of speaker-list (starts from mouse position)
+          target.style.position = 'absolute';
+          target.style.left = '0';
+          target.style.top = '0';
+        }
       }
     }
   });
 }
 
+// Show error message
 function showError(msg) {
   const errEl = document.getElementById('error-message');
   errEl.textContent = msg;
-  errEl.style.display = 'block';
-}
-
-function hideError() {
-  const errEl = document.getElementById('error-message');
-  errEl.style.display = 'none';
-}
-
-function submitAgeGender() {
-  const ageInput = document.getElementById('age');
-  const genderInput = document.getElementById('gender');
-
-  const age = parseInt(ageInput.value);
-  const gender = genderInput.value.trim();
-
-  if (isNaN(age) || age < 4 || age > 17) {
-    showError("Oops! Please enter a valid age between 4 and 17.");
-    return false;
-  }
-
-  if (!gender) {
-    showError("Oops! Please enter your gender.");
-    return false;
-  }
-
-  hideError();
-
-  // Hide age/gender form and instructions, show sorting task
-  document.getElementById('intro-section').style.display = 'none';
-  document.getElementById('sorting-section').style.display = 'block';
-
-  // Load task condition
-  const condKey = getConditionFromUrl();
-  initSorting(condKey);
-
-  return false; // prevent form submit reload
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('age-gender-form');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    submitAgeGender();
-  });
-});
+  errEl.style.display =
 
