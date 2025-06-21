@@ -3,35 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intro and Sorting Task</title>
+  <title>Intro Page</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-  <!-- Intro page -->
-  <div class="intro-box" id="intro-box">
-    <h1>Welcome to the Experiment</h1>
+  <div class="intro-box">
+    <h1>Welcome</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
-      <input type="number" id="age" name="age" required min="1" max="120" />
+      <input type="number" id="age" name="age" min="1" max="120" required />
 
       <label for="gender">Gender:</label>
       <input type="text" id="gender" name="gender" required />
 
-      <button type="submit" class="blue-button">Start</button>
+      <button class="blue-button" type="submit">Start</button>
     </form>
     <div id="error-message"></div>
   </div>
-
-  <!-- Sorting screen container (initially hidden) -->
-  <div id="task-wrapper" style="display:none;">
-    <div id="speaker-list"></div>
-    <div id="sorting-container"></div>
-    <div id="drag-layer"></div>
-  </div>
-
-  <script src="interact.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sorting Task</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+</head>
+<body>
+  <div id="task-wrapper">
+    <div id="instructions">
+      <h2>Instructions</h2>
+      <p>Drag each speaker's button from the left panel onto the grid on the right. Arrange as needed.</p>
+    </div>
+
+    <div style="display: flex; gap: 1rem;">
+      <div id="speaker-list" aria-label="List of speakers">
+        <!-- Speaker buttons will be created here -->
+      </div>
+
+      <div id="sorting-container" aria-label="Grid for sorting speakers">
+        <!-- Grid background -->
+        <div id="drag-layer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
