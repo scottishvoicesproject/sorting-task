@@ -61,6 +61,7 @@ select {
   text-align: center;
 }
 
+/* Hide rotate warning by default */
 #rotate-warning {
   display: none;
   position: fixed;
@@ -77,13 +78,17 @@ select {
   color: #333;
 }
 
-@media screen and (orientation: portrait) and (max-width: 768px) {
-  #rotate-warning {
+/* Show rotate warning only on small screens (max-width 768px) AND portrait */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  /* Only show warning if the user is beyond intro screen */
+  body.main-active #rotate-warning {
     display: flex;
   }
 
-  #main-content {
-    display: none;
+  /* Also hide main content to force rotate */
+  body.main-active #main-content,
+  body.main-active #sorting-section {
+    display: none !important;
   }
 }
 
