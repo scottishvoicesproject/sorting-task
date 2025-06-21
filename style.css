@@ -72,49 +72,31 @@ input[type="text"] {
 
 /* ----------- Sorting screen styles ----------- */
 
-#sorting-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
-  color: #222;
-  height: 100vh;
-  box-sizing: border-box;
-}
-
-#sorting-section h2 {
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-#sorting-section p {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-  font-size: 1.1rem;
-  line-height: 1.4;
-}
-
-/* Big grid container with grid lines */
-#sorting-container {
-  border: 2px solid #666;
-  background:
-    linear-gradient(to right, #ccc 1px, transparent 1px),
-    linear-gradient(to bottom, #ccc 1px, transparent 1px);
-  background-size: 50px 50px; /* grid cell size */
-  width: 90vw;
-  max-width: 1000px;
-  height: calc(100vh - 180px); /* leave space for instructions */
-  margin: 0 auto;
-  position: relative; /* for absolutely positioned children */
-  box-sizing: border-box;
-}
-
-/* Hide speaker list, not needed */
 #speaker-list {
-  display: none;
+  border: 1px solid #ccc;
+  width: 150px;
+  min-height: 400px;
+  padding: 8px;
+  position: relative;
+  overflow-y: auto;
+  background: #fafafa;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
+#sorting-container {
+  border: 2px dashed #666;
+  width: 800px;
+  height: 500px;
+  position: relative;
+  background: white;
+
+  /* Add grid lines */
+  background-image:
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  background-size: 40px 40px; /* grid cell size */
+}
+
 
 /* Draggable speaker rectangles - free floating */
 .draggable {
