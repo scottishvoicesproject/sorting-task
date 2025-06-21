@@ -93,7 +93,7 @@ select {
 
 /* Speaker list on the left */
 #speaker-list {
-  position: relative; /* so absolute positioning works if needed */
+  position: relative
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -124,7 +124,7 @@ select {
 
 /* Draggable icon */
 .draggable {
-  position: relative; /* changed from absolute */
+  position: absolute
   width: 60px;
   height: 40px;
   border-radius: 8px;
