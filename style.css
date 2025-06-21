@@ -77,6 +77,7 @@ select {
   box-sizing: border-box;
   overflow-wrap: break-word;
   flex-direction: column;
+  display: flex;
 }
 
 /* Sorting section */
@@ -108,25 +109,20 @@ select {
   max-width: 960px;
   height: 400px;
   margin: 0 auto;
-  overflow-x: auto; /* added for horizontal scroll */
-  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  overflow: visible; /* changed from hidden */
+  box-sizing: border-box;
+  padding-left: 160px; /* space for speaker list */
 }
 
-/* Responsive scale for smaller screens */
-@media screen and (max-width: 1024px) {
-  #task-wrapper {
-    height: 340px; /* slightly smaller height on smaller screens */
-  }
-}
-
-/* On very small screens, allow horizontal scroll, limit height */
-@media screen and (max-width: 600px) {
-  #task-wrapper {
-    height: 300px;
-  }
+/* Speaker list inside task-wrapper */
+#speaker-list {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 140px;
+  height: 400px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 /* Sorting grid container */
@@ -134,7 +130,8 @@ select {
   position: absolute;
   top: 0;
   left: 160px;
-  width: 800px;
+  width: calc(100% - 160px);
+  max-width: 800px;
   height: 400px;
   border: 2px dashed #aaa;
   border-radius: 12px;
@@ -143,19 +140,9 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  overflow: hidden;
+  overflow: visible; /* changed from hidden */
   z-index: 0;
   pointer-events: none;
-}
-
-/* On smaller screens, adjust the left and width so grid fits better */
-@media screen and (max-width: 600px) {
-  #sorting-container {
-    left: 120px;
-    width: 600px;
-    height: 300px;
-    background-size: 30px 30px;
-  }
 }
 
 /* Draggable items */
@@ -176,10 +163,9 @@ select {
   z-index: 10;
   touch-action: none; /* Added for improved touch dragging */
   transform: translate(0, 0);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  pointer-events: auto; /* Allow drag */
 }
 
-/* Speaker button inside draggable */
 .speaker-button {
   all: unset;
   width: 100%;
@@ -190,8 +176,61 @@ select {
   cursor: pointer;
 }
 
-/* Drag layer */
 #drag-layer {
   display: none;
 }
 
+/* Responsive scale for smaller screens */
+@media screen and (max-width: 1024px) {
+  #task-wrapper {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+}
+
+/* Mobile layout */
+@media screen and (max-width: 480px) {
+  #task-wrapper {
+    height: auto;
+    padding-left: 0;
+    padding-top: 20px;
+  }
+
+  #speaker-list {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    margin-bottom: 10px;
+  }
+
+  #speaker-list .draggable {
+    display: inline-block;
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  #sorting-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    max-width: none;
+    border: 2px dashed #aaa;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+
+  .draggable {
+    position: absolute;
+    width: 50px;
+    height: 35px;
+    font-size: 0.85rem;
+  }
+}
