@@ -33,8 +33,7 @@ function createSpeakerDiv(initials) {
   btn.textContent = initials;
   btn.className = 'speaker-button';
 
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
+  btn.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
       audioPlaying.pause();
       audioPlaying.currentTime = 0;
@@ -50,123 +49,126 @@ function createSpeakerDiv(initials) {
 
   div.appendChild(btn);
   div.appendChild(audio);
-
-  div.style.left = '20px';
-  div.style.top = '20px';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
-
   return div;
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('sorting-container');
+  const taskWrapper = document.getElementById('task-wrapper');
 
-  // Clear existing draggable divs
+  // Remove old draggable items
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  // Place speakers in two columns spaced vertically
+  // Setup initial positions
+  const colLeft = 20;
+  const colRight = 90;
+  const rowHeight = 45;
+  let rowLeft = 0;
+  let rowRight = 0;
+
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
+    speakerDiv.style.position = 'absolute';
 
-    // Position speakers in two columns, vertical spacing 50px
     if (i % 2 === 0) {
-      speakerDiv.style.left = '20px';
-      speakerDiv.style.top = `${20 + Math.floor(i / 2) * 50}px`;
+      speakerDiv.style.left = `${colLeft}px`;
+      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      rowLeft++;
     } else {
-      speakerDiv.style.left = '100px';
-      speakerDiv.style.top = `${20 + Math.floor(i / 2) * 50}px`;
+      speakerDiv.style.left = `${colRight}px`;
+      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      rowRight++;
     }
 
     taskWrapper.appendChild(speakerDiv);
   }
 
-  // Initialize interact.js draggable
+  // Enable dragging with interact.js
   interact('.draggable').draggable({
-    inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: '#sorting-container',
-        endOnly: true,
-      }),
-    ],
+    inertia: false,
     listeners: {
       move(event) {
         const target = event.target;
-        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-      },
-    },
+      }
+    }
   });
 }
 
-function checkRotateWarning() {
-  const rotateWarning = document.getElementById('rotate-warning');
-  const sortingSection = document.getElementById('sorting-section');
-  if (
-    sortingSection.style.display !== 'none' &&
-    window.matchMedia('(orientation: portrait)').matches
-  ) {
-    rotateWarning.style.display = 'flex';
+function showError(msg) {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+}
+
+function hideError() {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = '';
+  errEl.style.display = 'none';
+}
+
+document.getElementById('age-gender-form').addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent page reload
+
+  hideError();
+
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
+
+  if (!age || age < 1 || age > 120) {
+    showError('Please enter a valid age between 1 and 120.');
+    return;
+  }
+  if (!gender) {
+    showError('Please select a gender.');
+    return;
+  }
+
+  // Hide intro box and show sorting section and instructions
+  document.getElementById('intro-box').style.display = 'none';
+  document.getElementById('instructions').style.display = 'block';
+  document.getElementById('sorting-section').style.display = 'flex';
+
+  // Get condition and init sorting task
+  const cond = getConditionFromUrl();
+  initSorting(cond);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  hideError();
+  const instructions = document.getElementById('instructions');
+  if (instructions) instructions.style.display = 'none';
+  updateRotateWarning();
+});
+
+// === ROTATE WARNING LOGIC ===
+function isMobilePortrait() {
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  return isMobile && isPortrait;
+}
+
+function updateRotateWarning() {
+  const warning = document.getElementById('rotate-warning');
+  const main = document.getElementById('main-content');
+  if (!warning || !main) return;
+
+  if (isMobilePortrait()) {
+    warning.style.display = 'flex';
+    main.style.display = 'none';
   } else {
-    rotateWarning.style.display = 'none';
+    warning.style.display = 'none';
+    main.style.display = 'block';
   }
 }
 
-window.addEventListener('resize', () => {
-  checkRotateWarning();
-});
+window.addEventListener('resize', updateRotateWarning);
+window.addEventListener('orientationchange', updateRotateWarning);
 
-window.addEventListener('orientationchange', () => {
-  checkRotateWarning();
-});
-
-let currentCondition = getConditionFromUrl();
-
-window.addEventListener('DOMContentLoaded', () => {
-  checkRotateWarning();
-
-  const form = document.getElementById('age-gender-form');
-  const introBox = document.getElementById('intro-box');
-  const sortingSection = document.getElementById('sorting-section');
-  const errorMessage = document.getElementById('error-message');
-  const instructions = document.getElementById('instructions');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const age = parseInt(form.age.value);
-    const gender = form.gender.value;
-
-    if (!age || age < 1 || age > 120) {
-      errorMessage.textContent = 'Please enter a valid age between 1 and 120.';
-      return;
-    }
-    if (!gender) {
-      errorMessage.textContent = 'Please select your gender.';
-      return;
-    }
-    errorMessage.textContent = '';
-
-    // Hide intro, show sorting
-    introBox.style.display = 'none';
-    sortingSection.style.display = 'block';
-
-    // Show instructions only on wide screens
-    if (window.innerWidth > 768) {
-      instructions.style.display = 'block';
-    } else {
-      instructions.style.display = 'none';
-    }
-
-    initSorting(currentCondition);
-
-    checkRotateWarning();
-  });
-});
