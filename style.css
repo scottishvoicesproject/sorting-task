@@ -1,4 +1,4 @@
-/* ----- First page intro box exactly as before ----- */
+/* Center intro box exactly as originally was */
 body, html {
   height: 100%;
   margin: 0;
@@ -70,7 +70,8 @@ input[type="text"] {
   text-align: center;
 }
 
-/* ----- Sorting section styles only ----- */
+/* Sorting screen styles below - minimal for now */
+
 #sorting-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -87,42 +88,43 @@ input[type="text"] {
 #task-wrapper {
   display: flex;
   gap: 20px;
-  height: 100%;
 }
 
-/* Speaker list on left - vertical stacking */
 #speaker-list {
   border: 1px solid #ccc;
   width: 150px;
-  min-height: 400px;
+  min-height: 300px;
   padding: 8px;
+  /* Important: allow children to be draggable */
   position: relative;
-  overflow-y: auto;
-  background: #fafafa;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
-/* Sorting grid container */
 #sorting-container {
   border: 2px dashed #666;
-  width: 800px;
-  height: 500px;
-  position: relative;
-  background: white;
-
-  /* grid lines */
-  background-image:
-    linear-gradient(to right, #ddd 1px, transparent 1px),
-    linear-gradient(to bottom, #ddd 1px, transparent 1px);
-  background-size: 40px 40px; /* grid cell size */
+  width: 600px;
+  height: 400px;
+  position: relative; /* This is needed for absolute positioning inside */
 }
 
-/* Draggable speaker rectangles */
 .draggable {
-  /* position: static to start in the list normally */
+  cursor: grab;
+  user-select: none;
+  background-color: black;
+  color: white;
+  padding: 8px;
+  margin: 4px 0;
+  text-align: center;
+  width: 100px;
+  border-radius: 4px;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+/* Speaker rectangles */
+
+.draggable {
   width: 50px;
   height: 35px;
   background-color: #111;
@@ -137,12 +139,10 @@ input[type="text"] {
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
   user-select: none;
   touch-action: none;
-  margin: 0 auto;
-  z-index: 10;
+  margin: 0;
 }
 
-.draggable.dragging {
-  position: absolute !important;
+.draggable:active {
   cursor: grabbing;
   box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
@@ -163,3 +163,4 @@ input[type="text"] {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
+
