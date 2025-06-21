@@ -107,14 +107,14 @@ select {
 }
 
 #drag-layer {
-  position: absolute; /* layer above everything when visible */
+  position: fixed;      /* fixed to viewport */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* so it doesn't block clicks when hidden */
-  z-index: 1000;        /* very top */
-  display: none;        /* hidden by default */
+  width: 100vw;         /* full viewport width */
+  height: 100vh;        /* full viewport height */
+  pointer-events: none; /* allow clicks through when visible */
+  z-index: 1000;        /* top layer */
+  display: none;        /* hidden initially */
 }
 
 /* Speaker list on the left */
