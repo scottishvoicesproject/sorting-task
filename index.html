@@ -8,12 +8,18 @@
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
+  <!-- Rotate warning (only appears in vertical mobile view) -->
+  <div id="rotate-warning">
+    🔄 Please rotate your device to landscape to continue.
+  </div>
+
+  <!-- Intro box -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="1" max="120" />
-      
+
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -26,36 +32,34 @@
       <div id="error-message"></div>
     </form>
   </div>
-  
-<div id="rotate-warning">
-  🔄 Please rotate your device to landscape to continue.
-</div>
-<div id="main-content">
-  <!-- Your app's main content goes here -->
-</div>
 
-  <section id="sorting-section" style="display:none;">
-    <div id="instructions">
-      <p>
-        These 12 icons have the initials of 12 speakers who all are saying the same sentence.
-        Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
-        and to move the rectangles onto the grid to group them together by how similar they sound in
-        how they speak. Place the blocks close to each other if you think they belong to one group and
-        further apart if they sound different. The distance between different groups does not matter.
-        You can listen to the speakers as often as you want to, and you can build as few or as many
-        groupings as you like.
-      </p>
-    </div>
-
-    <div id="task-wrapper">
-      <div id="speaker-list" aria-label="List of speakers"></div>
-      <div id="sorting-container" aria-label="Sorting area">
-        <div id="grid-overlay"></div>
+  <!-- Main content wrapper -->
+  <div id="main-content">
+    <!-- Sorting task section (initially hidden) -->
+    <section id="sorting-section" style="display:none;">
+      <div id="instructions">
+        <p>
+          These 12 icons have the initials of 12 speakers who all are saying the same sentence.
+          Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+          and to move the rectangles onto the grid to group them together by how similar they sound in
+          how they speak. Place the blocks close to each other if you think they belong to one group and
+          further apart if they sound different. The distance between different groups does not matter.
+          You can listen to the speakers as often as you want to, and you can build as few or as many
+          groupings as you like.
+        </p>
       </div>
-      <div id="drag-layer"></div>
-    </div>
-  </section>
 
+      <div id="task-wrapper">
+        <div id="speaker-list" aria-label="List of speakers"></div>
+        <div id="sorting-container" aria-label="Sorting area">
+          <div id="grid-overlay"></div>
+        </div>
+        <div id="drag-layer"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- JS logic at end of body -->
   <script src="script.js"></script>
 </body>
 </html>
