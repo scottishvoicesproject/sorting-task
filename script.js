@@ -69,45 +69,49 @@ function initSorting(conditionKey) {
   speakerList.innerHTML = '';
   container.innerHTML = '';
 
-  speakers.forEach((initials) => {
+  speakers.forEach(initials => {
     const speakerDiv = createSpeakerDiv(initials);
     speakerList.appendChild(speakerDiv);
   });
 
-interact('.draggable').draggable({
-  inertia: true,
-  modifiers: [
-    // You can comment out restriction for testing:
-    // interact.modifiers.restrictRect({
-    //   restriction: 'parent',
-    //   endOnly: true,
-    // }),
-  ],
-  listeners: {
-    start(event) {
-      const target = event.target;
-      if (target.parentElement.id === 'speaker-list') {
-        const container = document.getElementById('sorting-container');
-        container.appendChild(target);
+  interact('.draggable').draggable({
+    inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent', // restrict drag within immediate parent container
+        endOnly: true,
+      }),
+    ],
+    listeners: {
+      start(event) {
+        const target = event.target;
+        // When drag starts, set position absolute so it can move freely within container
         target.style.position = 'absolute';
-        target.style.left = '0';
-        target.style.top = '0';
+
+        // Reset transform so it doesn't jump
         target.style.transform = 'translate(0px, 0px)';
         target.setAttribute('data-x', 0);
         target.setAttribute('data-y', 0);
-      }
-    },
-    move(event) {
-      const target = event.target;
-      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-      target.style.transform = `translate(${x}px, ${y}px)`;
-      target.setAttribute('data-x', x);
-      target.setAttribute('data-y', y);
-    },
-  }
-});
+        // Append to container to allow free drag inside sorting-container
+        // Only if dragged from speaker-list to sorting-container
+        if (target.parentElement.id === 'speaker-list') {
+          document.getElementById('sorting-container').appendChild(target);
+        }
+      },
+      move(event) {
+        const target = event.target;
+
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        target.style.transform = `translate(${x}px, ${y}px)`;
+
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      }
+    }
+  });
 }
 
 function showError(msg) {
