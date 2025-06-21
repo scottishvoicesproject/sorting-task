@@ -72,17 +72,15 @@ function initSorting(conditionKey) {
   // Clear previous content
   speakerList.innerHTML = '';
   container.innerHTML = '';
-  dragLayer.innerHTML = '';   // clear draggable layer
+  dragLayer.innerHTML = '';
 
-  const colWidth = 60;   // horizontal space between columns
-  const rowHeight = 40;  // vertical space between rows
+  const colWidth = 60;
+  const rowHeight = 40;
 
-  // Position speakers in two vertical columns on left side (#speaker-list visually),
-  // but append draggable elements to #drag-layer for free movement
   speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
-    const col = index % 2;  // 0 or 1 (two columns)
+    const col = index % 2;
     const row = Math.floor(index / 2);
 
     const x = col * colWidth + speakerList.offsetLeft;
@@ -94,14 +92,12 @@ function initSorting(conditionKey) {
     speakerDiv.setAttribute('data-x', x);
     speakerDiv.setAttribute('data-y', y);
 
-    dragLayer.appendChild(speakerDiv); // append draggable to drag-layer
+    dragLayer.appendChild(speakerDiv);
   });
 
-  // Enable dragging on all .draggable elements, free movement anywhere in #task-wrapper
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
-      // Keep draggables inside #task-wrapper boundaries
       interact.modifiers.restrictRect({
         restriction: '#task-wrapper',
         endOnly: true
@@ -109,7 +105,7 @@ function initSorting(conditionKey) {
     ],
     listeners: {
       start(event) {
-        event.target.style.zIndex = 10000; // bring on top while dragging
+        event.target.style.zIndex = 10000;
       },
       move(event) {
         const target = event.target;
@@ -121,7 +117,7 @@ function initSorting(conditionKey) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        event.target.style.zIndex = 3001; // reset after drag ends
+        event.target.style.zIndex = 3001;
       }
     }
   });
@@ -139,14 +135,29 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-// Example form submit handler placeholder, replace as needed
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
-  // Your existing submit handler code here
+  hideError();
+  
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
+
+  if (!age || age < 1 || age > 120) {
+    showError('Please enter a valid age between 1 and 120.');
+    return;
+  }
+  if (!gender) {
+    showError('Please select your gender.');
+    return;
+  }
+
+  // Proceed with form submission or next steps here
+  // For example, redirect with parameters:
+  window.location.href = `sorting.html?age=${age}&gender=${gender}`;
 });
 
-// Initialize with a condition (example)
 document.addEventListener('DOMContentLoaded', () => {
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
+
