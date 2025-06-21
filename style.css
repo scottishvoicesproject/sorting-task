@@ -1,93 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-* {
-  box-sizing: border-box;
-}
-
-body, html {
-  height: 100%;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f0f2f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-main {
-  width: 400px;
-  max-width: 95vw;
-  background: white;
-  padding: 24px 32px 32px 32px;
-  border-radius: 8px;
-  box-shadow: 0 4px 18px rgb(0 0 0 / 0.12);
-  user-select: none;
-}
-
-h1, h2 {
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 16px;
+/* --- ORIGINAL intro styles --- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
   color: #222;
-  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  margin-bottom: 1rem;
 }
 
 label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #333;
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
 }
 
 input[type="number"],
 input[type="text"] {
-  padding: 8px 10px;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.2rem;
   font-size: 1rem;
-  border: 1.8px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.2s;
-}
-
-input[type="number"]:focus,
-input[type="text"]:focus {
-  outline: none;
-  border-color: #2a85ff;
-  box-shadow: 0 0 6px #2a85ffaa;
 }
 
 button[type="submit"] {
-  margin-top: 12px;
-  background-color: #2a85ff;
-  border: none;
-  padding: 10px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
   font-size: 1rem;
-  transition: background-color 0.2s;
+  cursor: pointer;
 }
 
-button[type="submit"]:hover {
-  background-color: #1a5ecc;
-}
-
-/* Error message styling with shake animation */
 #error-message {
-  margin-top: 10px;
-  color: #d93025;
-  border: 2px solid #d93025;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: 600;
+  margin-top: 1rem;
+  color: red;
+  font-weight: bold;
   display: none;
   animation: shake 0.3s ease;
-  text-align: center;
 }
 
 @keyframes shake {
@@ -97,67 +51,74 @@ button[type="submit"]:hover {
   75% { transform: translateX(-5px); }
 }
 
-/* Sorting section instructions */
-#sorting-section p {
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.4;
-  margin-bottom: 14px;
+/* --- NEW sorting styles --- */
+#sorting-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 1rem;
 }
 
-/* Sorting container: horizontal grid background */
+#sorting-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#sorting-section p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+}
+
+/* Large grid container fills most of viewport height */
 #sorting-container {
   position: relative;
-  margin-top: 12px;
-  height: 80px;
+  width: 100%;
+  height: 70vh;
+  border: 2px solid #999;
+  border-radius: 8px;
   background:
     linear-gradient(to right, #ccc 1px, transparent 1px),
     linear-gradient(to bottom, #ccc 1px, transparent 1px);
-  background-size: 40px 40px;
-  border: 2px solid #888;
-  border-radius: 6px;
+  background-size: 50px 50px;
   overflow: hidden;
-  outline: none;
+  user-select: none;
 }
 
-/* Smaller draggable speaker rectangles */
+/* Draggable speaker rectangles */
 .draggable {
   position: absolute;
-  width: 70px;
-  height: 50px;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
+  width: 80px;
+  height: 60px;
+  background-color: #111;
+  color: white;
   border-radius: 6px;
-  box-shadow: 0 3px 8px rgb(0 0 0 / 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.6rem;
+  cursor: grab;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  user-select: none;
+  touch-action: none;
   transition: box-shadow 0.2s;
 }
 
 .draggable:active {
   cursor: grabbing;
-  box-shadow: 0 8px 15px rgb(0 0 0 / 0.25);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
-/* Speaker button styles */
 .speaker-button {
   width: 100%;
   height: 100%;
-  background-color: #111;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 6px;
-  font-size: 1.4rem;
+  color: white;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.6rem;
+  cursor: pointer;
   user-select: none;
-  transition: background-color 0.2s;
-}
-
-.speaker-button:hover {
-  background-color: #333;
-  outline: none;
 }
 
 .speaker-button:focus {
