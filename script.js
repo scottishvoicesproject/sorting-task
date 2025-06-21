@@ -9,9 +9,8 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
-let audioPlaying = null; // currently playing audio element
+let audioPlaying = null;
 
-// Get condition from URL or random
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -20,7 +19,6 @@ function getConditionFromUrl() {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
-// Setup audio play/pause toggle on button click
 function setupAudioControl(button, audio) {
   button.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
@@ -37,7 +35,6 @@ function setupAudioControl(button, audio) {
   });
 }
 
-// Create draggable speaker div with audio button
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -57,51 +54,47 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // Remove fixed transform so interact.js can handle it
-  div.style.transform = '';
-  div.removeAttribute('data-x');
-  div.removeAttribute('data-y');
+  div.style.position = ''; // no forced position here
+  div.style.transform = ''; // allow transform updates
+  div.setAttribute('data-x', 0);
+  div.setAttribute('data-y', 0);
 
   return div;
 }
 
-// Initialize sorting task UI
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-
   const speakerList = document.getElementById('speaker-list');
   const container = document.getElementById('sorting-container');
   speakerList.innerHTML = '';
-  container.innerHTML = ''; // start empty grid
+  container.innerHTML = '';
 
-  // Create speakers stacked vertically in speakerList
   speakers.forEach((initials) => {
     const speakerDiv = createSpeakerDiv(initials);
     speakerList.appendChild(speakerDiv);
   });
 
-  // Setup interact.js draggable with improved dragging logic
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
       interact.modifiers.restrictRect({
-        restriction: '#task-wrapper',  // restriction to entire wrapper containing both containers
+        restriction: 'parent',  // restrict inside immediate parent container only
         endOnly: true,
       }),
     ],
     listeners: {
       start(event) {
         const target = event.target;
-        // Move dragged element to #task-wrapper so it can freely move over both containers
-        const wrapper = document.getElementById('task-wrapper');
-        wrapper.appendChild(target);
-
-        // Set absolute positioning for free movement
-        target.style.position = 'absolute';
-
-        // If no stored coords, initialize data-x and data-y to zero
-        if (!target.hasAttribute('data-x')) target.setAttribute('data-x', 0);
-        if (!target.hasAttribute('data-y')) target.setAttribute('data-y', 0);
+        // If dragging starts inside speaker-list, move it to sorting container immediately
+        if (target.parentElement.id === 'speaker-list') {
+          const container = document.getElementById('sorting-container');
+          container.appendChild(target);
+          target.style.position = 'absolute';
+          // Reset transform so dragging starts fresh
+          target.style.transform = 'translate(0px, 0px)';
+          target.setAttribute('data-x', 0);
+          target.setAttribute('data-y', 0);
+        }
       },
       move(event) {
         const target = event.target;
@@ -113,66 +106,23 @@ function initSorting(conditionKey) {
 
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-      },
-      end(event) {
-        const target = event.target;
-        const speakerList = document.getElementById('speaker-list');
-        const sortingContainer = document.getElementById('sorting-container');
-
-        const dropX = event.pageX;
-        const dropY = event.pageY;
-
-        const speakerRect = speakerList.getBoundingClientRect();
-        const sortingRect = sortingContainer.getBoundingClientRect();
-
-        if (
-          dropX >= speakerRect.left && dropX <= speakerRect.right &&
-          dropY >= speakerRect.top && dropY <= speakerRect.bottom
-        ) {
-          // Dropped inside speaker list - append back and reset styles
-          speakerList.appendChild(target);
-          target.style.position = '';
-          target.style.left = '';
-          target.style.top = '';
-          target.style.transform = '';
-          target.removeAttribute('data-x');
-          target.removeAttribute('data-y');
-        } else if (
-          dropX >= sortingRect.left && dropX <= sortingRect.right &&
-          dropY >= sortingRect.top && dropY <= sortingRect.bottom
-        ) {
-          // Dropped inside sorting container - keep absolute position with current transform
-          sortingContainer.appendChild(target);
-        } else {
-          // Outside both containers - reset to speaker list
-          speakerList.appendChild(target);
-          target.style.position = '';
-          target.style.left = '';
-          target.style.top = '';
-          target.style.transform = '';
-          target.removeAttribute('data-x');
-          target.removeAttribute('data-y');
-        }
       }
     }
   });
 }
 
-// Show error message helper
 function showError(msg) {
   const errEl = document.getElementById('error-message');
   errEl.textContent = msg;
   errEl.style.display = 'block';
 }
 
-// Hide error message
 function hideError() {
   const errEl = document.getElementById('error-message');
   errEl.textContent = '';
   errEl.style.display = 'none';
 }
 
-// Form submit handler
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -194,11 +144,10 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
-  // Hide intro, show sorting
   document.getElementById('intro-section').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'block';
 
-  // Initialize sorting with random or URL condition
   const condition = getConditionFromUrl();
   initSorting(condition);
 });
+
