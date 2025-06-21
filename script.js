@@ -11,16 +11,14 @@ const conditions = {
 
 let audioPlaying = null;
 
-// Get condition from URL parameter ?cond= or pick random if missing/invalid
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
-  if (cond && conditions.hasOwnProperty(cond)) return cond;
+  if (cond && conditions[cond]) return cond;
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
-// Setup play/pause toggle for audio on button click, only one audio plays at a time
 function setupAudioControl(button, audio) {
   button.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
@@ -37,7 +35,6 @@ function setupAudioControl(button, audio) {
   });
 }
 
-// Create a draggable speaker div with audio and button
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -59,28 +56,38 @@ function createSpeakerDiv(initials) {
 
   // reset positioning for list placement
   div.style.position = 'absolute';
-  div.style.transform = 'translate(0,0)';
+  div.style.transform = '';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
 
   return div;
 }
 
-// Initialize sorting area with draggable speakers based on condition key
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
+  const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
   const dragLayer = document.getElementById('drag-layer');
 
   // Clear previous content
   speakerList.innerHTML = '';
+  container.innerHTML = '';
   dragLayer.innerHTML = '';
 
-  // Position speakers in two vertical columns visually on left (#speaker-list area)
-  // But append draggable elements to #drag-layer for free movement
-  const colWidth = 60;   // horizontal spacing
-  const rowHeight = 40;  // vertical spacing
+  // Show instructions above sorting container
+  let instructions = document.getElementById('instructions');
+  if (!instructions) {
+    instructions = document.createElement('div');
+    instructions.id = 'instructions';
+    container.parentNode.insertBefore(instructions, container);
+  }
+  instructions.textContent = `These 12 icons have the initials of 12 speakers who all are saying the same sentence. Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak. Place the blocks close to each other if you think they belong to one group and further apart if they sound different. The distance between different groups does not matter. You can listen to the speakers as often as you want to, and you can build as few or as many groupings as you like.`;
 
+  const colWidth = 60;   // horizontal space between columns
+  const rowHeight = 40;  // vertical space between rows
+
+  // Position speakers in two vertical columns on left side (#speaker-list visually),
+  // but append draggable elements to #drag-layer for free movement
   speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
@@ -93,13 +100,13 @@ function initSorting(conditionKey) {
     speakerDiv.style.left = `${x}px`;
     speakerDiv.style.top = `${y}px`;
 
-    speakerDiv.setAttribute('data-x', 0);
-    speakerDiv.setAttribute('data-y', 0);
+    speakerDiv.setAttribute('data-x', x);
+    speakerDiv.setAttribute('data-y', y);
 
     dragLayer.appendChild(speakerDiv);
   });
 
-  // Enable dragging on all .draggable elements, restricted to #task-wrapper
+  // Enable dragging on all .draggable elements, free movement anywhere in #task-wrapper
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
@@ -122,40 +129,30 @@ function initSorting(conditionKey) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        event.target.style.zIndex = 10;
+        event.target.style.zIndex = 3001;
       }
     }
   });
 }
 
-// Show error message
 function showError(msg) {
   const errEl = document.getElementById('error-message');
-  if (errEl) {
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
 }
 
-// Hide error message
 function hideError() {
   const errEl = document.getElementById('error-message');
-  if (errEl) {
-    errEl.textContent = '';
-    errEl.style.display = 'none';
-  }
+  errEl.textContent = '';
+  errEl.style.display = 'none';
 }
 
-// Handle form submit on intro page
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
 
-  const ageInput = document.getElementById('age');
-  const genderSelect = document.getElementById('gender');
-
-  const age = parseInt(ageInput.value, 10);
-  const gender = genderSelect.value;
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
 
   if (!age || age < 1 || age > 120) {
     showError('Please enter a valid age between 1 and 120.');
@@ -166,42 +163,16 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
-  // Build condition key based on gender and random choice (simulate your real logic here)
-  // For demo, pick a random condition for the gender group:
-  let conditionKeys;
-  if (gender === 'M') {
-    conditionKeys = Object.keys(conditions).filter(k => k.startsWith('M_'));
-  } else if (gender === 'F') {
-    conditionKeys = Object.keys(conditions).filter(k => k.startsWith('F_'));
-  } else {
-    showError('Gender option not recognized.');
-    return;
-  }
-  const conditionKey = conditionKeys[Math.floor(Math.random() * conditionKeys.length)];
+  // Hide intro, show sorting section
+  document.getElementById('intro-box').style.display = 'none';
+  document.getElementById('sorting-section').style.display = 'flex';
 
-  // Redirect to sorting page with condition as URL param
-  window.location.href = `?page=sorting&cond=${conditionKey}`;
+  // Use URL parameter or pick random condition
+  const cond = getConditionFromUrl();
+  initSorting(cond);
 });
 
-// On DOM loaded: if on sorting page, init sorting, else show intro
 document.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const page = urlParams.get('page');
-
-  if (page === 'sorting') {
-    document.body.innerHTML = `
-      <section id="sorting-section">
-        <h1>Sorting Task</h1>
-        <div id="task-wrapper">
-          <div id="speaker-list"></div>
-          <div id="sorting-container"></div>
-          <div id="drag-layer"></div>
-        </div>
-      </section>
-    `;
-
-    const cond = getConditionFromUrl();
-    initSorting(cond);
-  }
+  // Nothing to do on load — wait for form submit
 });
 
