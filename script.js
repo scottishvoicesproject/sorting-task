@@ -65,16 +65,17 @@ function initSorting(conditionKey) {
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-
+    const row = Math.floor(i / 2);
+    const col = i % 2;
+    speakerDiv.style.position = 'absolute';
+    speakerDiv.style.left = `${col * 60}px`;
+    speakerDiv.style.top = `${row * 50}px`;
     speakerList.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
     inertia: true,
     listeners: {
-      start (event) {
-        // No moving to drag-layer
-      },
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -82,9 +83,6 @@ function initSorting(conditionKey) {
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-      },
-      end(event) {
-        // No snap-back
       }
     }
   });
@@ -131,4 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
 });
+
 
