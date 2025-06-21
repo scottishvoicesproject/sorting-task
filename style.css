@@ -1,4 +1,4 @@
-/* Global styles */
+/* Global styles */ 
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -6,10 +6,9 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling - now responsive and narrower for phones */
+/* Intro box styling - only made narrower */
 .intro-box {
-  width: 90%;
-  max-width: 340px;
+  width: 300px; /* slightly narrower than original 360px */
   margin: 100px auto;
   background: white;
   padding: 30px;
@@ -86,37 +85,25 @@ select {
 /* Task wrapper layout */
 #task-wrapper {
   position: relative;
-  width: 100%;
   display: flex;
   justify-content: center;
   gap: 40px;
-  flex-wrap: nowrap;
   align-items: flex-start;
 }
 
-/* Speaker list on the left */
+/* Speaker list - NOT used as icon container anymore */
 #speaker-list {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 10px;
-  background: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  height: 400px;
-  width: 140px;
-  overflow-y: auto;
-  z-index: 20;
+  display: none; /* hide if you're no longer using this */
 }
 
-/* Sorting grid in the background */
+/* Sorting grid – stays fixed in background */
 #sorting-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 400px;
+  margin: auto;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -128,7 +115,7 @@ select {
   z-index: 0;
 }
 
-/* Draggable icon - free to move anywhere on screen */
+/* Draggable icons – now floating freely */
 .draggable {
   position: absolute;
   width: 60px;
@@ -155,6 +142,11 @@ select {
   color: white;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* Hide unused container */
+#drag-layer {
+  display: none;
 }
 
 /* Hide unused container */
