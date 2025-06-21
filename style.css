@@ -93,7 +93,7 @@ select {
 
 /* Speaker list on the left */
 #speaker-list {
-  position: relative;
+  position: relative; /* so absolute positioning works if needed */
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -102,15 +102,15 @@ select {
   border: 1px solid #ccc;
   border-radius: 10px;
   height: 400px;
-  width: 140px;
+  width: 140px; /* width enough for 2 columns of 60px + gap */
   overflow-y: auto;
 }
 
 /* Sorting grid in the center */
 #sorting-container {
-  position: relative; /* important */
-  width: 800px;
-  height: 400px;
+  position: relative;
+  width: 800px;    /* wider */
+  height: 400px;   /* less tall */
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -119,12 +119,12 @@ select {
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
   overflow: hidden;
-  z-index: 0; /* lower than draggable */
+  z-index: 0;
 }
 
 /* Draggable icon */
 .draggable {
-  position: absolute; /* changed to absolute */
+  position: relative; /* changed from absolute */
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -137,7 +137,7 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 10; /* higher */
+  z-index: 10;
 }
 
 /* Speaker button inside draggable */
