@@ -51,7 +51,8 @@ button[type="submit"] {
   75% { transform: translateX(-5px); }
 }
 
-/* --- NEW sorting styles --- */
+/* --- Sorting screen styles --- */
+
 #sorting-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -69,26 +70,43 @@ button[type="submit"] {
   max-width: 600px;
 }
 
-/* Large grid container fills most of viewport height */
-#sorting-container {
-  position: relative;
-  width: 100%;
+/* Wrapper to hold speaker list on left and grid on right */
+#task-wrapper {
+  display: flex;
+  gap: 20px;
   height: 70vh;
+  max-height: 700px;
+}
+
+/* Speaker list container - fixed width, scroll if needed */
+#speaker-list {
+  width: 110px;
+  background: #fafafa;
+  border: 2px solid #999;
+  border-radius: 8px;
+  padding: 10px 0;
+  overflow-y: auto;
+  user-select: none;
+}
+
+/* Sorting grid container fills remaining width */
+#sorting-container {
+  flex-grow: 1;
   border: 2px solid #999;
   border-radius: 8px;
   background:
     linear-gradient(to right, #ccc 1px, transparent 1px),
     linear-gradient(to bottom, #ccc 1px, transparent 1px);
   background-size: 50px 50px;
-  overflow: hidden;
+  position: relative;
   user-select: none;
 }
 
-/* Draggable speaker rectangles */
+/* Smaller draggable speaker rectangles */
 .draggable {
-  position: absolute;
-  width: 80px;
-  height: 60px;
+  position: relative; /* changed to relative for stacking in #speaker-list */
+  width: 70px;
+  height: 45px;
   background-color: #111;
   color: white;
   border-radius: 6px;
@@ -96,12 +114,15 @@ button[type="submit"] {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   cursor: grab;
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
   user-select: none;
   touch-action: none;
+  margin: 6px auto;
   transition: box-shadow 0.2s;
+  /* Remove absolute positioning here - speakers start stacked */
+  transform: none !important;
 }
 
 .draggable:active {
@@ -116,7 +137,7 @@ button[type="submit"] {
   border: none;
   color: white;
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   cursor: pointer;
   user-select: none;
 }
