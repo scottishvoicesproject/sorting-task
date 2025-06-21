@@ -1,4 +1,4 @@
-/* Center intro box exactly as originally was */
+/* General body and html setup */
 body, html {
   height: 100%;
   margin: 0;
@@ -7,8 +7,10 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
+/* Intro box styling */
 .intro-box {
   background: white;
   padding: 2rem 3rem;
@@ -20,8 +22,14 @@ body, html {
 
 h1 {
   font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   color: #333;
+}
+
+.intro-box p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #555;
 }
 
 label {
@@ -34,13 +42,13 @@ label {
 }
 
 input[type="number"],
+input[type="text"],
 select {
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box;
 }
 
 .blue-button {
@@ -67,67 +75,74 @@ select {
   color: red;
   font-weight: bold;
   margin-top: 1rem;
+  display: none;
   text-align: center;
 }
 
+/* Instructions styling - visible on sorting section */
+#instructions {
+  max-width: 700px;
+  margin: 0 auto 1rem auto;
+  padding: 1rem 1.5rem;
+  background-color: #e9f0ff;
+  border-radius: 8px;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
 /* Sorting screen styles */
+
 #sorting-section {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 2rem auto 2rem auto;
   padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   font-family: Arial, sans-serif;
   color: #222;
-  height: 100vh;
   box-sizing: border-box;
+  width: 90vw;
+  min-height: 80vh;
 }
 
 #task-wrapper {
   display: flex;
   gap: 20px;
-  position: relative;
-  height: 420px;
+  flex-grow: 1;
 }
 
-/* Speaker list (left column) */
 #speaker-list {
   border: 1px solid #ccc;
   width: 150px;
-  min-height: 400px;
+  min-height: 300px;
   padding: 8px;
   position: relative;
-  background: #fafafa;
-  overflow-y: auto;
 }
 
-/* Sorting container (main sorting area) */
 #sorting-container {
   border: 2px dashed #666;
   width: 600px;
   height: 400px;
   position: relative;
-  background: white;
 }
 
-/* Layer for draggable speakers */
 #drag-layer {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 800px; /* enough for speaker list + sorting container */
-  height: 420px;
-  pointer-events: none; /* allows clicks to pass through except on children */
-  z-index: 10;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 5000;
 }
 
-/* Draggable speaker blocks */
 .draggable {
   cursor: grab;
   user-select: none;
   background-color: #111;
   color: white;
+  padding: 8px;
+  margin: 4px 0;
+  text-align: center;
   width: 50px;
   height: 35px;
   border-radius: 6px;
@@ -137,10 +152,8 @@ select {
   font-weight: 700;
   font-size: 1rem;
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  position: absolute;
   touch-action: none;
-  margin: 0;
-  pointer-events: auto; /* enable interaction */
+  position: absolute; /* important for dragging */
 }
 
 .draggable:active {
@@ -164,3 +177,4 @@ select {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
+
