@@ -57,9 +57,10 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  div.style.transform = 'none';
-  div.setAttribute('data-x', 0);
-  div.setAttribute('data-y', 0);
+  // Remove fixed transform so interact.js can handle it
+  div.style.transform = '';
+  div.removeAttribute('data-x');
+  div.removeAttribute('data-y');
 
   return div;
 }
@@ -79,16 +80,29 @@ function initSorting(conditionKey) {
     speakerList.appendChild(speakerDiv);
   });
 
-  // Setup interact.js draggable
+  // Setup interact.js draggable with improved dragging logic
   interact('.draggable').draggable({
     inertia: true,
-modifiers: [
-  interact.modifiers.restrictRect({
-    restriction: '#task-wrapper',  // broader container holding both panels
-    endOnly: true,
-  }),
-],
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: '#task-wrapper',  // restriction to entire wrapper containing both containers
+        endOnly: true,
+      }),
+    ],
     listeners: {
+      start(event) {
+        const target = event.target;
+        // Move dragged element to #task-wrapper so it can freely move over both containers
+        const wrapper = document.getElementById('task-wrapper');
+        wrapper.appendChild(target);
+
+        // Set absolute positioning for free movement
+        target.style.position = 'absolute';
+
+        // If no stored coords, initialize data-x and data-y to zero
+        if (!target.hasAttribute('data-x')) target.setAttribute('data-x', 0);
+        if (!target.hasAttribute('data-y')) target.setAttribute('data-y', 0);
+      },
       move(event) {
         const target = event.target;
 
@@ -99,12 +113,45 @@ modifiers: [
 
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+      },
+      end(event) {
+        const target = event.target;
+        const speakerList = document.getElementById('speaker-list');
+        const sortingContainer = document.getElementById('sorting-container');
 
-        if (target.parentElement.id === 'speaker-list') {
-          document.getElementById('sorting-container').appendChild(target);
-          target.style.position = 'absolute';
-          target.style.left = '0';
-          target.style.top = '0';
+        const dropX = event.pageX;
+        const dropY = event.pageY;
+
+        const speakerRect = speakerList.getBoundingClientRect();
+        const sortingRect = sortingContainer.getBoundingClientRect();
+
+        if (
+          dropX >= speakerRect.left && dropX <= speakerRect.right &&
+          dropY >= speakerRect.top && dropY <= speakerRect.bottom
+        ) {
+          // Dropped inside speaker list - append back and reset styles
+          speakerList.appendChild(target);
+          target.style.position = '';
+          target.style.left = '';
+          target.style.top = '';
+          target.style.transform = '';
+          target.removeAttribute('data-x');
+          target.removeAttribute('data-y');
+        } else if (
+          dropX >= sortingRect.left && dropX <= sortingRect.right &&
+          dropY >= sortingRect.top && dropY <= sortingRect.bottom
+        ) {
+          // Dropped inside sorting container - keep absolute position with current transform
+          sortingContainer.appendChild(target);
+        } else {
+          // Outside both containers - reset to speaker list
+          speakerList.appendChild(target);
+          target.style.position = '';
+          target.style.left = '';
+          target.style.top = '';
+          target.style.transform = '';
+          target.removeAttribute('data-x');
+          target.removeAttribute('data-y');
         }
       }
     }
@@ -155,6 +202,3 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   const condition = getConditionFromUrl();
   initSorting(condition);
 });
-
-
-
