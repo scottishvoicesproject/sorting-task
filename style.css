@@ -61,7 +61,6 @@ select {
   text-align: center;
 }
 
-/* Hide rotate warning by default */
 #rotate-warning {
   display: none;
   position: fixed;
@@ -78,17 +77,13 @@ select {
   color: #333;
 }
 
-/* Show rotate warning only on small screens (max-width 768px) AND portrait */
-@media screen and (max-width: 768px) and (orientation: portrait) {
-  /* Only show warning if the user is beyond intro screen */
-  body.main-active #rotate-warning {
+@media screen and (orientation: portrait) and (max-width: 768px) {
+  #rotate-warning {
     display: flex;
   }
 
-  /* Also hide main content to force rotate */
-  body.main-active #main-content,
-  body.main-active #sorting-section {
-    display: none !important;
+  #main-content {
+    display: none;
   }
 }
 
@@ -119,6 +114,26 @@ select {
   width: 960px;
   height: 400px;
   margin: 0 auto;
+}
+
+/* Responsive adjustments for mobile landscape */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  #task-wrapper {
+    width: 90vw;
+    height: 300px;
+  }
+
+  #sorting-container {
+    left: 140px;
+    width: calc(100% - 140px);
+    height: 300px;
+  }
+
+  .draggable {
+    width: 50px;
+    height: 35px;
+    font-size: 0.85rem;
+  }
 }
 
 /* REMOVE speaker-list COMPLETELY */
