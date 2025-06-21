@@ -1,148 +1,167 @@
-/* Center intro box exactly as originally was */
-body, html {
-  height: 100%;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const conditions = {
+  M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
+  M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
+  M_SSEvsL1: ['US','TK','MB','KN','EQ','MF','GI','TV','QN','FI','DM','RU'],
+  M_SSEvsL2: ['TD','DG','KD','EK','QE','XU','VI','HS','WI','EL','PP','WW'],
+  F_SSEvsP1: ['XL','WN','KY','GQ','YR','VW','RX','BN','KX','BK','MP','PM'],
+  F_SSEvsP2: ['IT','KZ','JS','RN','MW','XN','RF','LM','ZY','DI','PR','HG'],
+  F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
+  F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
+};
+
+let audioPlaying = null;
+
+function getConditionFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const cond = urlParams.get('cond');
+  if (cond && conditions[cond]) return cond;
+  const keys = Object.keys(conditions);
+  return keys[Math.floor(Math.random() * keys.length)];
 }
 
-.intro-box {
-  background: white;
-  padding: 2rem 3rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  width: 320px;
-  text-align: center;
+function setupAudioControl(button, audio) {
+  button.addEventListener('click', () => {
+    if (audioPlaying && audioPlaying !== audio) {
+      audioPlaying.pause();
+      audioPlaying.currentTime = 0;
+    }
+    if (audio.paused) {
+      audio.play();
+      audioPlaying = audio;
+    } else {
+      audio.pause();
+      audioPlaying = null;
+    }
+  });
 }
 
-h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #333;
+function createSpeakerDiv(initials) {
+  const div = document.createElement('div');
+  div.className = 'draggable';
+  div.dataset.id = initials;
+
+  const audio = document.createElement('audio');
+  audio.src = `audio/${initials}.wav`;
+  audio.preload = 'none';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = initials;
+  btn.className = 'speaker-button';
+
+  setupAudioControl(btn, audio);
+
+  div.appendChild(btn);
+  div.appendChild(audio);
+
+  div.style.position = 'absolute';
+  div.style.transform = '';
+  div.setAttribute('data-x', 0);
+  div.setAttribute('data-y', 0);
+
+  return div;
 }
 
-label {
-  display: block;
-  font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 0.3rem;
-  text-align: left;
-  color: #444;
+function initSorting(conditionKey) {
+  const speakers = conditions[conditionKey];
+  const container = document.getElementById('sorting-container');
+  const speakerList = document.getElementById('speaker-list');
+  const dragLayer = document.getElementById('drag-layer');
+  
+  speakerList.innerHTML = '';
+  container.innerHTML = '';
+  dragLayer.innerHTML = '';
+
+  const colWidth = 60;
+  const rowHeight = 40;
+
+  speakers.forEach((initials, index) => {
+    const speakerDiv = createSpeakerDiv(initials);
+
+    const col = index % 2;
+    const row = Math.floor(index / 2);
+
+    const x = col * colWidth + speakerList.offsetLeft;
+    const y = row * rowHeight + speakerList.offsetTop;
+
+    speakerDiv.style.left = `${x}px`;
+    speakerDiv.style.top = `${y}px`;
+
+    speakerDiv.setAttribute('data-x', x);
+    speakerDiv.setAttribute('data-y', y);
+
+    dragLayer.appendChild(speakerDiv);
+  });
+
+  interact('.draggable').draggable({
+    inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: '#task-wrapper',
+        endOnly: true
+      })
+    ],
+    listeners: {
+      start(event) {
+        event.target.style.zIndex = 10000;
+      },
+      move(event) {
+        const target = event.target;
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      },
+      end(event) {
+        event.target.style.zIndex = 3001;
+      }
+    }
+  });
 }
 
-input[type="number"],
-input[type="text"],
-select {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
+function showError(msg) {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
 }
 
-.blue-button {
-  margin-top: 1.5rem;
-  background-color: #2978f0;
-  color: white;
-  border: none;
-  padding: 0.7rem 0;
-  width: 100%;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
+function hideError() {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = '';
+  errEl.style.display = 'none';
 }
 
-.blue-button:hover,
-.blue-button:focus {
-  background-color: #1a5edb;
-  outline: none;
-}
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
 
-#error-message {
-  color: red;
-  font-weight: bold;
-  margin-top: 1rem;
-  display: none;
-  text-align: center;
-}
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
 
-/* Sorting screen styles below - minimal for now */
+  if (!age || age < 1 || age > 120) {
+    showError('Please enter a valid age between 1 and 120.');
+    return;
+  }
 
-#sorting-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  font-family: Arial, sans-serif;
-  color: #222;
-  height: 100vh;
-  box-sizing: border-box;
-}
+  if (!gender) {
+    showError('Please select a gender.');
+    return;
+  }
 
-#task-wrapper {
-  display: flex;
-  gap: 20px;
-}
+  hideError();
 
-#speaker-list {
-  border: 1px solid #ccc;
-  width: 150px;
-  min-height: 300px;
-  padding: 8px;
-  position: relative;
-}
+  // Hide intro, show sorting section
+  document.getElementById('intro-box').style.display = 'none';
+  document.getElementById('sorting-section').style.display = 'block';
 
-#sorting-container {
-  border: 2px dashed #666;
-  width: 600px;
-  height: 400px;
-  position: relative;
-}
+  // Choose condition randomly or from URL param
+  const cond = getConditionFromUrl();
 
-.draggable {
-  cursor: grab;
-  user-select: none;
-  background-color: #111;
-  color: white;
-  width: 50px;
-  height: 35px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  touch-action: none;
-  margin: 0;
-}
+  // Initialize sorting UI
+  initSorting(cond);
+});
 
-.draggable:active {
-  cursor: grabbing;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-}
-
-.speaker-button {
-  width: 100%;
-  height: 100%;
-  background: none;
-  border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-.speaker-button:focus {
-  outline: 2px solid #2a85ff;
-  outline-offset: 2px;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // Nothing here yet
+});
