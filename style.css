@@ -6,7 +6,7 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling - restored compact look */
+/* Intro box styling */
 .intro-box {
   width: 360px;
   margin: 100px auto;
@@ -89,37 +89,13 @@ select {
   gap: 40px;
   flex-wrap: nowrap;
   align-items: flex-start;
-}
-
-#task-wrapper {
   position: relative; /* create stacking context */
   z-index: 1;
 }
 
-.draggable {
-  position: relative; /* keep relative */
-  z-index: 10;        /* ensure draggable icons appear on top */
-}
-
-#sorting-container {
-  position: relative; /* ensure it has a stacking context */
-  z-index: 0;         /* below draggable icons */
-}
-
-#drag-layer {
-  position: fixed;      /* fixed to viewport */
-  top: 0;
-  left: 0;
-  width: 100vw;         /* full viewport width */
-  height: 100vh;        /* full viewport height */
-  pointer-events: none; /* allow clicks through when visible */
-  z-index: 1000;        /* top layer */
-  display: none;        /* hidden initially */
-}
-
 /* Speaker list on the left */
 #speaker-list {
-  position: relative; /* so absolute positioning works if needed */
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -128,15 +104,15 @@ select {
   border: 1px solid #ccc;
   border-radius: 10px;
   height: 400px;
-  width: 140px; /* width enough for 2 columns of 60px + gap */
+  width: 140px;
   overflow-y: auto;
 }
 
 /* Sorting grid in the center */
 #sorting-container {
-  position: relative;
-  width: 800px;    /* wider */
-  height: 400px;   /* less tall */
+  position: relative; /* IMPORTANT for absolute children */
+  width: 800px;
+  height: 400px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -149,7 +125,7 @@ select {
 
 /* Draggable icon */
 .draggable {
-  position: relative; /* changed from absolute */
+  position: absolute; /* absolute inside sorting container */
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -176,8 +152,4 @@ select {
   cursor: pointer;
 }
 
-/* Hide unused container */
-#drag-layer {
-  display: none;
-}
 
