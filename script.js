@@ -56,22 +56,23 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const speakerList = document.getElementById('speaker-list');
+  const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  speakerList.innerHTML = '';
+  // Clear previous speakers
+  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
 
-    // REMOVE these two lines to let flexbox handle positioning:
-    //speakerDiv.style.position = 'absolute';
-    //speakerDiv.style.left = `${col * 60}px`;
-    //speakerDiv.style.top = `${row * 50}px`;
+    // Initial positioning on the left side
+    speakerDiv.style.position = 'absolute';
+    speakerDiv.style.left = '20px';
+    speakerDiv.style.top = `${20 + i * 45}px`;
 
-    speakerList.appendChild(speakerDiv);
+    taskWrapper.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
@@ -130,5 +131,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
 });
-
-
