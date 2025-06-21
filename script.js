@@ -11,6 +11,26 @@ const conditions = {
 
 let audioPlaying = null;
 
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function checkRotateWarning() {
+  const warning = document.getElementById('rotate-warning');
+  const mainContent = document.getElementById('main-content');
+
+  const isMobile = isMobileDevice();
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+  if (isMobile && isPortrait) {
+    warning.style.display = 'flex';
+    mainContent.style.display = 'none';
+  } else {
+    warning.style.display = 'none';
+    mainContent.style.display = 'block';
+  }
+}
+
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -59,13 +79,12 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
 
-  const colLeft = 20;   // X position for left column
-  const colRight = 90;  // X position for right column
-  const rowHeight = 45; // Y space between items
+  const colLeft = 20;
+  const colRight = 90;
+  const rowHeight = 45;
   let rowLeft = 0;
   let rowRight = 0;
 
@@ -75,12 +94,10 @@ function initSorting(conditionKey) {
     speakerDiv.style.position = 'absolute';
 
     if (i % 2 === 0) {
-      // Left column
       speakerDiv.style.left = `${colLeft}px`;
       speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
-      // Right column
       speakerDiv.style.left = `${colRight}px`;
       speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
       rowRight++;
@@ -90,10 +107,10 @@ function initSorting(conditionKey) {
   }
 
   interact('.draggable').draggable({
-    inertia: false,  // Disable inertia for immediate follow of finger/mouse
+    inertia: false,
     modifiers: [
-      interact.modifiers.restrict({
-        restriction: 'parent',
+      interact.modifiers.restrictRect({
+        restriction: '#task-wrapper',
         endOnly: true
       })
     ],
@@ -122,7 +139,6 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-// Form submit handler
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -151,35 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
+
+  checkRotateWarning();
 });
 
-// === ROTATE WARNING LOGIC ===
-
-function checkRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const mainContent = document.getElementById('main-content');
-
-  // Detect if mobile device (screen width <= 768px)
-  const isMobile = window.innerWidth <= 768;
-
-  // Detect if portrait mode
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-  if (isMobile && isPortrait) {
-    // Show warning and hide main content
-    warning.style.display = 'flex';
-    mainContent.style.display = 'none';
-  } else {
-    // Hide warning and show main content
-    warning.style.display = 'none';
-    mainContent.style.display = 'block';
-  }
-}
-
-// Run on page load
-window.addEventListener('load', checkRotateWarning);
-
-// Run on resize and orientation change
 window.addEventListener('resize', checkRotateWarning);
 window.addEventListener('orientationchange', checkRotateWarning);
 
