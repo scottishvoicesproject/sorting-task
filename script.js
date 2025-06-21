@@ -150,4 +150,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
-
