@@ -82,12 +82,12 @@ function initSorting(conditionKey) {
   // Setup interact.js draggable
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: '#sorting-container',
-        endOnly: true,
-      }),
-    ],
+modifiers: [
+  interact.modifiers.restrictRect({
+    restriction: '#task-wrapper',  // broader container holding both panels
+    endOnly: true,
+  }),
+],
     listeners: {
       move(event) {
         const target = event.target;
