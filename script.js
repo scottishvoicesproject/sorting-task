@@ -56,41 +56,42 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const speakerList = document.getElementById('speaker-list');
+  const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  speakerList.innerHTML = '';
+  // Remove previous icons
+  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
+
+  const colLeft = 20;   // X position for left column
+  const colRight = 90;  // X position for right column
+  const rowHeight = 45; // Y space between items
+  let rowLeft = 0;
+  let rowRight = 0;
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
+    speakerDiv.style.position = 'absolute';
 
-    // Remove absolute positioning, let flexbox handle layout
-    // speakerDiv.style.position = 'absolute';
-    // speakerDiv.style.left = `${col * 60}px`;
-    // speakerDiv.style.top = `${row * 50}px`;
+    if (i % 2 === 0) {
+      // Left column
+      speakerDiv.style.left = `${colLeft}px`;
+      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      rowLeft++;
+    } else {
+      // Right column
+      speakerDiv.style.left = `${colRight}px`;
+      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      rowRight++;
+    }
 
-    speakerList.appendChild(speakerDiv);
+    taskWrapper.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
     inertia: true,
     listeners: {
-      start (event) {
-        // Move dragged element to drag-layer container on drag start
-        const dragLayer = document.getElementById('drag-layer');
-        dragLayer.style.display = 'block';
-        dragLayer.appendChild(event.target);
-        event.target.style.position = 'absolute';
-        event.target.style.zIndex = '1000';
-        const rect = event.target.getBoundingClientRect();
-        event.target.style.left = `${rect.left}px`;
-        event.target.style.top = `${rect.top}px`;
-        event.target.style.transform = 'none';
-        event.target.setAttribute('data-x', 0);
-        event.target.setAttribute('data-y', 0);
-      },
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -98,20 +99,6 @@ function initSorting(conditionKey) {
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-      },
-      end(event) {
-        // Move back to speaker list on drag end
-        const speakerList = document.getElementById('speaker-list');
-        speakerList.appendChild(event.target);
-        event.target.style.position = 'relative';
-        event.target.style.left = '';
-        event.target.style.top = '';
-        event.target.style.transform = '';
-        event.target.setAttribute('data-x', 0);
-        event.target.setAttribute('data-y', 0);
-
-        const dragLayer = document.getElementById('drag-layer');
-        dragLayer.style.display = 'none';
       }
     }
   });
