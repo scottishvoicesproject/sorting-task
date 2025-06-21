@@ -126,3 +126,17 @@ function hideError() {
 
 document.getElementById('age-gender-form').addEventListener('submit', (e
 
+interact('.draggable').draggable({
+  inertia: true,
+  listeners: {
+    start(event) {
+      event.target.style.zIndex = 10000; // bring on top while dragging
+    },
+    move(event) {
+      // your existing move code
+    },
+    end(event) {
+      event.target.style.zIndex = 1000; // reset after drag ends
+    }
+  }
+});
