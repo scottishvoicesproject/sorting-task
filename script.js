@@ -1,4 +1,4 @@
-// 🧩 All condition mappings
+// All conditions with speaker initials
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
   M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
@@ -21,13 +21,13 @@ let condition = null;
 let currentAudio = null;
 let currentPlayingDiv = null;
 
-// Start button: hide instructions, show age form
+// Start button hides instructions, shows age form
 startButton.addEventListener('click', () => {
   instructionsDiv.style.display = 'none';
   ageForm.style.display = 'block';
 });
 
-// Age gating
+// Age gating (3-17)
 ageForm.addEventListener("submit", function(e) {
   e.preventDefault();
   const age = parseInt(document.getElementById("age").value);
@@ -40,18 +40,17 @@ ageForm.addEventListener("submit", function(e) {
   }
 });
 
-// Get condition from URL (e.g. ?cond=M_SSEvsP1)
+// Get condition from URL (default fallback)
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
   if (cond && conditions[cond]) {
     return cond;
   }
-  // fallback default condition
-  return 'M_SSEvsP1';
+  return 'M_SSEvsP1'; // fallback default
 }
 
-// Load speakers and setup drag/drop
+// Load the speaker initials for the chosen condition
 function loadCondition() {
   condition = getConditionFromUrl();
   const speakers = conditions[condition];
@@ -60,11 +59,11 @@ function loadCondition() {
     return;
   }
 
-  speakerContainer.innerHTML = ''; // Clear previous speakers
+  speakerContainer.innerHTML = ''; // Clear previous content
 
-  // Position speakers initially spaced on top
-  let startX = 20;
-  let startY = 20;
+  // Arrange speakers in a horizontal line initially
+  const startX = 20;
+  const startY = 20;
   const gapX = 100;
 
   speakers.forEach((initials, idx) => {
@@ -72,12 +71,15 @@ function loadCondition() {
     div.className = 'draggable';
     div.dataset.id = initials;
     div.textContent = initials;
-    // Set initial position
-    div.style.transform = `translate(${startX + idx*gapX}px, ${startY}px)`;
-    div.setAttribute('data-x', startX + idx*gapX);
-    div.setAttribute('data-y', startY);
 
-    // Play / pause toggle with visual cue
+    // Initial position
+    const x = startX + idx * gapX;
+    const y = startY;
+    div.style.transform = `translate(${x}px, ${y}px)`;
+    div.setAttribute('data-x', x);
+    div.setAttribute('data-y', y);
+
+    // Play/pause toggle
     div.addEventListener('click', () => {
       if (currentAudio && !currentAudio.paused && currentAudio.dataset.id === initials) {
         currentAudio.pause();
@@ -89,6 +91,7 @@ function loadCondition() {
         }
         return;
       }
+
       if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
@@ -96,6 +99,7 @@ function loadCondition() {
       if (currentPlayingDiv) {
         currentPlayingDiv.classList.remove('playing');
       }
+
       currentAudio = new Audio(`audio/${initials.toLowerCase()}.wav`);
       currentAudio.dataset.id = initials;
       currentAudio.play();
@@ -116,15 +120,14 @@ function loadCondition() {
   setupDrag();
 }
 
-// Drag and drop functionality using Interact.js
+// Setup Interact.js draggable with boundaries in #grid
 function setupDrag() {
   interact('.draggable').draggable({
     inertia: true,
-    autoScroll: true,
     modifiers: [
       interact.modifiers.restrictRect({
         restriction: '#grid',
-        endOnly: true
+        endOnly: true,
       })
     ],
     listeners: {
@@ -135,28 +138,5 @@ function setupDrag() {
 
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      }
-    }
-  });
-}
-
-// Submit button — collect positions and groupings
-submitBtn.addEventListener('click', () => {
-  // Example: collect the speaker initials with their x,y positions
-  const data = [];
-  document.querySelectorAll('.draggable').forEach(div => {
-    data.push({
-      id: div.dataset.id,
-      x: parseFloat(div.getAttribute('data-x')) || 0,
-      y: parseFloat(div.getAttribute('data-y')) || 0,
-    });
-  });
-
-  console.log('Participant grouping data:', data);
-
-  alert('Thanks for participating! You grouped the speakers. Check console for data output.');
-
-  // TODO: Add real data saving method here (e.g. send to server or API)
-});
+        target.setAttribute('
 
