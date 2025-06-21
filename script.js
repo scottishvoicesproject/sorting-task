@@ -74,41 +74,40 @@ function initSorting(conditionKey) {
     speakerList.appendChild(speakerDiv);
   });
 
-  interact('.draggable').draggable({
-    inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',  // restrict inside immediate parent container only
-        endOnly: true,
-      }),
-    ],
-    listeners: {
-      start(event) {
-        const target = event.target;
-        // If dragging starts inside speaker-list, move it to sorting container immediately
-        if (target.parentElement.id === 'speaker-list') {
-          const container = document.getElementById('sorting-container');
-          container.appendChild(target);
-          target.style.position = 'absolute';
-          // Reset transform so dragging starts fresh
-          target.style.transform = 'translate(0px, 0px)';
-          target.setAttribute('data-x', 0);
-          target.setAttribute('data-y', 0);
-        }
-      },
-      move(event) {
-        const target = event.target;
-
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-        target.style.transform = `translate(${x}px, ${y}px)`;
-
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
+interact('.draggable').draggable({
+  inertia: true,
+  modifiers: [
+    // You can comment out restriction for testing:
+    // interact.modifiers.restrictRect({
+    //   restriction: 'parent',
+    //   endOnly: true,
+    // }),
+  ],
+  listeners: {
+    start(event) {
+      const target = event.target;
+      if (target.parentElement.id === 'speaker-list') {
+        const container = document.getElementById('sorting-container');
+        container.appendChild(target);
+        target.style.position = 'absolute';
+        target.style.left = '0';
+        target.style.top = '0';
+        target.style.transform = 'translate(0px, 0px)';
+        target.setAttribute('data-x', 0);
+        target.setAttribute('data-y', 0);
       }
-    }
-  });
+    },
+    move(event) {
+      const target = event.target;
+      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+      target.style.transform = `translate(${x}px, ${y}px)`;
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
+    },
+  }
+});
 }
 
 function showError(msg) {
