@@ -74,19 +74,47 @@ function initSorting(conditionKey) {
     speakerList.appendChild(speakerDiv);
   }
 
-  interact('.draggable').draggable({
-    inertia: true,
-    listeners: {
-      move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      }
+ interact('.draggable').draggable({
+  inertia: true,
+  listeners: {
+    start (event) {
+      // Move dragged element to drag-layer container on drag start
+      const dragLayer = document.getElementById('drag-layer');
+      dragLayer.style.display = 'block';
+      dragLayer.appendChild(event.target);
+      event.target.style.position = 'absolute';
+      event.target.style.zIndex = '1000';
+      const rect = event.target.getBoundingClientRect();
+      event.target.style.left = `${rect.left}px`;
+      event.target.style.top = `${rect.top}px`;
+      event.target.style.transform = 'none';
+      event.target.setAttribute('data-x', 0);
+      event.target.setAttribute('data-y', 0);
+    },
+    move(event) {
+      const target = event.target;
+      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+      target.style.transform = `translate(${x}px, ${y}px)`;
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
+    },
+    end(event) {
+      // Move back to speaker list on drag end
+      const speakerList = document.getElementById('speaker-list');
+      speakerList.appendChild(event.target);
+      event.target.style.position = 'relative';
+      event.target.style.left = '';
+      event.target.style.top = '';
+      event.target.style.transform = '';
+      event.target.setAttribute('data-x', 0);
+      event.target.setAttribute('data-y', 0);
+
+      const dragLayer = document.getElementById('drag-layer');
+      dragLayer.style.display = 'none';
     }
-  });
+  }
+});
 }
 
 function showError(msg) {
