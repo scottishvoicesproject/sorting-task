@@ -9,13 +9,17 @@
 <body>
   <div class="intro-box">
     <h1>Welcome!</h1>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" />
-    <label for="age">Age</label>
-    <input type="number" id="age" name="age" />
-    <button class="blue-button">Start</button>
-    <div id="error-message">Please fill out all fields</div>
-  </div>
-</body>
-</html>
+ <form id="age-gender-form">
+  <label for="age">Age:</label>
+  <input type="number" id="age" name="age" required min="1" max="120" />
+  
+  <label for="gender">Gender:</label>
+  <select id="gender" name="gender" required>
+    <option value="">Select gender</option>
+    <option value="M">Male</option>
+    <option value="F">Female</option>
+    <!-- Add other options if needed -->
+  </select>
 
+  <button type="submit" class="blue-button">Submit</button>
+</form>
