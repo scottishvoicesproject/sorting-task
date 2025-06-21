@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sorting Task</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sorting Task</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="intro-box" class="intro-box">
@@ -12,14 +12,14 @@
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" min="1" max="120" required />
-      
+
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">-- Select --</option>
         <option value="M">Male</option>
         <option value="F">Female</option>
       </select>
-      
+
       <button type="submit" class="blue-button">Start</button>
       <div id="error-message"></div>
     </form>
@@ -27,7 +27,12 @@
 
   <div id="instructions" style="display:none;">
     <h2>Instructions</h2>
-    <p>Drag the speaker icons to the grid to sort them as you wish.</p>
+    <p>Thank you for participating in this sorting task.</p>
+    <p>You will see a set of speaker icons on the left. Drag each speaker icon onto the grid on the right.</p>
+    <p>Feel free to place them anywhere you want on the grid — there is no snapping or fixed slots.</p>
+    <p>You can move the icons around freely at any time before you submit your final arrangement.</p>
+    <p>Click on a speaker icon to play their audio clip. Make sure to listen carefully before placing the icons.</p>
+    <p>When you are done arranging, follow the prompts to complete the task.</p>
   </div>
 
   <section id="sorting-section" style="display:none;">
@@ -43,4 +48,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
