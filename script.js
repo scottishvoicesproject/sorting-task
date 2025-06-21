@@ -67,25 +67,26 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
-  const topLayer = document.getElementById('top-layer-container');
-
+  const dragLayer = document.getElementById('drag-layer');
+  
   // Clear previous content
   speakerList.innerHTML = '';
   container.innerHTML = '';
-  topLayer.innerHTML = '';
+  dragLayer.innerHTML = '';   // clear draggable layer
 
   const colWidth = 60;   // horizontal space between columns
   const rowHeight = 40;  // vertical space between rows
 
-  // Position speakers in two vertical columns on left side (#speaker-list)
+  // Position speakers in two vertical columns on left side (#speaker-list visually),
+  // but append draggable elements to #drag-layer for free movement
   speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
     const col = index % 2;  // 0 or 1 (two columns)
     const row = Math.floor(index / 2);
 
-    const x = col * colWidth;
-    const y = row * rowHeight;
+    const x = col * colWidth + speakerList.offsetLeft;
+    const y = row * rowHeight + speakerList.offsetTop;
 
     speakerDiv.style.left = `${x}px`;
     speakerDiv.style.top = `${y}px`;
@@ -93,13 +94,19 @@ function initSorting(conditionKey) {
     speakerDiv.setAttribute('data-x', x);
     speakerDiv.setAttribute('data-y', y);
 
-    // Append the speaker div to the top layer container for dragging on top
-    topLayer.appendChild(speakerDiv);
+    dragLayer.appendChild(speakerDiv); // append draggable to drag-layer
   });
 
-  // Enable dragging on all .draggable elements, free movement anywhere on page
+  // Enable dragging on all .draggable elements, free movement anywhere in #task-wrapper
   interact('.draggable').draggable({
     inertia: true,
+    modifiers: [
+      // Keep draggables inside #task-wrapper boundaries
+      interact.modifiers.restrictRect({
+        restriction: '#task-wrapper',
+        endOnly: true
+      })
+    ],
     listeners: {
       start(event) {
         event.target.style.zIndex = 10000; // bring on top while dragging
@@ -114,7 +121,7 @@ function initSorting(conditionKey) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        event.target.style.zIndex = 2000; // reset after drag ends to default draggable z-index
+        event.target.style.zIndex = 3001; // reset after drag ends
       }
     }
   });
@@ -132,9 +139,15 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
+// Example form submit handler placeholder, replace as needed
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   // Your existing submit handler code here
 });
 
-// No other separate interact draggable calls needed
+// Initialize with a condition (example)
+document.addEventListener('DOMContentLoaded', () => {
+  const cond = getConditionFromUrl();
+  initSorting(cond);
+});
+
