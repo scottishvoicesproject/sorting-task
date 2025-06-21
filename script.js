@@ -11,6 +11,7 @@ const conditions = {
 
 let audioPlaying = null;
 
+// Get cond from URL or pick random
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -19,6 +20,7 @@ function getConditionFromUrl() {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
+// Create speaker draggable element
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -33,7 +35,8 @@ function createSpeakerDiv(initials) {
   btn.textContent = initials;
   btn.className = 'speaker-button';
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
     if (audioPlaying && audioPlaying !== audio) {
       audioPlaying.pause();
       audioPlaying.currentTime = 0;
@@ -48,6 +51,7 @@ function createSpeakerDiv(initials) {
   });
 
   div.appendChild(btn);
+
   div.appendChild(audio);
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
@@ -58,12 +62,12 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
 
-  // Clear existing speakers
+  // Clear existing draggable divs
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const isSmallScreen = window.innerWidth < 600;
 
-  // On small screens, use flex column layout, otherwise absolute positioning
+  // Set taskWrapper layout for mobile vs desktop
   if (isSmallScreen) {
     taskWrapper.style.display = 'flex';
     taskWrapper.style.flexDirection = 'column';
@@ -106,4 +110,95 @@ function initSorting(conditionKey) {
     taskWrapper.appendChild(speakerDiv);
   }
 
-  interact('.draggable').draggable
+  // Enable dragging with interact.js
+  interact('.draggable').draggable({
+    inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: '#sorting-container',
+        endOnly: true
+      })
+    ],
+    listeners: {
+      move(event) {
+        const target = event.target;
+        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      }
+    }
+  });
+}
+
+// Show/hide rotate warning for portrait on sorting page
+function checkRotateWarning() {
+  const rotateWarning = document.getElementById('rotate-warning');
+  // Show only if sorting section is visible and in portrait mode
+  const sortingSectionVisible = document.getElementById('sorting-section').style.display !== 'none';
+  if (sortingSectionVisible && window.matchMedia("(orientation: portrait)").matches) {
+    rotateWarning.style.display = 'flex';
+  } else {
+    rotateWarning.style.display = 'none';
+  }
+}
+
+// On window resize/orientation change check rotate warning and re-init sorting layout
+window.addEventListener('resize', () => {
+  checkRotateWarning();
+  if (document.getElementById('sorting-section').style.display !== 'none') {
+    initSorting(currentCondition);
+  }
+});
+
+window.addEventListener('orientationchange', checkRotateWarning);
+
+let currentCondition = getConditionFromUrl();
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Hide rotate warning initially
+  checkRotateWarning();
+
+  const form = document.getElementById('age-gender-form');
+  const introBox = document.getElementById('intro-box');
+  const sortingSection = document.getElementById('sorting-section');
+  const errorMessage = document.getElementById('error-message');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Validate age and gender
+    const age = parseInt(form.age.value);
+    const gender = form.gender.value;
+
+    if (!age || age < 1 || age > 120) {
+      errorMessage.textContent = 'Please enter a valid age between 1 and 120.';
+      return;
+    }
+    if (!gender) {
+      errorMessage.textContent = 'Please select your gender.';
+      return;
+    }
+    errorMessage.textContent = '';
+
+    // Hide intro, show sorting
+    introBox.style.display = 'none';
+    sortingSection.style.display = 'block';
+
+    // Show instructions for desktop only
+    const instructions = document.getElementById('instructions');
+    if (window.innerWidth > 768) {
+      instructions.style.display = 'block';
+    } else {
+      instructions.style.display = 'none';
+    }
+
+    // Initialize sorting draggable speakers
+    initSorting(currentCondition);
+
+    // Check rotate warning on start
+    checkRotateWarning();
+  });
+});
