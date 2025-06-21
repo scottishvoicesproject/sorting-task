@@ -10,21 +10,25 @@ const conditions = {
 };
 
 const urlParams = new URLSearchParams(window.location.search);
-const condition = urlParams.get('cond') || 'M_SSEvsP1'; // default if none
+const condition = urlParams.get('cond') || 'M_SSEvsP1';
 
 const speakerContainer = document.getElementById('speaker-container');
 const grid = document.getElementById('grid');
+const submitBtn = document.getElementById('submit-btn');
 
 let currentAudio = null;
 let currentPlayingDiv = null;
 
+// Show age form when start button clicked
 document.getElementById("start-button").addEventListener("click", () => {
   document.getElementById("instructions").style.display = "none";
   document.getElementById("age-form").style.display = "block";
 });
 
+// Age & gender form submit
 document.getElementById("age-form").addEventListener("submit", function(e) {
   e.preventDefault();
+
   const ageInput = document.getElementById("age");
   const genderInput = document.getElementById("gender");
 
@@ -43,7 +47,7 @@ document.getElementById("age-form").addEventListener("submit", function(e) {
 
   document.getElementById("age-form").style.display = "none";
   document.getElementById("task").style.display = "flex";
-  document.getElementById("submit-btn").style.display = "block";
+  submitBtn.style.display = "block";
 
   loadCondition();
 });
@@ -65,13 +69,13 @@ function loadCondition() {
     div.textContent = initials;
 
     div.addEventListener('click', () => {
-      // Pause previous audio if playing
+      // Stop previously playing audio if different speaker clicked
       if (currentAudio && currentPlayingDiv && currentPlayingDiv !== div) {
         currentAudio.pause();
         currentPlayingDiv.classList.remove('playing');
       }
 
-      // If clicking same playing audio toggle pause/play
+      // Toggle play/pause if same speaker clicked
       if (currentPlayingDiv === div && currentAudio) {
         if (currentAudio.paused) {
           currentAudio.play();
@@ -81,7 +85,7 @@ function loadCondition() {
           div.classList.remove('playing');
         }
       } else {
-        // New audio play
+        // Play new audio
         currentAudio = new Audio(`audio/${initials.toLowerCase()}.wav`);
         currentPlayingDiv = div;
 
@@ -101,11 +105,4 @@ function loadCondition() {
 }
 
 function setupDrag() {
-  interact('.draggable').draggable({
-    inertia: true,
-    autoScroll: true,
-    listeners: {
-      move(event) {
-        const target = event.target;
-        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        const y = (parseFloat(target.getAttribute('
+  interact
