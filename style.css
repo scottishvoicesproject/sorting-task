@@ -70,7 +70,7 @@ input[type="text"] {
   text-align: center;
 }
 
-/* Sorting screen styles below - minimal for now */
+/* ----------- Sorting screen styles ----------- */
 
 #sorting-section {
   max-width: 1200px;
@@ -78,53 +78,47 @@ input[type="text"] {
   padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   font-family: Arial, sans-serif;
   color: #222;
   height: 100vh;
   box-sizing: border-box;
 }
 
-#task-wrapper {
-  display: flex;
-  gap: 20px;
-}
-
-#speaker-list {
-  border: 1px solid #ccc;
-  width: 150px;
-  min-height: 300px;
-  padding: 8px;
-  /* Important: allow children to be draggable */
-  position: relative;
-}
-
-#sorting-container {
-  border: 2px dashed #666;
-  width: 600px;
-  height: 400px;
-  position: relative; /* This is needed for absolute positioning inside */
-}
-
-.draggable {
-  cursor: grab;
-  user-select: none;
-  background-color: black;
-  color: white;
-  padding: 8px;
-  margin: 4px 0;
+#sorting-section h2 {
+  margin-bottom: 0.5rem;
   text-align: center;
-  width: 100px;
-  border-radius: 4px;
 }
 
-.draggable:active {
-  cursor: grabbing;
+#sorting-section p {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.4;
 }
 
-/* Speaker rectangles */
+/* Big grid container with grid lines */
+#sorting-container {
+  border: 2px solid #666;
+  background:
+    linear-gradient(to right, #ccc 1px, transparent 1px),
+    linear-gradient(to bottom, #ccc 1px, transparent 1px);
+  background-size: 50px 50px; /* grid cell size */
+  width: 90vw;
+  max-width: 1000px;
+  height: calc(100vh - 180px); /* leave space for instructions */
+  margin: 0 auto;
+  position: relative; /* for absolutely positioned children */
+  box-sizing: border-box;
+}
 
+/* Hide speaker list, not needed */
+#speaker-list {
+  display: none;
+}
+
+/* Draggable speaker rectangles - free floating */
 .draggable {
+  position: absolute !important;
   width: 50px;
   height: 35px;
   background-color: #111;
@@ -140,6 +134,7 @@ input[type="text"] {
   user-select: none;
   touch-action: none;
   margin: 0;
+  z-index: 10;
 }
 
 .draggable:active {
