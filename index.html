@@ -8,12 +8,12 @@
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-  <!-- Rotate warning (landscape only needed for sorting page) -->
+  <!-- Rotate warning -->
   <div id="rotate-warning">
     🔄 Please rotate your device to landscape to continue.
   </div>
 
-  <!-- Intro box (portrait mobile OK) -->
+  <!-- Intro box -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
@@ -34,8 +34,8 @@
   </div>
 
   <!-- Main content wrapper -->
-  <div id="main-content">
-    <!-- Sorting task section (initially hidden) -->
+  <div id="main-content" style="display:none;">
+    <!-- Sorting task section -->
     <section id="sorting-section" style="display:none;">
       <div id="instructions">
         <p>
@@ -49,9 +49,8 @@
         </p>
       </div>
 
-      <div id="task-wrapper">
-        <div id="speaker-list" aria-label="List of speakers"></div>
-        <div id="sorting-container" aria-label="Sorting area"></div>
+      <div id="task-wrapper" style="position: relative; width: 960px; height: 400px; margin: 0 auto; overflow: hidden;">
+        <div id="sorting-container" aria-label="Sorting area" style="position: absolute; top: 0; left: 160px; width: 800px; height: 400px; border: 2px dashed #aaa; border-radius: 12px; background: #fff; background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px, transparent 1px); background-size: 40px 40px;"></div>
       </div>
     </section>
   </div>
@@ -59,4 +58,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
