@@ -20,27 +20,27 @@
     <button id="start-button">Start Task</button>
   </div>
 
-<form id="age-form" style="display:none; text-align:center; margin-top:30px;">
-  <label for="age">Please enter your age (4-17): </label>
-  <input type="number" id="age" min="4" max="17" required />
-  
-  <label for="gender" style="display:block; margin-top: 10px;">Please enter your gender:</label>
-  <input type="text" id="gender" required />
-  
-  <button type="submit" style="margin-top: 10px;">Submit</button>
-</form>
-    
-    <button type="submit" style="margin-left: 20px;">Submit</button>
+  <form id="age-form" style="display:none; text-align:center; margin-top:30px;">
+    <label for="age">Please enter your age (4-17): </label>
+    <input type="number" id="age" min="4" max="17" required />
+
+    <label for="gender" style="display:block; margin-top: 10px;">Please enter your gender:</label>
+    <input type="text" id="gender" required />
+
+    <button type="submit" style="margin-top: 10px;">Submit</button>
   </form>
 
-  <div id="task" style="display:none; text-align:center;">
-    <div id="grid" class="dropzone">
-      <!-- Speaker boxes will appear here -->
+  <div id="task" style="display:none; margin-top: 20px; display: flex; justify-content: center; gap: 30px;">
+    <div id="speaker-container">
+      <!-- Speaker boxes go here -->
     </div>
-    <button id="submit-btn" style="margin-top: 20px;">Submit</button>
+    <div id="grid" class="dropzone">
+      <!-- Drag grid here -->
+    </div>
   </div>
+
+  <button id="submit-btn" style="display:none; margin-top: 20px;">Submit</button>
 
   <script src="script.js"></script>
 </body>
 </html>
-
