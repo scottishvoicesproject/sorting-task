@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scottish Voices Project - Sorting Task</title>
+  <title>Scottish Voices Project</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
@@ -21,35 +21,36 @@
         <option value="F">Female</option>
         <option value="O">Other</option>
       </select>
-      
+
       <button type="submit" class="blue-button">Start Task</button>
       <div id="error-message"></div>
     </form>
   </div>
 
   <section id="sorting-section" style="display:none;">
-    <div class="instructions">
+    <div id="instructions">
       <p>
         These 12 icons have the initials of 12 speakers who all are saying the same sentence.
         Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
-        and move the rectangles onto the grid to group them together by how similar they sound.
-        Place the blocks close if they belong to one group and further apart if they sound different.
-        The distance between different groups does not matter.
-        You can listen as often as you want and create as few or as many groups as you like.
+        and to move the rectangles onto the grid to group them together by how similar they sound in
+        how they speak. Place the blocks close to each other if you think they belong to one group and
+        further apart if they sound different. The distance between different groups does not matter.
+        You can listen to the speakers as often as you want to, and you can build as few or as many
+        groupings as you like.
       </p>
     </div>
 
     <div id="task-wrapper">
-      <div id="speaker-list" aria-label="List of speakers">
-        <!-- Icons go here in two vertical columns, fixed order -->
+      <div id="speaker-list" aria-label="List of speakers"></div>
+      <div id="sorting-container" aria-label="Sorting area">
+        <div id="grid-overlay"></div>
       </div>
-      <div id="sorting-container" aria-label="Sorting grid">
-        <!-- The grid with lines -->
-      </div>
+      <div id="drag-layer"></div>
     </div>
   </section>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
