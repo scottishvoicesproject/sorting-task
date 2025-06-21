@@ -72,14 +72,21 @@ select {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 40px;
+  padding: 40px 20px;  /* <-- Added horizontal padding */
   font-size: 1.5rem;
   color: #333;
+  box-sizing: border-box; /* <-- Added */
+  max-width: 90vw;         /* <-- Added to limit width */
+  overflow-wrap: break-word; /* <-- Added to wrap long text */
+  margin: 0 auto;          /* Center horizontally */
 }
 
+/* Show rotate warning ONLY on portrait on small screens */
 @media screen and (orientation: portrait) and (max-width: 768px) {
   #rotate-warning {
     display: flex;
+    max-width: none; /* override for small screens to fill full width */
+    padding: 40px 15px; /* less horizontal padding on small phones */
   }
 
   #main-content {
@@ -191,3 +198,4 @@ select {
 #drag-layer {
   display: none;
 }
+
