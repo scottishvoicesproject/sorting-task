@@ -71,6 +71,7 @@ input[type="text"] {
 }
 
 /* Sorting screen styles */
+
 #sorting-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -84,11 +85,10 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-/* Added relative positioning here */
 #task-wrapper {
   display: flex;
   gap: 20px;
-  position: relative; /* Added for stacking context */
+  position: relative;  /* added so absolute children are positioned relative here */
 }
 
 /* Left container for speakers */
@@ -123,12 +123,20 @@ input[type="text"] {
   background-size: 40px 40px;
 }
 
-/* New container for draggable speakers on top */
+/* New top layer container for draggable elements */
 #top-layer-container {
-  position: relative;
-  z-index: 3000; /* High z-index to keep draggable elements on top */
-  width: 0;
-  height: 0;
+  position: absolute;
+  top: 0;
+  left: calc(150px + 20px); /* position right next to #speaker-list */
+  width: 800px;
+  height: 500px;
+  pointer-events: none;   /* so clicks pass through empty space */
+  z-index: 3000;          /* higher than #sorting-container */
+}
+
+/* Allow draggable elements inside top-layer to be interactive */
+#top-layer-container .draggable {
+  pointer-events: auto;
 }
 
 /* Draggable speaker boxes */
