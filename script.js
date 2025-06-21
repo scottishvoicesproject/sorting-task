@@ -11,12 +11,10 @@ const conditions = {
 
 let audioPlaying = null; // current playing audio element
 
-// Utility: get random condition or from URL
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
   if (cond && conditions[cond]) return cond;
-
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
@@ -42,14 +40,12 @@ function createSpeakerDiv(initials, idx) {
   div.className = 'draggable';
   div.dataset.id = initials;
 
-  // Create audio element
   const audio = document.createElement('audio');
   audio.src = `audio/${initials}.wav`;
-  audio.preload = "none";
+  audio.preload = 'none';
 
-  // Create play button with initials text
   const btn = document.createElement('button');
-  btn.type = "button";
+  btn.type = 'button';
   btn.textContent = initials;
   btn.className = 'speaker-button';
 
@@ -58,22 +54,18 @@ function createSpeakerDiv(initials, idx) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // Position in 2-column grid: 0-based
-const cols = speakers.length; // all in one row
-const gapX = 90;  // horizontal spacing
-const gapY = 0;   // single row, no vertical gap
-const row = 0;
-const col = idx;
-const x = col * gapX;
-const y = 0;
-div.style.transform = `translate(${x}px, ${y}px)`;
-div.setAttribute('data-x', x);
-div.setAttribute('data-y', y);
+  // Vertical stack with left padding, 90px vertical gap
+  const gapY = 90;
+  const x = 20;
+  const y = idx * gapY + 20;
+
+  div.style.transform = `translate(${x}px, ${y}px)`;
+  div.setAttribute('data-x', x);
+  div.setAttribute('data-y', y);
 
   return div;
 }
 
-// Initialize the sorting interface
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const container = document.getElementById('sorting-container');
@@ -84,14 +76,13 @@ function initSorting(conditionKey) {
     container.appendChild(speakerDiv);
   });
 
-  // Setup interact.js draggable
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
       interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: true
-      })
+        restriction: '#sorting-container',
+        endOnly: true,
+      }),
     ],
     listeners: {
       move(event) {
@@ -107,14 +98,12 @@ function initSorting(conditionKey) {
   });
 }
 
-// Show error message helper
 function showError(msg) {
   const errEl = document.getElementById('error-message');
   errEl.textContent = msg;
   errEl.style.display = 'block';
 }
 
-// Hide error message
 function hideError() {
   const errEl = document.getElementById('error-message');
   errEl.style.display = 'none';
@@ -128,12 +117,12 @@ function submitAgeGender() {
   const gender = genderInput.value.trim();
 
   if (isNaN(age) || age < 4 || age > 17) {
-    showError("Please enter a valid age between 4 and 17.");
+    showError("Oops! Please enter a valid age between 4 and 17.");
     return false;
   }
 
   if (!gender) {
-    showError("Please enter your gender.");
+    showError("Oops! Please enter your gender.");
     return false;
   }
 
@@ -143,7 +132,7 @@ function submitAgeGender() {
   document.getElementById('intro-section').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'block';
 
-  // Load task
+  // Load task condition
   const condKey = getConditionFromUrl();
   initSorting(condKey);
 
@@ -151,10 +140,10 @@ function submitAgeGender() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Setup form submission
   const form = document.getElementById('age-gender-form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     submitAgeGender();
   });
 });
+
