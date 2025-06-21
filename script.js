@@ -64,49 +64,47 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const speakerList = document.getElementById('speaker-list');
   const container = document.getElementById('sorting-container');
-  speakerList.innerHTML = '';
+  const speakerList = document.getElementById('speaker-list');
+  speakerList.innerHTML = '';  // hide/remove old list
   container.innerHTML = '';
 
-  speakers.forEach(initials => {
+  speakers.forEach((initials) => {
     const speakerDiv = createSpeakerDiv(initials);
-    speakerList.appendChild(speakerDiv);
+
+    // Random initial position inside container boundaries
+    const maxX = container.clientWidth - 50; // width of draggable
+    const maxY = container.clientHeight - 35; // height of draggable
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    speakerDiv.style.position = 'absolute';
+    speakerDiv.style.transform = `translate(${x}px, ${y}px)`;
+    speakerDiv.setAttribute('data-x', x);
+    speakerDiv.setAttribute('data-y', y);
+
+    container.appendChild(speakerDiv);
   });
 
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
       interact.modifiers.restrictRect({
-        restriction: 'parent', // restrict drag within immediate parent container
+        restriction: container,
         endOnly: true,
       }),
     ],
     listeners: {
-      start(event) {
-        const target = event.target;
-        // When drag starts, set position absolute so it can move freely within container
-        target.style.position = 'absolute';
-
-        // Reset transform so it doesn't jump
-        target.style.transform = 'translate(0px, 0px)';
-        target.setAttribute('data-x', 0);
-        target.setAttribute('data-y', 0);
-
-        // Append to container to allow free drag inside sorting-container
-        // Only if dragged from speaker-list to sorting-container
-        if (target.parentElement.id === 'speaker-list') {
-          document.getElementById('sorting-container').appendChild(target);
-        }
-      },
       move(event) {
         const target = event.target;
-
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-        target.style.transform = `translate(${x}px, ${y}px)`;
+        // Clamp inside container boundaries
+        x = Math.min(Math.max(0, x), container.clientWidth - target.offsetWidth);
+        y = Math.min(Math.max(0, y), container.clientHeight - target.offsetHeight);
 
+        target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
       }
