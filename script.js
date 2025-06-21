@@ -11,26 +11,6 @@ const conditions = {
 
 let audioPlaying = null;
 
-function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-function checkRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const mainContent = document.getElementById('main-content');
-
-  const isMobile = isMobileDevice();
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-  if (isMobile && isPortrait) {
-    warning.style.display = 'flex';
-    mainContent.style.display = 'none';
-  } else {
-    warning.style.display = 'none';
-    mainContent.style.display = 'block';
-  }
-}
-
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -108,12 +88,6 @@ function initSorting(conditionKey) {
 
   interact('.draggable').draggable({
     inertia: false,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: '#task-wrapper',
-        endOnly: true
-      })
-    ],
     listeners: {
       move(event) {
         const target = event.target;
@@ -167,10 +141,30 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
-
-  checkRotateWarning();
+  updateRotateWarning(); // Call once on load
 });
 
-window.addEventListener('resize', checkRotateWarning);
-window.addEventListener('orientationchange', checkRotateWarning);
+// === NEW ROTATE LOGIC ===
 
+function isMobilePortrait() {
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  return isMobile && isPortrait;
+}
+
+function updateRotateWarning() {
+  const warning = document.getElementById('rotate-warning');
+  const main = document.getElementById('main-content');
+  if (!warning || !main) return;
+
+  if (isMobilePortrait()) {
+    warning.style.display = 'flex';
+    main.style.display = 'none';
+  } else {
+    warning.style.display = 'none';
+    main.style.display = 'block';
+  }
+}
+
+window.addEventListener('resize', updateRotateWarning);
+window.addEventListener('orientationchange', updateRotateWarning);
