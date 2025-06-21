@@ -59,16 +59,16 @@ function createSpeakerDiv(initials, idx) {
   div.appendChild(audio);
 
   // Position in 2-column grid: 0-based
-  const cols = 2;
-  const gapX = 180;
-  const gapY = 130;
-  const row = Math.floor(idx / cols);
-  const col = idx % cols;
-  const x = col * gapX;
-  const y = row * gapY;
-  div.style.transform = `translate(${x}px, ${y}px)`;
-  div.setAttribute('data-x', x);
-  div.setAttribute('data-y', y);
+const cols = speakers.length; // all in one row
+const gapX = 90;  // horizontal spacing
+const gapY = 0;   // single row, no vertical gap
+const row = 0;
+const col = idx;
+const x = col * gapX;
+const y = 0;
+div.style.transform = `translate(${x}px, ${y}px)`;
+div.setAttribute('data-x', x);
+div.setAttribute('data-y', y);
 
   return div;
 }
