@@ -8,20 +8,22 @@
 </head>
 <body>
   <main>
-    <!-- Intro Section: exactly as original, no changes -->
+    <!-- Original intro box centered -->
     <section id="intro-section">
-      <h1>Welcome to the Speaker Sorting Task</h1>
-      <form id="age-gender-form" novalidate>
-        <label for="age">Age (4-17):</label>
-        <input type="number" id="age" name="age" min="4" max="17" required />
-        <label for="gender">Gender:</label>
-        <input type="text" id="gender" name="gender" required />
-        <button type="submit">Start Task</button>
-      </form>
-      <div id="error-message" role="alert" aria-live="assertive"></div>
+      <div class="intro-box">
+        <h1>Welcome to the Speaker Sorting Task</h1>
+        <form id="age-gender-form" novalidate>
+          <label for="age">Age (4-17):</label>
+          <input type="number" id="age" name="age" min="4" max="17" required />
+          <label for="gender">Gender:</label>
+          <input type="text" id="gender" name="gender" required />
+          <button type="submit" class="blue-button">Start Task</button>
+        </form>
+        <div id="error-message" role="alert" aria-live="assertive"></div>
+      </div>
     </section>
 
-    <!-- Sorting Section: hidden initially -->
+    <!-- Sorting Section (hidden initially) -->
     <section id="sorting-section" style="display:none">
       <h2>Instructions</h2>
       <p>
