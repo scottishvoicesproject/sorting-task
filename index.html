@@ -4,13 +4,187 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sorting Task</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/dist/interact.min.js"></script>
+  <style>
+    /* Center intro box exactly as originally was */
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column; /* stack intro and sorting vertically */
+    }
+
+    .intro-box {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 320px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      text-align: left;
+      color: #444;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .blue-button {
+      margin-top: 1.5rem;
+      background-color: #2978f0;
+      color: white;
+      border: none;
+      padding: 0.7rem 0;
+      width: 100%;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+    }
+
+    .blue-button:hover,
+    .blue-button:focus {
+      background-color: #1a5edb;
+      outline: none;
+    }
+
+    #error-message {
+      color: red;
+      font-weight: bold;
+      margin-top: 1rem;
+      display: none;
+      text-align: center;
+    }
+
+    /* Sorting screen styles */
+    #task-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      font-family: Arial, sans-serif;
+      color: #222;
+      height: 520px;           /* Enough height for sorting area */
+      box-sizing: border-box;
+      position: relative;      /* container for absolute dragging */
+    }
+
+    #task-wrapper > div {
+      box-sizing: border-box;
+    }
+
+    /* Left container for speakers */
+    #speaker-list {
+      border: 1px solid #ccc;
+      width: 150px;
+      min-height: 400px;
+      padding: 8px;
+      background: #fafafa;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      height: 500px;
+      position: relative;      /* needed for absolute children */
+      overflow-y: auto;
+    }
+
+    /* Right container with dashed grid */
+    #sorting-container {
+      border: 2px dashed #666;
+      width: 800px;
+      height: 500px;
+      position: relative;
+      z-index: 1;
+      background: white;
+      background-image:
+        linear-gradient(to right, #ddd 1px, transparent 1px),
+        linear-gradient(to bottom, #ddd 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Layer above grid for dragging */
+    #drag-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 500px;
+      pointer-events: none;  /* allow clicks to pass through */
+      z-index: 3000;
+    }
+
+    /* Draggable speaker boxes */
+    .draggable {
+      position: absolute;
+      width: 50px;
+      height: 35px;
+      background-color: #111;
+      color: white;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: grab;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      user-select: none;
+      touch-action: none;
+      margin: 0;
+      pointer-events: auto; /* enable pointer events on draggable */
+      z-index: 3001;
+    }
+
+    .draggable:active {
+      cursor: grabbing;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Button inside each speaker */
+    .speaker-button {
+      width: 100%;
+      height: 100%;
+      background: none;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .speaker-button:focus {
+      outline: 2px solid #2a85ff;
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Intro form page (unchanged) -->
-  <div class="intro-box" id="intro-box">
+  <!-- Intro Page -->
+  <div class="intro-box">
     <h1>Welcome to the Task</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
@@ -24,32 +198,105 @@
     <div id="error-message"></div>
   </div>
 
-  <!-- Sorting screen container (hidden initially, shown after form submit) -->
+  <!-- Sorting Task Page -->
   <div id="task-wrapper" style="display:none;">
-    <!-- Left container for speaker list -->
     <div id="speaker-list"></div>
-
-    <!-- Right container with dashed grid -->
-    <div id="sorting-container"></div>
-
-    <!-- Drag layer for draggable icons -->
-    <div id="drag-layer"></div>
+    <div id="sorting-container">
+      <div id="drag-layer"></div>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   <script>
-    // Example form submit handler that hides intro and shows sorting
-    document.getElementById('age-gender-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Hide intro
-      document.getElementById('intro-box').style.display = 'none';
-      // Show sorting screen
-      document.getElementById('task-wrapper').style.display = 'flex';
+    // Conditions data
+    const conditions = {
+      M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
+      M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
+      M_SSEvsL1: ['US','TK','MB','KN','EQ','MF','GI','TV','QN','FI','DM','RU'],
+      M_SSEvsL2: ['TD','DG','KD','EK','QE','XU','VI','HS','WI','EL','PP','WW'],
+      F_SSEvsP1: ['XL','WN','KY','GQ','YR','VW','RX','BN','KX','BK','MP','PM'],
+      F_SSEvsP2: ['IT','KZ','JS','RN','MW','XN','RF','LM','ZY','DI','PR','HG'],
+      F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
+      F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
+    };
 
-      // Initialize sorting with condition
-      const cond = getConditionFromUrl();
-      initSorting(cond);
-    });
-  </script>
-</body>
-</html>
+    let audioPlaying = null;
+
+    function getConditionFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cond = urlParams.get('cond');
+      if (cond && conditions[cond]) return cond;
+      const keys = Object.keys(conditions);
+      return keys[Math.floor(Math.random() * keys.length)];
+    }
+
+    function setupAudioControl(button, audio) {
+      button.addEventListener('click', () => {
+        if (audioPlaying && audioPlaying !== audio) {
+          audioPlaying.pause();
+          audioPlaying.currentTime = 0;
+        }
+        if (audio.paused) {
+          audio.play();
+          audioPlaying = audio;
+        } else {
+          audio.pause();
+          audioPlaying = null;
+        }
+      });
+    }
+
+    function createSpeakerDiv(initials) {
+      const div = document.createElement('div');
+      div.className = 'draggable';
+      div.dataset.id = initials;
+
+      const audio = document.createElement('audio');
+      audio.src = `audio/${initials}.wav`;
+      audio.preload = 'none';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = initials;
+      btn.className = 'speaker-button';
+
+      setupAudioControl(btn, audio);
+
+      div.appendChild(btn);
+      div.appendChild(audio);
+
+      // reset positioning for list placement
+      div.style.position = 'absolute';
+      div.style.transform = '';
+      div.setAttribute('data-x', 0);
+      div.setAttribute('data-y', 0);
+
+      return div;
+    }
+
+    function initSorting(conditionKey) {
+      const speakers = conditions[conditionKey];
+      const speakerList = document.getElementById('speaker-list');
+      const dragLayer = document.getElementById('drag-layer');
+      
+      // Clear previous content
+      speakerList.innerHTML = '';
+      dragLayer.innerHTML = '';
+
+      const colWidth = 60;   // horizontal space between columns
+      const rowHeight = 40;  // vertical space between rows
+
+      // Position speakers in two vertical columns on left side (#speaker-list)
+      speakers.forEach((initials, index) => {
+        const speakerDiv = createSpeakerDiv(initials);
+
+        const col = index % 2;  // 0 or 1 (two columns)
+        const row = Math.floor(index / 2);
+
+        const x = col * colWidth;
+        const y = row * rowHeight;
+
+        speakerDiv.style.left = `${x}px`;
+        speakerDiv.style.top = `${y}px`;
+
+        speakerDiv.setAttribute('data-x', x
