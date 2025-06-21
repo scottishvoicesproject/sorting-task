@@ -65,30 +65,26 @@ function initSorting(conditionKey) {
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
+
     speakerList.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: true
-      })
-    ],
     listeners: {
+      start (event) {
+        // No moving to drag-layer
+      },
       move(event) {
         const target = event.target;
-        // keep the dragged position in the data-x/data-y attributes
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-        // translate the element
         target.style.transform = `translate(${x}px, ${y}px)`;
-
-        // update the position attributes
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+      },
+      end(event) {
+        // No snap-back
       }
     }
   });
