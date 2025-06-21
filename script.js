@@ -11,7 +11,6 @@ const conditions = {
 
 let audioPlaying = null;
 
-// Get cond from URL or pick random
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -20,7 +19,6 @@ function getConditionFromUrl() {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
-// Create speaker draggable element
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -51,73 +49,48 @@ function createSpeakerDiv(initials) {
   });
 
   div.appendChild(btn);
-
   div.appendChild(audio);
+
+  div.style.left = '20px';
+  div.style.top = '20px';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
+
   return div;
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
+  const taskWrapper = document.getElementById('sorting-container');
 
   // Clear existing draggable divs
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const isSmallScreen = window.innerWidth < 600;
-
-  // Set taskWrapper layout for mobile vs desktop
-  if (isSmallScreen) {
-    taskWrapper.style.display = 'flex';
-    taskWrapper.style.flexDirection = 'column';
-    taskWrapper.style.height = 'auto';
-  } else {
-    taskWrapper.style.display = 'block';
-    taskWrapper.style.height = '400px';
-  }
-
+  // Place speakers in two columns spaced vertically
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
 
-    if (isSmallScreen) {
-      speakerDiv.style.position = 'relative';
-      speakerDiv.style.left = 'auto';
-      speakerDiv.style.top = 'auto';
-      speakerDiv.style.marginBottom = '10px';
-      speakerDiv.style.width = '100%';
-      speakerDiv.style.transform = 'none';
-      speakerDiv.setAttribute('data-x', 0);
-      speakerDiv.setAttribute('data-y', 0);
+    // Position speakers in two columns, vertical spacing 50px
+    if (i % 2 === 0) {
+      speakerDiv.style.left = '20px';
+      speakerDiv.style.top = `${20 + Math.floor(i / 2) * 50}px`;
     } else {
-      speakerDiv.style.position = 'absolute';
-      if (i % 2 === 0) {
-        speakerDiv.style.left = '20px';
-        speakerDiv.style.top = `${20 + Math.floor(i / 2) * 45}px`;
-      } else {
-        speakerDiv.style.left = '90px';
-        speakerDiv.style.top = `${20 + Math.floor(i / 2) * 45}px`;
-      }
-      speakerDiv.style.width = '60px';
-      speakerDiv.style.height = '40px';
-      speakerDiv.style.marginBottom = '0';
-      speakerDiv.style.transform = 'translate(0, 0)';
-      speakerDiv.setAttribute('data-x', 0);
-      speakerDiv.setAttribute('data-y', 0);
+      speakerDiv.style.left = '100px';
+      speakerDiv.style.top = `${20 + Math.floor(i / 2) * 50}px`;
     }
 
     taskWrapper.appendChild(speakerDiv);
   }
 
-  // Enable dragging with interact.js
+  // Initialize interact.js draggable
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
       interact.modifiers.restrictRect({
         restriction: '#sorting-container',
-        endOnly: true
-      })
+        endOnly: true,
+      }),
     ],
     listeners: {
       move(event) {
@@ -128,48 +101,46 @@ function initSorting(conditionKey) {
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
-      }
-    }
+      },
+    },
   });
 }
 
-// Show/hide rotate warning for portrait on sorting page
 function checkRotateWarning() {
   const rotateWarning = document.getElementById('rotate-warning');
-  // Show only if sorting section is visible and in portrait mode
-  const sortingSectionVisible = document.getElementById('sorting-section').style.display !== 'none';
-  if (sortingSectionVisible && window.matchMedia("(orientation: portrait)").matches) {
+  const sortingSection = document.getElementById('sorting-section');
+  if (
+    sortingSection.style.display !== 'none' &&
+    window.matchMedia('(orientation: portrait)').matches
+  ) {
     rotateWarning.style.display = 'flex';
   } else {
     rotateWarning.style.display = 'none';
   }
 }
 
-// On window resize/orientation change check rotate warning and re-init sorting layout
 window.addEventListener('resize', () => {
   checkRotateWarning();
-  if (document.getElementById('sorting-section').style.display !== 'none') {
-    initSorting(currentCondition);
-  }
 });
 
-window.addEventListener('orientationchange', checkRotateWarning);
+window.addEventListener('orientationchange', () => {
+  checkRotateWarning();
+});
 
 let currentCondition = getConditionFromUrl();
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Hide rotate warning initially
   checkRotateWarning();
 
   const form = document.getElementById('age-gender-form');
   const introBox = document.getElementById('intro-box');
   const sortingSection = document.getElementById('sorting-section');
   const errorMessage = document.getElementById('error-message');
+  const instructions = document.getElementById('instructions');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Validate age and gender
     const age = parseInt(form.age.value);
     const gender = form.gender.value;
 
@@ -187,18 +158,15 @@ window.addEventListener('DOMContentLoaded', () => {
     introBox.style.display = 'none';
     sortingSection.style.display = 'block';
 
-    // Show instructions for desktop only
-    const instructions = document.getElementById('instructions');
+    // Show instructions only on wide screens
     if (window.innerWidth > 768) {
       instructions.style.display = 'block';
     } else {
       instructions.style.display = 'none';
     }
 
-    // Initialize sorting draggable speakers
     initSorting(currentCondition);
 
-    // Check rotate warning on start
     checkRotateWarning();
   });
 });
