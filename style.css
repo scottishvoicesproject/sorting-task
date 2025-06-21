@@ -167,3 +167,75 @@ input[type="text"] {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
+
+/* Center intro box exactly as originally was */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-box {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 320px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  text-align: left;
+  color: #444;
+}
+
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.blue-button {
+  margin-top: 1.5rem;
+  background-color: #2978f0;
+  color: white;
+  border: none;
+  padding: 0.7rem 0;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
+
+.blue-button:hover,
+.blue-button:focus {
+  background-color: #1a5edb;
+  outline: none;
+}
+
+#error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+  display: none;
+  text-align: center;
+}
