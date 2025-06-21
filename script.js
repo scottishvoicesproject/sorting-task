@@ -23,38 +23,15 @@ function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
   div.dataset.id = initials;
-  div.style.position = 'relative'; // important for dragging inside container
-  div.style.width = '50px';
-  div.style.height = '35px';
-  div.style.margin = '5px auto';
-  div.style.borderRadius = '6px';
-  div.style.backgroundColor = '#111';
-  div.style.color = 'white';
-  div.style.display = 'flex';
-  div.style.justifyContent = 'center';
-  div.style.alignItems = 'center';
-  div.style.fontWeight = '700';
-  div.style.fontSize = '1rem';
-  div.style.cursor = 'grab';
-  div.style.userSelect = 'none';
 
-  // Audio element
   const audio = document.createElement('audio');
   audio.src = `audio/${initials}.wav`;
   audio.preload = 'none';
 
-  // Button to play audio
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.textContent = initials;
   btn.className = 'speaker-button';
-  btn.style.all = 'unset'; // remove default button styles
-  btn.style.width = '100%';
-  btn.style.height = '100%';
-  btn.style.textAlign = 'center';
-  btn.style.color = 'white';
-  btn.style.fontWeight = '700';
-  btn.style.cursor = 'pointer';
 
   btn.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
@@ -72,46 +49,37 @@ function createSpeakerDiv(initials) {
 
   div.appendChild(btn);
   div.appendChild(audio);
-
-  // Set initial data-x/y for interactjs dragging
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
-
   return div;
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const speakerList = document.getElementById('speaker-list');
-  const dragLayer = document.getElementById('drag-layer');
   const sortingContainer = document.getElementById('sorting-container');
 
-  // Clear containers
   speakerList.innerHTML = '';
-  dragLayer.innerHTML = '';
   sortingContainer.innerHTML = '';
 
-  // Put all icons in speakerList initially (vertical column)
-  speakers.forEach(initials => {
+  for (let i = 0; i < speakers.length; i++) {
+    const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
+    const row = Math.floor(i / 2);
+    const col = i % 2;
+    speakerDiv.style.position = 'absolute';
+    speakerDiv.style.left = `${col * 60}px`;
+    speakerDiv.style.top = `${row * 50}px`;
     speakerList.appendChild(speakerDiv);
-  });
+  }
 
-  // Make all .draggable inside speakerList and dragLayer draggable
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: true
-      })
-    ],
     listeners: {
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
@@ -148,18 +116,15 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
-  // Hide intro, show instructions and sorting section
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
 
-  // Initialize sorting grid with chosen condition
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Hide error and instructions on page load
   hideError();
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
