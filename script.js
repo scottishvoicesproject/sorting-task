@@ -54,8 +54,9 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  div.style.position = ''; // no forced position here
-  div.style.transform = ''; // allow transform updates
+  // reset positioning for list placement
+  div.style.position = 'absolute';
+  div.style.transform = '';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
 
@@ -66,44 +67,43 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
-  speakerList.innerHTML = '';  // hide/remove old list
+  
+  // Clear previous
+  speakerList.innerHTML = '';
   container.innerHTML = '';
 
-  speakers.forEach((initials) => {
+  const colWidth = 60;   // horizontal space between columns
+  const rowHeight = 40;  // vertical space between rows
+
+  // Position speakers in two vertical columns on left side (#speaker-list)
+  speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
-    // Random initial position inside container boundaries
-    const maxX = container.clientWidth - 50; // width of draggable
-    const maxY = container.clientHeight - 35; // height of draggable
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const col = index % 2;  // 0 or 1 (two columns)
+    const row = Math.floor(index / 2);
 
-    speakerDiv.style.position = 'absolute';
-    speakerDiv.style.transform = `translate(${x}px, ${y}px)`;
+    const x = col * colWidth;
+    const y = row * rowHeight;
+
+    speakerDiv.style.left = `${x}px`;
+    speakerDiv.style.top = `${y}px`;
+
     speakerDiv.setAttribute('data-x', x);
     speakerDiv.setAttribute('data-y', y);
 
-    container.appendChild(speakerDiv);
+    speakerList.appendChild(speakerDiv);
   });
 
+  // Enable dragging on all .draggable elements, free movement anywhere on page
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: container,
-        endOnly: true,
-      }),
-    ],
     listeners: {
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-        // Clamp inside container boundaries
-        x = Math.min(Math.max(0, x), container.clientWidth - target.offsetWidth);
-        y = Math.min(Math.max(0, y), container.clientHeight - target.offsetHeight);
-
+        // No clamping - free movement anywhere
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
