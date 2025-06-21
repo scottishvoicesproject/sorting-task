@@ -34,19 +34,14 @@
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-#sorting-container {
-  border: 2px dashed #666;
-  width: 800px;
-  height: 500px;
-  position: relative;
-  background: white;
-
-  /* Add grid lines */
-  background-image:
-    linear-gradient(to right, #ddd 1px, transparent 1px),
-    linear-gradient(to bottom, #ddd 1px, transparent 1px);
-  background-size: 40px 40px; /* grid cell size */
-}
+<section id="sorting-section" style="display:none">
+  <h2>Instructions</h2>
+  <p>...</p>
+  <div id="task-wrapper" style="display:flex; gap: 20px;">
+    <div id="speaker-list" aria-label="Speakers to drag" tabindex="0"></div>
+    <div id="sorting-container" aria-label="Speaker sorting grid" tabindex="0"></div>
+  </div>
+</section>
 
   <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
   <script src="script.js"></script>
