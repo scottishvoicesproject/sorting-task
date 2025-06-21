@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intro Page with Sorting</title>
+  <title>Scottish Voices Project - Sorting Task</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
   <div class="intro-box" id="intro-box">
-    <h1>Welcome!</h1>
+    <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="1" max="120" />
@@ -27,16 +27,25 @@
     </form>
   </div>
 
-  <!-- Instructions above the sorting task -->
-  <div id="instructions" style="max-width: 600px; margin: 20px auto; font-size: 0.95rem; color: #222; display:none;">
-    These 12 icons have the initials of 12 speakers who all are saying the same sentence. Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak. Place the blocks close to each other if you think they belong to one group and further apart if they sound different. The distance between different groups does not matter. You can listen to the speakers as often as you want to, and you can build as few or as many groupings as you like.
-  </div>
+  <section id="sorting-section" style="display:none;">
+    <div class="instructions">
+      <p>
+        These 12 icons have the initials of 12 speakers who all are saying the same sentence.
+        Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+        and move the rectangles onto the grid to group them together by how similar they sound.
+        Place the blocks close if they belong to one group and further apart if they sound different.
+        The distance between different groups does not matter.
+        You can listen as often as you want and create as few or as many groups as you like.
+      </p>
+    </div>
 
-  <section id="sorting-section" style="display:none; flex-direction: column; align-items: center;">
-    <div id="task-wrapper" style="display: flex; gap: 20px; max-width: 800px; width: 100%;">
-      <div id="speaker-list" aria-label="List of speakers" style="position: relative; width: 130px; min-height: 400px; border: 1px solid #ccc; background: #fafafa; border-radius: 8px; padding: 10px;"></div>
-      <div id="sorting-container" aria-label="Sorting area" style="border: 2px dashed #666; width: 600px; height: 400px; position: relative; border-radius: 8px;"></div>
-      <div id="drag-layer" style="position: relative; width: 190px; min-height: 400px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; padding: 10px;"></div>
+    <div id="task-wrapper">
+      <div id="speaker-list" aria-label="List of speakers">
+        <!-- Icons go here in two vertical columns, fixed order -->
+      </div>
+      <div id="sorting-container" aria-label="Sorting grid">
+        <!-- The grid with lines -->
+      </div>
     </div>
   </section>
 
