@@ -56,7 +56,7 @@ function loadCondition() {
     return;
   }
 
-  // Clear any previous speakers
+  // Clear previous speakers
   speakerContainer.innerHTML = '';
 
   speakers.forEach(initials => {
@@ -79,7 +79,6 @@ function loadCondition() {
         currentlyPlayingDiv = div;
         div.classList.add('playing');
 
-        // When audio ends, remove playing style and reset
         currentAudio.onended = () => {
           div.classList.remove('playing');
           currentAudio = null;
@@ -129,7 +128,7 @@ function setupDrag() {
   });
 }
 
-// 🔄 Submit button (placeholder for now)
+// 🔄 Submit button (placeholder)
 document.getElementById('submit-btn').addEventListener('click', () => {
   alert(`Thanks for participating! (Condition: ${condition})`);
 });
