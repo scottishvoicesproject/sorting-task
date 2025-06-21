@@ -57,114 +57,53 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
-  const sortingContainer = document.getElementById('sorting-container');
 
+  // Clear existing speakers
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
-  sortingContainer.innerHTML = '';
 
-  const colLeft = 20;
-  const colRight = 90;
-  const rowHeight = 45;
-  let rowLeft = 0;
-  let rowRight = 0;
+  const isSmallScreen = window.innerWidth < 600;
+
+  // On small screens, use flex column layout, otherwise absolute positioning
+  if (isSmallScreen) {
+    taskWrapper.style.display = 'flex';
+    taskWrapper.style.flexDirection = 'column';
+    taskWrapper.style.height = 'auto';
+  } else {
+    taskWrapper.style.display = 'block';
+    taskWrapper.style.height = '400px';
+  }
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-    speakerDiv.style.position = 'absolute';
 
-    if (i % 2 === 0) {
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
-      rowLeft++;
+    if (isSmallScreen) {
+      speakerDiv.style.position = 'relative';
+      speakerDiv.style.left = 'auto';
+      speakerDiv.style.top = 'auto';
+      speakerDiv.style.marginBottom = '10px';
+      speakerDiv.style.width = '100%';
+      speakerDiv.style.transform = 'none';
+      speakerDiv.setAttribute('data-x', 0);
+      speakerDiv.setAttribute('data-y', 0);
     } else {
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
-      rowRight++;
+      speakerDiv.style.position = 'absolute';
+      if (i % 2 === 0) {
+        speakerDiv.style.left = '20px';
+        speakerDiv.style.top = `${20 + Math.floor(i / 2) * 45}px`;
+      } else {
+        speakerDiv.style.left = '90px';
+        speakerDiv.style.top = `${20 + Math.floor(i / 2) * 45}px`;
+      }
+      speakerDiv.style.width = '60px';
+      speakerDiv.style.height = '40px';
+      speakerDiv.style.marginBottom = '0';
+      speakerDiv.style.transform = 'translate(0, 0)';
+      speakerDiv.setAttribute('data-x', 0);
+      speakerDiv.setAttribute('data-y', 0);
     }
 
     taskWrapper.appendChild(speakerDiv);
   }
 
-  interact('.draggable').draggable({
-    inertia: false,
-    listeners: {
-      move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      }
-    }
-  });
-}
-
-function showError(msg) {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = msg;
-  errEl.style.display = 'block';
-}
-
-function hideError() {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = '';
-  errEl.style.display = 'none';
-}
-
-document.getElementById('age-gender-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  hideError();
-
-  const age = document.getElementById('age').value.trim();
-  const gender = document.getElementById('gender').value;
-
-  if (!age || age < 1 || age > 120) {
-    showError('Please enter a valid age between 1 and 120.');
-    return;
-  }
-  if (!gender) {
-    showError('Please select a gender.');
-    return;
-  }
-
-  document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('instructions').style.display = 'block';
-  document.getElementById('sorting-section').style.display = 'flex';
-
-  const cond = getConditionFromUrl();
-  initSorting(cond);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  hideError();
-  const instructions = document.getElementById('instructions');
-  if (instructions) instructions.style.display = 'none';
-  updateRotateWarning(); // Call once on load
-});
-
-// === NEW ROTATE LOGIC ===
-
-function isMobilePortrait() {
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  return isMobile && isPortrait;
-}
-
-function updateRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const main = document.getElementById('main-content');
-  if (!warning || !main) return;
-
-  if (isMobilePortrait()) {
-    warning.style.display = 'flex';
-    main.style.display = 'none';
-  } else {
-    warning.style.display = 'none';
-    main.style.display = 'block';
-  }
-}
-
-window.addEventListener('resize', updateRotateWarning);
-window.addEventListener('orientationchange', updateRotateWarning);
+  interact('.draggable').draggable
