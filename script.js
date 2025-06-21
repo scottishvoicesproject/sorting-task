@@ -43,50 +43,29 @@ function createSpeakerDiv(initials) {
       audioPlaying = audio;
     } else {
       audio.pause();
+      audio.currentTime = 0;
       audioPlaying = null;
     }
   });
 
   div.appendChild(btn);
   div.appendChild(audio);
-  div.setAttribute('data-x', 0);
-  div.setAttribute('data-y', 0);
+
   return div;
 }
 
-function initSorting(conditionKey) {
-  const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
-
-  // Remove old draggable items
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
-
-  // Setup initial positions
-  const colLeft = 20;
-  const colRight = 90;
-  const rowHeight = 45;
-  let rowLeft = 0;
-  let rowRight = 0;
-
-  for (let i = 0; i < speakers.length; i++) {
-    const initials = speakers[i];
+function loadSpeakers() {
+  const cond = getConditionFromUrl();
+  const speakerList = document.getElementById('speaker-list');
+  speakerList.innerHTML = '';
+  conditions[cond].forEach(initials => {
     const speakerDiv = createSpeakerDiv(initials);
-    speakerDiv.style.position = 'absolute';
+    speakerList.appendChild(speakerDiv);
+  });
+}
 
-    if (i % 2 === 0) {
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
-      rowLeft++;
-    } else {
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
-      rowRight++;
-    }
-
-    taskWrapper.appendChild(speakerDiv);
-  }
-
-  // Enable dragging with interact.js
+// Initialize draggable with interactjs
+function initDraggables() {
   interact('.draggable').draggable({
     inertia: false,
     listeners: {
@@ -102,73 +81,61 @@ function initSorting(conditionKey) {
   });
 }
 
-function showError(msg) {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = msg;
-  errEl.style.display = 'block';
+function showRotateWarning(show) {
+  const warning = document.getElementById('rotate-warning');
+  if (show) {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
 }
 
-function hideError() {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = '';
-  errEl.style.display = 'none';
+// Check orientation and show warning on mobile
+function checkOrientation() {
+  if (window.innerWidth < 600) {
+    if (window.innerHeight > window.innerWidth) {
+      showRotateWarning(true);
+    } else {
+      showRotateWarning(false);
+    }
+  } else {
+    showRotateWarning(false);
+  }
 }
 
-document.getElementById('age-gender-form').addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent page reload
-
-  hideError();
+// Form validation and task start
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
 
   const age = document.getElementById('age').value.trim();
   const gender = document.getElementById('gender').value;
 
-  if (!age || age < 1 || age > 120) {
-    showError('Please enter a valid age between 1 and 120.');
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.textContent = '';
+
+  if (!age || isNaN(age) || age < 1 || age > 120) {
+    errorMessage.textContent = 'Please enter a valid age between 1 and 120.';
     return;
   }
+
   if (!gender) {
-    showError('Please select a gender.');
+    errorMessage.textContent = 'Please select your gender.';
     return;
   }
 
-  // Hide intro box and show sorting section and instructions
+  // Hide intro box and show sorting section & instructions
   document.getElementById('intro-box').style.display = 'none';
+  document.getElementById('sorting-section').style.display = 'block';
   document.getElementById('instructions').style.display = 'block';
-  document.getElementById('sorting-section').style.display = 'flex';
 
-  // Get condition and init sorting task
-  const cond = getConditionFromUrl();
-  initSorting(cond);
+  loadSpeakers();
+  initDraggables();
+
+  // Enable pointer events on sorting container so dragging works
+  document.getElementById('sorting-container').style.pointerEvents = 'auto';
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  hideError();
-  const instructions = document.getElementById('instructions');
-  if (instructions) instructions.style.display = 'none';
-  updateRotateWarning();
-});
-
-// === ROTATE WARNING LOGIC ===
-function isMobilePortrait() {
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  return isMobile && isPortrait;
-}
-
-function updateRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const main = document.getElementById('main-content');
-  if (!warning || !main) return;
-
-  if (isMobilePortrait()) {
-    warning.style.display = 'flex';
-    main.style.display = 'none';
-  } else {
-    warning.style.display = 'none';
-    main.style.display = 'block';
-  }
-}
-
-window.addEventListener('resize', updateRotateWarning);
-window.addEventListener('orientationchange', updateRotateWarning);
+// Run orientation check on load and on resize
+window.addEventListener('load', checkOrientation);
+window.addEventListener('resize', checkOrientation);
 
