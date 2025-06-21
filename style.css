@@ -89,30 +89,26 @@ select {
   gap: 40px;
   flex-wrap: nowrap;
   align-items: flex-start;
-  position: relative; /* create stacking context */
-  z-index: 1;
 }
 
 /* Speaker list on the left */
 #speaker-list {
-  position: relative; /* so absolute positioning works if needed */
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 60px 60px;
   gap: 10px;
   padding: 10px;
   background: #ffffff;
   border: 1px solid #ccc;
   border-radius: 10px;
-  height: 400px;
-  width: 140px; /* width enough for 2 columns of 60px + gap */
+  height: 500px;
   overflow-y: auto;
 }
 
 /* Sorting grid in the center */
 #sorting-container {
   position: relative;
-  width: 800px;    /* wider */
-  height: 400px;   /* less tall */
+  width: 600px;
+  height: 500px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -121,12 +117,11 @@ select {
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
   overflow: hidden;
-  z-index: 0; /* grid behind icons */
 }
 
 /* Draggable icon */
 .draggable {
-  position: relative;
+  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -139,7 +134,7 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 1000; /* icons on top */
+  z-index: 2;
 }
 
 /* Speaker button inside draggable */
