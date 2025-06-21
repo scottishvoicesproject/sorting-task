@@ -111,7 +111,8 @@ input[type="text"] {
   border: 2px dashed #666;
   width: 800px;
   height: 500px;
-  position: relative;
+  position: relative; /* keep this */
+  z-index: 1;         /* make sure it is below draggable */
   background: white;
 
   /* Grid lines */
@@ -139,7 +140,7 @@ input[type="text"] {
   user-select: none;
   touch-action: none;
   margin: 0;
-  z-index: 10;
+  z-index: 1000;       /* keep this high */
 }
 
 .draggable:active {
@@ -164,12 +165,3 @@ input[type="text"] {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
-#sorting-container {
-  position: relative; /* keep this */
-  z-index: 1;         /* add this, make sure it is below draggable */
-}
-
-.draggable {
-  z-index: 1000;      /* increase so it's above the grid */
-}
-
