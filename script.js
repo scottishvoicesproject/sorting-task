@@ -65,18 +65,31 @@ function initSorting(conditionKey) {
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-
-    // REMOVE these two lines to let flexbox handle positioning:
-    //speakerDiv.style.position = 'absolute';
-    //speakerDiv.style.left = `${col * 60}px`;
-    //speakerDiv.style.top = `${row * 50}px`;
-
     speakerList.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
     inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: '#sorting-container',
+        endOnly: true
+      })
+    ],
     listeners: {
+      start(event) {
+        // No drag-layer stuff needed; just keep normal flow
+        event.target.style.position = 'absolute';
+        const rect = event.target.getBoundingClientRect();
+        event.target.style.left = `${rect.left}px`;
+        event.target.style.top = `${rect.top}px`;
+        event.target.style.zIndex = '1000';
+        event.target.style.transform = 'none';
+        event.target.setAttribute('data-x', 0);
+        event.target.setAttribute('data-y', 0);
+        // Append directly to sorting container so it stays inside
+        document.getElementById('sorting-container').appendChild(event.target);
+      },
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -84,6 +97,27 @@ function initSorting(conditionKey) {
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+      },
+      end(event) {
+        // Keep the icon where dropped (no snapping)
+        // Just update the style so transform is applied as absolute left/top
+
+        const target = event.target;
+        const x = parseFloat(target.getAttribute('data-x')) || 0;
+        const y = parseFloat(target.getAttribute('data-y')) || 0;
+
+        // Calculate final absolute position based on current left/top + transform
+        const currentLeft = parseFloat(target.style.left) || 0;
+        const currentTop = parseFloat(target.style.top) || 0;
+        const finalLeft = currentLeft + x;
+        const finalTop = currentTop + y;
+
+        target.style.left = `${finalLeft}px`;
+        target.style.top = `${finalTop}px`;
+        target.style.transform = 'none';
+        target.setAttribute('data-x', 0);
+        target.setAttribute('data-y', 0);
+        target.style.zIndex = 'auto'; // reset z-index
       }
     }
   });
