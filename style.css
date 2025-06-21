@@ -1,5 +1,3 @@
-/* style.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 * {
@@ -107,26 +105,26 @@ button[type="submit"]:hover {
   margin-bottom: 14px;
 }
 
-/* Sorting container: grid background */
+/* Sorting container: horizontal grid background */
 #sorting-container {
   position: relative;
   margin-top: 12px;
-  height: 320px;
+  height: 80px;
   background:
     linear-gradient(to right, #ccc 1px, transparent 1px),
     linear-gradient(to bottom, #ccc 1px, transparent 1px);
-  background-size: 60px 60px;
+  background-size: 40px 40px;
   border: 2px solid #888;
   border-radius: 6px;
   overflow: hidden;
   outline: none;
 }
 
-/* Speaker rectangles */
+/* Smaller draggable speaker rectangles */
 .draggable {
   position: absolute;
-  width: 150px;
-  height: 100px;
+  width: 70px;
+  height: 50px;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -148,7 +146,7 @@ button[type="submit"]:hover {
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 2.8rem;
+  font-size: 1.4rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -166,3 +164,4 @@ button[type="submit"]:hover {
   outline: 2px solid #2a85ff;
   outline-offset: 2px;
 }
+
