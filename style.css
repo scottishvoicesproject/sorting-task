@@ -140,7 +140,7 @@ input[type="text"] {
   user-select: none;
   touch-action: none;
   margin: 0;
-  z-index: 1000;       /* keep this high */
+  z-index: 2000;       /* keep this high */
 }
 
 .draggable:active {
