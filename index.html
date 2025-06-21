@@ -1,186 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Speaker Sorting Task</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <section id="intro-section">
+      <h1>Welcome to the Speaker Sorting Task</h1>
+      <form id="age-gender-form" novalidate>
+        <label for="age">Age (4-17):</label>
+        <input type="number" id="age" name="age" min="4" max="17" required />
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" name="gender" required />
+        <button type="submit">Start Task</button>
+      </form>
+      <div id="error-message" role="alert" aria-live="assertive"></div>
+    </section>
 
-* {
-  box-sizing: border-box;
-}
+    <section id="sorting-section" style="display:none">
+      <h2>Instructions</h2>
+      <p>
+        On the next slide, you will see a grid and 12 black rectangles with the initials of 12 speakers who all are saying the same sentence. Once you click on a rectangle you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak. You can listen to the speakers as often as you want to, and you can build as few or as many groupings as you like. Below is just an example of what your groupings could look like.
+      </p>
+      <div id="sorting-container" aria-label="Speaker sorting grid" tabindex="0"></div>
+    </section>
+  </main>
 
-body, html {
-  height: 100%;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f0f2f5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  user-select: none;
-  overflow: hidden;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
 
-main {
-  width: 100vw;
-  height: 100vh;
-  padding: 16px 24px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  overflow: hidden;
-}
 
-#intro-section {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-h1, h2 {
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 16px;
-  color: #222;
-  text-align: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-input[type="number"],
-input[type="text"] {
-  padding: 8px 10px;
-  font-size: 1rem;
-  border: 1.8px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.2s;
-}
-
-input[type="number"]:focus,
-input[type="text"]:focus {
-  outline: none;
-  border-color: #2a85ff;
-  box-shadow: 0 0 6px #2a85ffaa;
-}
-
-button[type="submit"] {
-  margin-top: 12px;
-  background-color: #2a85ff;
-  border: none;
-  padding: 10px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: background-color 0.2s;
-}
-
-button[type="submit"]:hover {
-  background-color: #1a5ecc;
-}
-
-/* Error message styling with shake animation */
-#error-message {
-  margin-top: 10px;
-  color: #d93025;
-  border: 2px solid #d93025;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: 600;
-  display: none;
-  animation: shake 0.3s ease;
-  text-align: center;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-}
-
-/* Sorting section instructions */
-#sorting-section p {
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.4;
-  margin-bottom: 14px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* The sorting grid container fills most viewport height */
-#sorting-container {
-  position: relative;
-  margin: 0 auto;
-  flex-grow: 1;
-  width: 100%;
-  max-width: 1200px;
-  border: 2px solid #888;
-  border-radius: 8px;
-  background:
-    linear-gradient(to right, #ccc 1px, transparent 1px),
-    linear-gradient(to bottom, #ccc 1px, transparent 1px);
-  background-size: 40px 40px;
-  overflow: hidden;
-  touch-action: none;
-  /* We'll set height to fill remaining space */
-  height: calc(100vh - 280px); /* adjust based on instructions and padding */
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Smaller draggable speaker rectangles */
-.draggable {
-  position: absolute;
-  width: 70px;
-  height: 50px;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  border-radius: 6px;
-  box-shadow: 0 3px 8px rgb(0 0 0 / 0.15);
-  transition: box-shadow 0.2s;
-  background-color: transparent;
-}
-
-.draggable:active {
-  cursor: grabbing;
-  box-shadow: 0 8px 15px rgb(0 0 0 / 0.25);
-}
-
-/* Speaker button styles */
-.speaker-button {
-  width: 100%;
-  height: 100%;
-  background-color: #111;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.4rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  transition: background-color 0.2s;
-}
-
-.speaker-button:hover {
-  background-color: #333;
-  outline: none;
-}
-
-.speaker-button:focus {
-  outline: 2px solid #2a85ff;
-  outline-offset: 2px;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
