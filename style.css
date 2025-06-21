@@ -6,7 +6,7 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling */
+/* Intro box styling - restored compact look */
 .intro-box {
   width: 360px;
   margin: 100px auto;
@@ -89,13 +89,37 @@ select {
   gap: 40px;
   flex-wrap: nowrap;
   align-items: flex-start;
+}
+
+#task-wrapper {
   position: relative; /* create stacking context */
   z-index: 1;
 }
 
+.draggable {
+  position: relative; /* keep relative */
+  z-index: 10;        /* ensure draggable icons appear on top */
+}
+
+#sorting-container {
+  position: relative; /* ensure it has a stacking context */
+  z-index: 0;         /* below draggable icons */
+}
+
+#drag-layer {
+  position: absolute; /* layer above everything when visible */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* so it doesn't block clicks when hidden */
+  z-index: 1000;        /* very top */
+  display: none;        /* hidden by default */
+}
+
 /* Speaker list on the left */
 #speaker-list {
-  position: relative;
+  position: relative; /* so absolute positioning works if needed */
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -104,15 +128,15 @@ select {
   border: 1px solid #ccc;
   border-radius: 10px;
   height: 400px;
-  width: 140px;
+  width: 140px; /* width enough for 2 columns of 60px + gap */
   overflow-y: auto;
 }
 
 /* Sorting grid in the center */
 #sorting-container {
-  position: relative; /* IMPORTANT for absolute children */
-  width: 800px;
-  height: 400px;
+  position: relative;
+  width: 800px;    /* wider */
+  height: 400px;   /* less tall */
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -125,7 +149,7 @@ select {
 
 /* Draggable icon */
 .draggable {
-  position: absolute; /* absolute inside sorting container */
+  position: relative; /* changed from absolute */
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -152,4 +176,7 @@ select {
   cursor: pointer;
 }
 
-
+/* Hide unused container */
+#drag-layer {
+  display: none;
+}
