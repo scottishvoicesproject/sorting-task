@@ -63,9 +63,9 @@ function initSorting(conditionKey) {
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
 
-  const colLeft = 20;
-  const colRight = 90;
-  const rowHeight = 45;
+  const colLeft = 20;   // X position for left column
+  const colRight = 90;  // X position for right column
+  const rowHeight = 45; // Y space between items
   let rowLeft = 0;
   let rowRight = 0;
 
@@ -75,10 +75,12 @@ function initSorting(conditionKey) {
     speakerDiv.style.position = 'absolute';
 
     if (i % 2 === 0) {
+      // Left column
       speakerDiv.style.left = `${colLeft}px`;
       speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
+      // Right column
       speakerDiv.style.left = `${colRight}px`;
       speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
       rowRight++;
@@ -88,42 +90,21 @@ function initSorting(conditionKey) {
   }
 
   interact('.draggable').draggable({
-    inertia: false, // disable inertia
-
+    inertia: false,  // Disable inertia for immediate follow of finger/mouse
     modifiers: [
       interact.modifiers.restrict({
         restriction: 'parent',
-        endOnly: true,
+        endOnly: true
       })
     ],
-
     listeners: {
       move(event) {
         const target = event.target;
-
-        // Adjust position so that the dragged element centers under the pointer,
-        // this fixes the "drag behind finger" hesitation:
-        // We get the current pointer position relative to the parent container,
-        // then subtract half the width and height of the target element.
-
-        const parentRect = target.parentElement.getBoundingClientRect();
-        let pointerX = event.clientX - parentRect.left;
-        let pointerY = event.clientY - parentRect.top;
-
-        // Calculate new x,y so center of div is under pointer
-        const newX = pointerX - target.offsetWidth / 2;
-        const newY = pointerY - target.offsetHeight / 2;
-
-        // Restrict within parent bounds:
-        const maxX = target.parentElement.clientWidth - target.offsetWidth;
-        const maxY = target.parentElement.clientHeight - target.offsetHeight;
-
-        const clampedX = Math.min(Math.max(newX, 0), maxX);
-        const clampedY = Math.min(Math.max(newY, 0), maxY);
-
-        target.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
-        target.setAttribute('data-x', clampedX);
-        target.setAttribute('data-y', clampedY);
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
       }
     }
   });
@@ -141,6 +122,7 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
+// Form submit handler
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -170,4 +152,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
 });
+
+// === ROTATE WARNING LOGIC ===
+
+function checkRotateWarning() {
+  const warning = document.getElementById('rotate-warning');
+  const mainContent = document.getElementById('main-content');
+
+  // Detect if mobile device (screen width <= 768px)
+  const isMobile = window.innerWidth <= 768;
+
+  // Detect if portrait mode
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+  if (isMobile && isPortrait) {
+    // Show warning and hide main content
+    warning.style.display = 'flex';
+    mainContent.style.display = 'none';
+  } else {
+    // Hide warning and show main content
+    warning.style.display = 'none';
+    mainContent.style.display = 'block';
+  }
+}
+
+// Run on page load
+window.addEventListener('load', checkRotateWarning);
+
+// Run on resize and orientation change
+window.addEventListener('resize', checkRotateWarning);
+window.addEventListener('orientationchange', checkRotateWarning);
 
