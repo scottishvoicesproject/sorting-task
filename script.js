@@ -56,38 +56,26 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
+  const speakerList = document.getElementById('speaker-list');
   const sortingContainer = document.getElementById('sorting-container');
 
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
+  speakerList.innerHTML = '';
   sortingContainer.innerHTML = '';
-
-  const colLeft = 20;
-  const colRight = 90;
-  const rowHeight = 45;
-  let rowLeft = 0;
-  let rowRight = 0;
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-    speakerDiv.style.position = 'absolute';
 
-    if (i % 2 === 0) {
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
-      rowLeft++;
-    } else {
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
-      rowRight++;
-    }
+    // REMOVE these two lines to let flexbox handle positioning:
+    //speakerDiv.style.position = 'absolute';
+    //speakerDiv.style.left = `${col * 60}px`;
+    //speakerDiv.style.top = `${row * 50}px`;
 
-    taskWrapper.appendChild(speakerDiv);
+    speakerList.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
-    inertia: false,
+    inertia: true,
     listeners: {
       move(event) {
         const target = event.target;
@@ -141,30 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
-  updateRotateWarning(); // Call once on load
 });
-
-// === NEW ROTATE LOGIC ===
-
-function isMobilePortrait() {
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  return isMobile && isPortrait;
-}
-
-function updateRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const main = document.getElementById('main-content');
-  if (!warning || !main) return;
-
-  if (isMobilePortrait()) {
-    warning.style.display = 'flex';
-    main.style.display = 'none';
-  } else {
-    warning.style.display = 'none';
-    main.style.display = 'block';
-  }
-}
-
-window.addEventListener('resize', updateRotateWarning);
-window.addEventListener('orientationchange', updateRotateWarning);
