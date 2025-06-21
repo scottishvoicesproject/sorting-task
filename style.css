@@ -136,7 +136,7 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 2;
+  z-index: 10;
 }
 
 /* Speaker button inside draggable */
