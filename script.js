@@ -57,11 +57,11 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
+  const sortingContainer = document.getElementById('sorting-container');
 
-  // Remove old draggable items
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
+  sortingContainer.innerHTML = '';
 
-  // Setup initial positions
   const colLeft = 20;
   const colRight = 90;
   const rowHeight = 45;
@@ -86,7 +86,6 @@ function initSorting(conditionKey) {
     taskWrapper.appendChild(speakerDiv);
   }
 
-  // Enable dragging with interact.js
   interact('.draggable').draggable({
     inertia: false,
     listeners: {
@@ -114,9 +113,8 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-document.getElementById('age-gender-form').addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent page reload
-
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
   hideError();
 
   const age = document.getElementById('age').value.trim();
@@ -131,12 +129,10 @@ document.getElementById('age-gender-form').addEventListener('submit', (event) =>
     return;
   }
 
-  // Hide intro box and show sorting section and instructions
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
 
-  // Get condition and init sorting task
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
@@ -145,10 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   const instructions = document.getElementById('instructions');
   if (instructions) instructions.style.display = 'none';
-  updateRotateWarning();
+  updateRotateWarning(); // Call once on load
 });
 
-// === ROTATE WARNING LOGIC ===
+// === NEW ROTATE LOGIC ===
+
 function isMobilePortrait() {
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
