@@ -65,110 +65,50 @@ function initSorting(conditionKey) {
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-
-    // REMOVE these two lines to let flexbox handle positioning:
-    //speakerDiv.style.position = 'absolute';
-    //speakerDiv.style.left = `${col * 60}px`;
-    //speakerDiv.style.top = `${row * 50}px`;
-
     speakerList.appendChild(speakerDiv);
   }
 
-interact('.draggable').draggable({
-  inertia: true,
-  modifiers: [
-    // Keep draggable within the visible bounds of sorting-container
-    interact.modifiers.restrictRect({
-      restriction: '#sorting-container',
-      endOnly: true
-    })
-  ],
-  listeners: {
-    start(event) {
-      const dragLayer = document.getElementById('drag-layer');
-      dragLayer.style.display = 'block';
+  interact('.draggable').draggable({
+    inertia: true,
+    listeners: {
+      start(event) {
+        // Move dragged element to drag-layer container on drag start
+        const dragLayer = document.getElementById('drag-layer');
+        dragLayer.style.display = 'block';
+        dragLayer.appendChild(event.target);
+        event.target.style.position = 'absolute';
+        event.target.style.zIndex = '1000';
+        const rect = event.target.getBoundingClientRect();
+        event.target.style.left = `${rect.left}px`;
+        event.target.style.top = `${rect.top}px`;
+        event.target.style.transform = 'none';
+        event.target.setAttribute('data-x', 0);
+        event.target.setAttribute('data-y', 0);
+      },
+      move(event) {
+        const target = event.target;
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      },
+      end(event) {
+        // Move back to speaker list on drag end (snap back)
+        const speakerList = document.getElementById('speaker-list');
+        speakerList.appendChild(event.target);
+        event.target.style.position = 'relative';
+        event.target.style.left = '';
+        event.target.style.top = '';
+        event.target.style.transform = '';
+        event.target.setAttribute('data-x', 0);
+        event.target.setAttribute('data-y', 0);
 
-      // Move dragged element to drag-layer for layering during drag
-      dragLayer.appendChild(event.target);
-      event.target.style.position = 'absolute';
-      event.target.style.zIndex = '1000';
-
-      const rect = event.target.getBoundingClientRect();
-      // Position relative to viewport, adjust to container coords if needed
-      event.target.style.left = `${rect.left}px`;
-      event.target.style.top = `${rect.top}px`;
-      event.target.style.transform = 'none';
-
-      event.target.setAttribute('data-x', 0);
-      event.target.setAttribute('data-y', 0);
-    },
-    move(event) {
-      const target = event.target;
-      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-      target.style.transform = `translate(${x}px, ${y}px)`;
-      target.setAttribute('data-x', x);
-      target.setAttribute('data-y', y);
-    },
-    end(event) {
-      const target = event.target;
-      const dragLayer = document.getElementById('drag-layer');
-      const sortingContainer = document.getElementById('sorting-container');
-      const speakerList = document.getElementById('speaker-list');
-
-      // Calculate final position relative to sorting container
-      const sortingRect = sortingContainer.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-
-      // Check if dropped inside sorting container
-      if (
-        targetRect.left >= sortingRect.left &&
-        targetRect.top >= sortingRect.top &&
-        targetRect.right <= sortingRect.right &&
-        targetRect.bottom <= sortingRect.bottom
-      ) {
-        // Append to sorting container (if not already inside)
-        if (target.parentElement !== sortingContainer) {
-          sortingContainer.appendChild(target);
-        }
-
-        // Calculate position relative to sorting container's top-left
-        const left = targetRect.left - sortingRect.left;
-        const top = targetRect.top - sortingRect.top;
-
-        // Set absolute position inside sorting container
-        target.style.position = 'absolute';
-        target.style.left = `${left}px`;
-        target.style.top = `${top}px`;
-        target.style.transform = 'none';
-        target.style.zIndex = '10';
-
-        // Reset data-x and data-y for next drag
-        target.setAttribute('data-x', 0);
-        target.setAttribute('data-y', 0);
-      } else {
-        // If dropped outside sorting container, snap back to speaker list
-
-        // Append to speaker list
-        speakerList.appendChild(target);
-
-        // Reset styles for flexbox layout
-        target.style.position = 'relative';
-        target.style.left = '';
-        target.style.top = '';
-        target.style.transform = '';
-        target.style.zIndex = '';
-
-        target.setAttribute('data-x', 0);
-        target.setAttribute('data-y', 0);
+        const dragLayer = document.getElementById('drag-layer');
+        dragLayer.style.display = 'none';
       }
-
-      // Hide drag layer after drop
-      dragLayer.style.display = 'none';
     }
-  }
-});
+  });
 }
 
 function showError(msg) {
