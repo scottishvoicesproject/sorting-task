@@ -8,7 +8,7 @@ body {
 
 /* Intro box styling - only made narrower */
 .intro-box {
-  width: 300px; /* slightly narrower than original 360px */
+  width: 300px; /* narrower for phone friendliness */
   margin: 100px auto;
   background: white;
   padding: 30px;
@@ -85,25 +85,23 @@ select {
 /* Task wrapper layout */
 #task-wrapper {
   position: relative;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  align-items: flex-start;
+  width: 800px;
+  height: 400px;
+  margin: 0 auto;
 }
 
-/* Speaker list - NOT used as icon container anymore */
+/* Speaker list — removed fixed container that was trapping icons */
 #speaker-list {
-  display: none; /* hide if you're no longer using this */
+  display: none; /* or remove from HTML if unused now */
 }
 
-/* Sorting grid – stays fixed in background */
+/* Sorting grid — stays visually behind icons */
 #sorting-container {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 400px;
-  margin: auto;
+  width: 100%;
+  height: 100%;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -111,13 +109,13 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  pointer-events: none;
+  pointer-events: none; /* ensure icons can pass through */
   z-index: 0;
 }
 
-/* Draggable icons – now floating freely */
+/* Draggable icon — now floats freely over the grid */
 .draggable {
-  position: absolute;
+  position: absolute; /* this lets them move freely anywhere */
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -144,12 +142,7 @@ select {
   cursor: pointer;
 }
 
-/* Hide unused container */
-#drag-layer {
-  display: none;
-}
-
-/* Hide unused container */
+/* Hide unused drag layer */
 #drag-layer {
   display: none;
 }
