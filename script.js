@@ -66,36 +66,25 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const container = document.getElementById('sorting-container');
-  const speakerList = document.getElementById('speaker-list');
   const dragLayer = document.getElementById('drag-layer');
 
   // Clear previous content
-  speakerList.innerHTML = '';
   container.innerHTML = '';
   dragLayer.innerHTML = '';
 
-  // Show instructions above sorting container
-  let instructions = document.getElementById('instructions');
-  if (!instructions) {
-    instructions = document.createElement('div');
-    instructions.id = 'instructions';
-    container.parentNode.insertBefore(instructions, container);
-  }
-  instructions.textContent = `These 12 icons have the initials of 12 speakers who all are saying the same sentence. Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak. Place the blocks close to each other if you think they belong to one group and further apart if they sound different. The distance between different groups does not matter. You can listen to the speakers as often as you want to, and you can build as few or as many groupings as you like.`;
+  // Position speakers in two vertical columns inside #drag-layer (free draggable)
+  const colWidth = 60;
+  const rowHeight = 40;
 
-  const colWidth = 60;   // horizontal space between columns
-  const rowHeight = 40;  // vertical space between rows
-
-  // Position speakers in two vertical columns on left side (#speaker-list visually),
-  // but append draggable elements to #drag-layer for free movement
   speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
-    const col = index % 2;  // 0 or 1 (two columns)
+    const col = index % 2;
     const row = Math.floor(index / 2);
 
-    const x = col * colWidth + speakerList.offsetLeft;
-    const y = row * rowHeight + speakerList.offsetTop;
+    // Start positions inside dragLayer
+    const x = col * colWidth + 10;
+    const y = row * rowHeight + 10;
 
     speakerDiv.style.left = `${x}px`;
     speakerDiv.style.top = `${y}px`;
@@ -106,7 +95,7 @@ function initSorting(conditionKey) {
     dragLayer.appendChild(speakerDiv);
   });
 
-  // Enable dragging on all .draggable elements, free movement anywhere in #task-wrapper
+  // Make the .draggable elements draggable inside #task-wrapper
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
@@ -167,12 +156,21 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
 
+  // Show instructions text (only once, placed above sorting container)
+  const instructions = document.getElementById('instructions');
+  instructions.style.display = 'block';
+
   // Use URL parameter or pick random condition
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Nothing to do on load — wait for form submit
+  // Hide instructions initially
+  const instructions = document.getElementById('instructions');
+  if (instructions) {
+    instructions.style.display = 'none';
+  }
 });
+
 
