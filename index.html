@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sorting Task</title>
+  <title>Intro Page</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-
-  <!-- Intro screen -->
-  <div class="intro-box" id="intro-screen">
+  <div class="intro-box">
     <h1>Welcome!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="1" max="120" />
-
+      
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -27,24 +26,23 @@
     </form>
   </div>
 
-  <!-- Sorting screen -->
-  <div class="sorting-box hidden" id="sorting-screen">
-    <h1>Sorting Task</h1>
-    <p>Age: <span id="display-age"></span> | Gender: <span id="display-gender"></span></p>
-    <p>Condition: <span id="display-condition"></span></p>
-
-    <div id="task-wrapper">
-      <div id="speaker-list" aria-label="Speaker list" role="list"></div>
-      <div id="sorting-container" aria-label="Sorting container" role="region"></div>
+  <section id="sorting-section" class="hidden">
+    <div id="info-bar">
+      <span id="info-age"></span> | <span id="info-gender"></span> | <span id="info-condition"></span>
+      <button id="back-button" class="blue-button" style="float: right; width: auto; padding: 0.4rem 1rem;">Back</button>
     </div>
 
-    <button class="blue-button" id="back-button">Back to Intro</button>
-  </div>
+    <div id="task-wrapper">
+      <div id="speaker-list"></div>
+      <div id="sorting-container">
+        <div id="drag-layer"></div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Interact.js CDN for drag-and-drop -->
-  <script src="https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.min.js"></script>
+  <div id="error-message"></div>
+
   <script src="script.js"></script>
-
 </body>
 </html>
 
