@@ -56,7 +56,7 @@ function createSpeakerDiv(initials) {
 
   // reset positioning for list placement
   div.style.position = 'absolute';
-  div.style.transform = '';
+  div.style.transform = 'none';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
 
@@ -68,7 +68,7 @@ function initSorting(conditionKey) {
   const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
   
-  // Clear previous
+  // Clear previous content
   speakerList.innerHTML = '';
   container.innerHTML = '';
 
@@ -145,10 +145,11 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
+  // Hide intro, show sorting
   document.getElementById('intro-section').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'block';
 
+  // Init sorting page with condition
   const condition = getConditionFromUrl();
   initSorting(condition);
 });
-
