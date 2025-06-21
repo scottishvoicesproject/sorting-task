@@ -98,15 +98,20 @@ function initSorting(conditionKey) {
   interact('.draggable').draggable({
     inertia: true,
     listeners: {
+      start(event) {
+        event.target.style.zIndex = 10000; // bring on top while dragging
+      },
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
         let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-        // No clamping - free movement anywhere
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+      },
+      end(event) {
+        event.target.style.zIndex = 1000; // reset after drag ends
       }
     }
   });
@@ -124,19 +129,10 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-document.getElementById('age-gender-form').addEventListener('submit', (e
-
-interact('.draggable').draggable({
-  inertia: true,
-  listeners: {
-    start(event) {
-      event.target.style.zIndex = 10000; // bring on top while dragging
-    },
-    move(event) {
-      // your existing move code
-    },
-    end(event) {
-      event.target.style.zIndex = 1000; // reset after drag ends
-    }
-  }
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  // Your existing submit handler code here
 });
+
+// (No other separate interact draggable calls needed)
+
