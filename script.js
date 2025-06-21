@@ -67,10 +67,12 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
-  
+  const topLayer = document.getElementById('top-layer-container');
+
   // Clear previous content
   speakerList.innerHTML = '';
   container.innerHTML = '';
+  topLayer.innerHTML = '';
 
   const colWidth = 60;   // horizontal space between columns
   const rowHeight = 40;  // vertical space between rows
@@ -91,7 +93,8 @@ function initSorting(conditionKey) {
     speakerDiv.setAttribute('data-x', x);
     speakerDiv.setAttribute('data-y', y);
 
-    speakerList.appendChild(speakerDiv);
+    // Append the speaker div to the top layer container for dragging on top
+    topLayer.appendChild(speakerDiv);
   });
 
   // Enable dragging on all .draggable elements, free movement anywhere on page
@@ -111,7 +114,7 @@ function initSorting(conditionKey) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        event.target.style.zIndex = 1000; // reset after drag ends
+        event.target.style.zIndex = 2000; // reset after drag ends to default draggable z-index
       }
     }
   });
@@ -134,5 +137,4 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   // Your existing submit handler code here
 });
 
-// (No other separate interact draggable calls needed)
-
+// No other separate interact draggable calls needed
