@@ -6,7 +6,7 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling - made narrower */
+/* Intro box styling */
 .intro-box {
   width: 300px;
   margin: 100px auto;
@@ -61,32 +61,32 @@ select {
   text-align: center;
 }
 
+/* Rotate warning - full screen overlay */
 #rotate-warning {
   display: none;
   position: fixed;
-  top: 0; left: 0;
+  top: 0; 
+  left: 0;
   width: 100vw;
   height: 100vh;
   background: #fff;
   z-index: 9999;
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 40px 20px;  /* <-- Added horizontal padding */
+  padding: 40px 20px;
   font-size: 1.5rem;
   color: #333;
-  box-sizing: border-box; /* <-- Added */
-  max-width: 90vw;         /* <-- Added to limit width */
-  overflow-wrap: break-word; /* <-- Added to wrap long text */
-  margin: 0 auto;          /* Center horizontally */
+  box-sizing: border-box;
+  overflow-wrap: break-word;
 }
 
-/* Show rotate warning ONLY on portrait on small screens */
+/* Show rotate warning only on small devices in portrait */
 @media screen and (orientation: portrait) and (max-width: 768px) {
   #rotate-warning {
     display: flex;
-    max-width: none; /* override for small screens to fill full width */
-    padding: 40px 15px; /* less horizontal padding on small phones */
+    padding: 40px 15px;
   }
 
   #main-content {
@@ -116,6 +116,7 @@ select {
 }
 
 /* Task wrapper layout */
+/* -- CHANGE: make responsive width/height to prevent zoom on phone -- */
 #task-wrapper {
   position: relative;
   width: 960px;
@@ -123,11 +124,12 @@ select {
   margin: 0 auto;
 }
 
-/* Responsive adjustments for mobile landscape */
-@media screen and (max-width: 768px) and (orientation: landscape) {
+/* Responsive layout on small devices, including landscape */
+@media screen and (max-width: 768px) {
   #task-wrapper {
-    width: 90vw;
-    height: 300px;
+    width: 90vw;   /* responsive width */
+    height: 300px; /* reduce height */
+    max-width: 600px; /* max width so not too big */
   }
 
   #sorting-container {
@@ -143,14 +145,11 @@ select {
   }
 }
 
-/* REMOVE speaker-list COMPLETELY */
-/* No more icon container */
-
-/* Sorting grid - visual only */
+/* Sorting grid */
 #sorting-container {
   position: absolute;
   top: 0;
-  left: 160px; /* match where the grid should start after where icons sit */
+  left: 160px;
   width: 800px;
   height: 400px;
   border: 2px dashed #aaa;
@@ -165,9 +164,10 @@ select {
   pointer-events: none;
 }
 
-/* Draggable icon - now floats on background */
+/* Draggable icons */
+/* -- NO CHANGE in size here for desktop */
 .draggable {
-  position: absolute; /* needed for free placement */
+  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -198,4 +198,3 @@ select {
 #drag-layer {
   display: none;
 }
-
