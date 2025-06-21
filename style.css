@@ -6,9 +6,9 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling */
+/* Intro box styling - restored compact look */
 .intro-box {
-  max-width: 500px;
+  width: 360px;
   margin: 100px auto;
   background: white;
   padding: 30px;
@@ -16,6 +16,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Form elements */
 h1 {
   margin-top: 0;
   font-size: 1.8rem;
@@ -60,7 +61,7 @@ select {
   text-align: center;
 }
 
-/* Sorting task section */
+/* Sorting section */
 #sorting-section {
   padding: 20px;
   display: flex;
@@ -68,73 +69,57 @@ select {
   gap: 20px;
 }
 
-/* Instructions box */
+/* Instructions styling */
 #instructions {
   max-width: 800px;
   margin: 0 auto;
   font-size: 1rem;
-  background: #fff8dc;
+  background: #fffbe6;
   padding: 16px;
   border-radius: 8px;
-  border: 1px solid #f0e68c;
+  border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  text-align: left;
 }
 
-/* Main task layout */
+/* Task wrapper layout */
 #task-wrapper {
   display: flex;
   justify-content: center;
   gap: 40px;
-  flex-wrap: wrap;
-  padding: 0 20px 40px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
 }
 
-/* Speaker icon list */
+/* Speaker list on the left */
 #speaker-list {
   display: grid;
-  grid-template-columns: repeat(2, 60px);
+  grid-template-columns: 60px 60px;
   gap: 10px;
   padding: 10px;
   background: #ffffff;
   border: 1px solid #ccc;
   border-radius: 10px;
-  max-height: 500px;
+  height: 500px;
   overflow-y: auto;
 }
 
-/* Sorting grid container */
+/* Sorting grid in the center */
 #sorting-container {
   position: relative;
   width: 600px;
   height: 500px;
   border: 2px dashed #aaa;
   border-radius: 12px;
-  background: #ffffff;
-  overflow: hidden;
-}
-
-/* Grid visual overlay */
-#grid-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
+  background: #fff;
+  background-image:
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  pointer-events: none;
+  overflow: hidden;
 }
 
-/* Drag layer (optional use) */
-#drag-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-/* Speaker draggable item */
+/* Draggable icon */
 .draggable {
   position: absolute;
   width: 60px;
@@ -149,9 +134,10 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
+  z-index: 2;
 }
 
-/* Audio button styling inside draggable */
+/* Speaker button inside draggable */
 .speaker-button {
   all: unset;
   width: 100%;
@@ -162,3 +148,7 @@ select {
   cursor: pointer;
 }
 
+/* Hide unused container */
+#drag-layer {
+  display: none;
+}
