@@ -6,7 +6,7 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling */
+/* Intro box styling - made narrower */
 .intro-box {
   width: 300px;
   margin: 100px auto;
@@ -63,7 +63,6 @@ select {
 
 /* Rotate warning - full screen overlay */
 #rotate-warning {
-  display: none;
   position: fixed;
   top: 0; 
   left: 0;
@@ -71,7 +70,6 @@ select {
   height: 100vh;
   background: #fff;
   z-index: 9999;
-  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -80,18 +78,8 @@ select {
   color: #333;
   box-sizing: border-box;
   overflow-wrap: break-word;
-}
-
-/* Show rotate warning only on small devices in portrait */
-@media screen and (orientation: portrait) and (max-width: 768px) {
-  #rotate-warning {
-    display: flex;
-    padding: 40px 15px;
-  }
-
-  #main-content {
-    display: none;
-  }
+  display: none; /* hidden by default */
+  flex-direction: column;
 }
 
 /* Sorting section */
@@ -113,10 +101,10 @@ select {
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: left;
+  display: none; /* hidden initially */
 }
 
 /* Task wrapper layout */
-/* -- CHANGE: make responsive width/height to prevent zoom on phone -- */
 #task-wrapper {
   position: relative;
   width: 960px;
@@ -124,32 +112,14 @@ select {
   margin: 0 auto;
 }
 
-/* Responsive layout on small devices, including landscape */
-@media screen and (max-width: 768px) {
-  #task-wrapper {
-    width: 90vw;   /* responsive width */
-    height: 300px; /* reduce height */
-    max-width: 600px; /* max width so not too big */
-  }
+/* REMOVE speaker-list COMPLETELY */
+/* No more icon container */
 
-  #sorting-container {
-    left: 140px;
-    width: calc(100% - 140px);
-    height: 300px;
-  }
-
-  .draggable {
-    width: 50px;
-    height: 35px;
-    font-size: 0.85rem;
-  }
-}
-
-/* Sorting grid */
+/* Sorting grid - visual only */
 #sorting-container {
   position: absolute;
   top: 0;
-  left: 160px;
+  left: 160px; /* match where the grid should start after where icons sit */
   width: 800px;
   height: 400px;
   border: 2px dashed #aaa;
@@ -164,10 +134,9 @@ select {
   pointer-events: none;
 }
 
-/* Draggable icons */
-/* -- NO CHANGE in size here for desktop */
+/* Draggable icon - now floats on background */
 .draggable {
-  position: absolute;
+  position: absolute; /* needed for free placement */
   width: 60px;
   height: 40px;
   border-radius: 8px;
