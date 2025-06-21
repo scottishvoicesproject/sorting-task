@@ -60,7 +60,7 @@ select {
 
 /* Rotate warning - centered and mobile-portrait only */
 #rotate-warning {
-  display: none;
+  display: none; /* Controlled entirely by JS */
   position: fixed;
   top: 0;
   left: 0;
@@ -77,18 +77,20 @@ select {
   box-sizing: border-box;
   overflow-wrap: break-word;
   flex-direction: column;
-  display: flex;
 }
 
 /* Sorting section */
 #sorting-section {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Instructions box */
 #instructions {
   max-width: 800px;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
@@ -96,30 +98,44 @@ select {
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: left;
+  display: none;
 }
 
 /* Task layout container */
 #task-wrapper {
   position: relative;
-  width: 960px;
+  width: 100%;
+  max-width: 960px;
   height: 400px;
   margin: 0 auto;
-  overflow: hidden;
-  display: flex;
+  overflow-x: auto; /* added for horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
 /* Responsive scale for smaller screens */
 @media screen and (max-width: 1024px) {
   #task-wrapper {
-    width: 100%;
-    height: auto;
-    flex-direction: column;
+    height: 340px; /* slightly smaller height on smaller screens */
+  }
+}
+
+/* On very small screens, allow horizontal scroll, limit height */
+@media screen and (max-width: 600px) {
+  #task-wrapper {
+    height: 300px;
   }
 }
 
 /* Sorting grid container */
 #sorting-container {
-  flex-grow: 1;
+  position: absolute;
+  top: 0;
+  left: 160px;
+  width: 800px;
+  height: 400px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -127,9 +143,19 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  position: relative;
-  min-height: 400px;
-  margin-left: 20px;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* On smaller screens, adjust the left and width so grid fits better */
+@media screen and (max-width: 600px) {
+  #sorting-container {
+    left: 120px;
+    width: 600px;
+    height: 300px;
+    background-size: 30px 30px;
+  }
 }
 
 /* Draggable items */
@@ -147,9 +173,10 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  touch-action: none;
   z-index: 10;
+  touch-action: none; /* Added for improved touch dragging */
   transform: translate(0, 0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 /* Speaker button inside draggable */
@@ -161,5 +188,10 @@ select {
   color: white;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* Drag layer */
+#drag-layer {
+  display: none;
 }
 
