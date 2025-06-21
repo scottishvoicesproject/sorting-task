@@ -9,9 +9,9 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
-let audioPlaying = null; // current playing audio element
+let audioPlaying = null; // currently playing audio element
 
-// Get condition key from URL or random
+// Get condition from URL or random
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
@@ -57,7 +57,7 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // No position here; initially stacked in #speaker-list container
+  // No position transform initially
   div.style.transform = 'none';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
@@ -65,22 +65,22 @@ function createSpeakerDiv(initials) {
   return div;
 }
 
-// Initialize the sorting task UI
+// Initialize sorting task UI
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
 
   const speakerList = document.getElementById('speaker-list');
   const container = document.getElementById('sorting-container');
   speakerList.innerHTML = '';
-  container.innerHTML = ''; // empty grid to start
+  container.innerHTML = ''; // start empty grid
 
-  // Create speaker divs stacked in speakerList (left sidebar)
+  // Create speakers stacked vertically in speakerList
   speakers.forEach((initials) => {
     const speakerDiv = createSpeakerDiv(initials);
     speakerList.appendChild(speakerDiv);
   });
 
-  // Setup interact.js draggable for all .draggable
+  // Setup interact.js draggable
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
@@ -104,11 +104,9 @@ function initSorting(conditionKey) {
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
 
-        // If currently inside speaker-list (no positioning), remove it and append to sorting-container
+        // If element currently inside speaker-list, move it to sorting-container to enable dragging on grid
         if (target.parentElement.id === 'speaker-list') {
           document.getElementById('sorting-container').appendChild(target);
-
-          // Fix position after moving out of speaker-list (starts from mouse position)
           target.style.position = 'absolute';
           target.style.left = '0';
           target.style.top = '0';
@@ -118,9 +116,15 @@ function initSorting(conditionKey) {
   });
 }
 
-// Show error message
+// Show error message helper
 function showError(msg) {
   const errEl = document.getElementById('error-message');
   errEl.textContent = msg;
-  errEl.style.display =
+  errEl.style.display = 'block';
+}
+
+// Hide error message
+function hideError() {
+ 
+
 
