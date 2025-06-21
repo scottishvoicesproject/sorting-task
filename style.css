@@ -1,63 +1,81 @@
 body {
   font-family: Arial, sans-serif;
+  background-color: #fafafa;
   margin: 20px;
-  background: #f5f5f5;
+  color: #222;
+  text-align: center;
 }
 
-#instructions {
+#instructions, #age-form, #task {
   max-width: 700px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-#age-form, #task {
-  max-width: 700px;
-  margin: 20px auto;
+  margin: 0 auto;
 }
 
 #grid {
-  width: 700px;
-  height: 500px;
-  background-color: #e0e0e0;
-  border: 2px dashed #aaa;
-  margin: 20px auto;
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 120px);
+  grid-gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+  min-height: 250px;
+  border: 2px dashed #bbb;
+  padding: 20px;
+  background-color: white;
 }
 
 .draggable {
-  width: 80px;
-  height: 40px;
   background-color: black;
   color: white;
+  padding: 20px 0;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  position: absolute;
-  cursor: grab;
+  font-size: 18px;
   user-select: none;
-  transition: background-color 0.3s, border 0.3s;
-  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.draggable:hover {
+  border-color: #555;
 }
 
 .draggable.playing {
-  border: 3px solid #007BFF;
-  background-color: #D0E8FF;
-  color: black;
+  background-color: #4caf50; /* green highlight */
+  color: white;
+  font-weight: bold;
+  border: 2px solid #388e3c;
 }
 
+/* Dropzone styling */
+.dropzone {
+  min-height: 300px;
+}
+
+/* Button styling */
 button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #007bff;
+  color: white;
   cursor: pointer;
+  transition: background-color 0.25s ease;
 }
 
 button:hover {
-  background-color: #007BFF;
-  color: white;
+  background-color: #0056b3;
 }
+
+input[type="number"],
+input[type="text"] {
+  font-size: 16px;
+  padding: 6px 8px;
+  margin-left: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 80px;
+  text-align: center;
+}
+
