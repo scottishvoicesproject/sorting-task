@@ -65,11 +65,12 @@ function initSorting(conditionKey) {
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-    const row = Math.floor(i / 2);
-    const col = i % 2;
-    speakerDiv.style.position = 'absolute';
-    speakerDiv.style.left = `${col * 60}px`;
-    speakerDiv.style.top = `${row * 50}px`;
+
+    // REMOVE these two lines to let flexbox handle positioning:
+    //speakerDiv.style.position = 'absolute';
+    //speakerDiv.style.left = `${col * 60}px`;
+    //speakerDiv.style.top = `${row * 50}px`;
+
     speakerList.appendChild(speakerDiv);
   }
 
