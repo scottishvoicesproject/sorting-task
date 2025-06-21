@@ -15,40 +15,49 @@ const urlParams = new URLSearchParams(window.location.search);
 const condition = urlParams.get('cond');
 
 const speakerContainer = document.getElementById('grid');
-let currentlyPlayingAudio = null;
+
+let currentAudio = null;
 let currentlyPlayingDiv = null;
 
-// === INSTRUCTIONS FLOW ===
-
-// Start button: show age + gender form, hide instructions
-document.getElementById('start-button').addEventListener('click', () => {
-  document.getElementById('instructions').style.display = 'none';
-  document.getElementById('age-form').style.display = 'block';
+// Show age & gender form after clicking Start
+document.getElementById("start-button").addEventListener("click", () => {
+  document.getElementById("instructions").style.display = "none";
+  document.getElementById("age-form").style.display = "block";
 });
 
-// Age + Gender gating
-document.getElementById('age-form').addEventListener('submit', function(e) {
+// Age and Gender gating
+document.getElementById("age-form").addEventListener("submit", function(e) {
   e.preventDefault();
-  const age = parseInt(document.getElementById('age').value);
-  const gender = document.getElementById('gender').value.trim();
 
-  if (age >= 4 && age <= 17 && gender !== '') {
-    document.getElementById('age-form').style.display = 'none';
-    document.getElementById('task').style.display = 'block';
-    loadCondition();
-  } else {
-    alert("Please enter a valid age between 4 and 17 and specify your gender.");
+  const age = parseInt(document.getElementById("age").value);
+  const gender = document.getElementById("gender").value.trim();
+
+  if (isNaN(age) || age < 4 || age > 17) {
+    alert("Sorry, only participants aged 4–17 can take part.");
+    return;
   }
+
+  if (!gender) {
+    alert("Please enter your gender.");
+    return;
+  }
+
+  // Passed validation
+  document.getElementById("age-form").style.display = "none";
+  document.getElementById("task").style.display = "block";
+  loadCondition();
 });
 
 // 🧱 Build speaker boxes for condition
 function loadCondition() {
-  speakerContainer.innerHTML = ''; // Clear old speakers
   const speakers = conditions[condition];
   if (!speakers) {
     speakerContainer.innerHTML = `<p>Invalid or missing condition: ${condition}</p>`;
     return;
   }
+
+  // Clear any previous speakers
+  speakerContainer.innerHTML = '';
 
   speakers.forEach(initials => {
     const div = document.createElement('div');
@@ -56,34 +65,35 @@ function loadCondition() {
     div.dataset.id = initials;
     div.textContent = initials;
 
-    // Create an Audio object for each speaker (reuse)
-    div.audio = new Audio(`audio/${initials.toLowerCase()}.wav`);
-
     div.addEventListener('click', () => {
-      if (currentlyPlayingAudio && currentlyPlayingAudio !== div.audio) {
-        // Pause previous audio & reset style
-        currentlyPlayingAudio.pause();
-        if (currentlyPlayingDiv) currentlyPlayingDiv.classList.remove('playing');
+      // Pause currently playing audio if different speaker clicked
+      if (currentAudio && currentlyPlayingDiv && currentlyPlayingDiv !== div) {
+        currentAudio.pause();
+        currentlyPlayingDiv.classList.remove('playing');
       }
 
-      if (div.audio.paused) {
-        div.audio.play();
-        div.classList.add('playing');
-        currentlyPlayingAudio = div.audio;
+      if (!currentAudio || currentlyPlayingDiv !== div) {
+        // New audio or new speaker clicked — create and play
+        currentAudio = new Audio(`audio/${initials.toLowerCase()}.wav`);
+        currentAudio.play();
         currentlyPlayingDiv = div;
-      } else {
-        div.audio.pause();
-        div.classList.remove('playing');
-        currentlyPlayingAudio = null;
-        currentlyPlayingDiv = null;
-      }
-    });
+        div.classList.add('playing');
 
-    // When audio ends, remove visual cue
-    div.audio.addEventListener('ended', () => {
-      div.classList.remove('playing');
-      currentlyPlayingAudio = null;
-      currentlyPlayingDiv = null;
+        // When audio ends, remove playing style and reset
+        currentAudio.onended = () => {
+          div.classList.remove('playing');
+          currentAudio = null;
+          currentlyPlayingDiv = null;
+        };
+      } else if (!currentAudio.paused) {
+        // Pause current audio
+        currentAudio.pause();
+        div.classList.remove('playing');
+      } else {
+        // Resume playing
+        currentAudio.play();
+        div.classList.add('playing');
+      }
     });
 
     speakerContainer.appendChild(div);
@@ -119,8 +129,8 @@ function setupDrag() {
   });
 }
 
-// 🔄 Submit button (placeholder)
+// 🔄 Submit button (placeholder for now)
 document.getElementById('submit-btn').addEventListener('click', () => {
-  alert(`Thanks for participating! (Condition: ${condition})\nData saving coming next.`);
+  alert(`Thanks for participating! (Condition: ${condition})`);
 });
 
