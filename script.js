@@ -11,14 +11,16 @@ const conditions = {
 
 let audioPlaying = null;
 
+// Get condition from URL parameter ?cond= or pick random if missing/invalid
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
-  if (cond && conditions[cond]) return cond;
+  if (cond && conditions.hasOwnProperty(cond)) return cond;
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
+// Setup play/pause toggle for audio on button click, only one audio plays at a time
 function setupAudioControl(button, audio) {
   button.addEventListener('click', () => {
     if (audioPlaying && audioPlaying !== audio) {
@@ -35,6 +37,7 @@ function setupAudioControl(button, audio) {
   });
 }
 
+// Create a draggable speaker div with audio and button
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -54,70 +57,60 @@ function createSpeakerDiv(initials) {
   div.appendChild(btn);
   div.appendChild(audio);
 
-  // Reset positioning for list placement
+  // reset positioning for list placement
   div.style.position = 'absolute';
-  div.style.transform = '';
+  div.style.transform = 'translate(0,0)';
   div.setAttribute('data-x', 0);
   div.setAttribute('data-y', 0);
 
   return div;
 }
 
-function initSorting(conditionKey, age, gender) {
+// Initialize sorting area with draggable speakers based on condition key
+function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const container = document.getElementById('sorting-container');
   const speakerList = document.getElementById('speaker-list');
   const dragLayer = document.getElementById('drag-layer');
-  const infoAge = document.getElementById('info-age');
-  const infoGender = document.getElementById('info-gender');
-  const infoCondition = document.getElementById('info-condition');
-
-  // Set info text
-  infoAge.textContent = `Age: ${age}`;
-  infoGender.textContent = `Gender: ${gender === 'M' ? 'Male' : gender === 'F' ? 'Female' : gender}`;
-  infoCondition.textContent = `Condition: ${conditionKey}`;
 
   // Clear previous content
   speakerList.innerHTML = '';
-  container.innerHTML = '';
-  dragLayer.innerHTML = '';   // clear draggable layer
+  dragLayer.innerHTML = '';
 
-  const colWidth = 60;   // horizontal space between columns
-  const rowHeight = 40;  // vertical space between rows
+  // Position speakers in two vertical columns visually on left (#speaker-list area)
+  // But append draggable elements to #drag-layer for free movement
+  const colWidth = 60;   // horizontal spacing
+  const rowHeight = 40;  // vertical spacing
 
-  // Position speakers in two vertical columns on left side (#speaker-list visually),
-  // but append draggable elements to #drag-layer for free movement
   speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
 
     const col = index % 2;  // 0 or 1 (two columns)
     const row = Math.floor(index / 2);
 
-    const x = col * colWidth;
-    const y = row * rowHeight;
+    const x = col * colWidth + speakerList.offsetLeft;
+    const y = row * rowHeight + speakerList.offsetTop;
 
     speakerDiv.style.left = `${x}px`;
     speakerDiv.style.top = `${y}px`;
 
-    speakerDiv.setAttribute('data-x', x);
-    speakerDiv.setAttribute('data-y', y);
+    speakerDiv.setAttribute('data-x', 0);
+    speakerDiv.setAttribute('data-y', 0);
 
-    dragLayer.appendChild(speakerDiv); // append draggable to drag-layer
+    dragLayer.appendChild(speakerDiv);
   });
 
-  // Enable dragging on all .draggable elements, free movement anywhere in #sorting-container
+  // Enable dragging on all .draggable elements, restricted to #task-wrapper
   interact('.draggable').draggable({
     inertia: true,
     modifiers: [
-      // Keep draggables inside #sorting-container boundaries
       interact.modifiers.restrictRect({
-        restriction: '#sorting-container',
+        restriction: '#task-wrapper',
         endOnly: true
       })
     ],
     listeners: {
       start(event) {
-        event.target.style.zIndex = 10000; // bring on top while dragging
+        event.target.style.zIndex = 10000;
       },
       move(event) {
         const target = event.target;
@@ -129,38 +122,86 @@ function initSorting(conditionKey, age, gender) {
         target.setAttribute('data-y', y);
       },
       end(event) {
-        event.target.style.zIndex = 3001; // reset after drag ends
+        event.target.style.zIndex = 10;
       }
     }
   });
 }
 
+// Show error message
+function showError(msg) {
+  const errEl = document.getElementById('error-message');
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+}
+
+// Hide error message
+function hideError() {
+  const errEl = document.getElementById('error-message');
+  if (errEl) {
+    errEl.textContent = '';
+    errEl.style.display = 'none';
+  }
+}
+
+// Handle form submit on intro page
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
-  const age = e.target.age.value;
-  const gender = e.target.gender.value;
-  if (!age || !gender) {
-    alert('Please fill in both age and gender');
+  hideError();
+
+  const ageInput = document.getElementById('age');
+  const genderSelect = document.getElementById('gender');
+
+  const age = parseInt(ageInput.value, 10);
+  const gender = genderSelect.value;
+
+  if (!age || age < 1 || age > 120) {
+    showError('Please enter a valid age between 1 and 120.');
     return;
   }
-  const cond = getConditionFromUrl();
-
-  // Hide intro, show sorting screen
-  document.querySelector('.intro-box').classList.add('hidden');
-  document.getElementById('sorting-section').classList.remove('hidden');
-
-  // Initialize sorting grid with chosen condition and info
-  initSorting(cond, age, gender);
-});
-
-// Back button to return to intro form
-document.getElementById('back-button').addEventListener('click', () => {
-  // Pause any playing audio
-  if (audioPlaying) {
-    audioPlaying.pause();
-    audioPlaying = null;
+  if (!gender) {
+    showError('Please select a gender.');
+    return;
   }
-  // Hide sorting, show intro
-  document.getElementById('sorting-section').classList.add('hidden');
-  document.querySelector('.intro-box').classList.remove('hidden');
+
+  // Build condition key based on gender and random choice (simulate your real logic here)
+  // For demo, pick a random condition for the gender group:
+  let conditionKeys;
+  if (gender === 'M') {
+    conditionKeys = Object.keys(conditions).filter(k => k.startsWith('M_'));
+  } else if (gender === 'F') {
+    conditionKeys = Object.keys(conditions).filter(k => k.startsWith('F_'));
+  } else {
+    showError('Gender option not recognized.');
+    return;
+  }
+  const conditionKey = conditionKeys[Math.floor(Math.random() * conditionKeys.length)];
+
+  // Redirect to sorting page with condition as URL param
+  window.location.href = `?page=sorting&cond=${conditionKey}`;
 });
+
+// On DOM loaded: if on sorting page, init sorting, else show intro
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get('page');
+
+  if (page === 'sorting') {
+    document.body.innerHTML = `
+      <section id="sorting-section">
+        <h1>Sorting Task</h1>
+        <div id="task-wrapper">
+          <div id="speaker-list"></div>
+          <div id="sorting-container"></div>
+          <div id="drag-layer"></div>
+        </div>
+      </section>
+    `;
+
+    const cond = getConditionFromUrl();
+    initSorting(cond);
+  }
+});
+
