@@ -36,3 +36,20 @@
 </body>
 </html>
 
+<section id="sorting-section" style="display:none">
+  <h2>Instructions</h2>
+  <p>Drag the speakers from the list on the left into the grid on the right.</p>
+  <div id="task-wrapper" style="display:flex; gap: 20px;">
+    <div id="speaker-list" aria-label="Speakers to drag" tabindex="0">
+      <!-- Place speakers here initially -->
+      <div class="draggable" style="top: 0; left: 0;">A</div>
+      <div class="draggable" style="top: 40px; left: 0;">B</div>
+      <div class="draggable" style="top: 80px; left: 0;">C</div>
+      <div class="draggable" style="top: 120px; left: 0;">D</div>
+      <div class="draggable" style="top: 0; left: 70px;">E</div>
+      <div class="draggable" style="top: 40px; left: 70px;">F</div>
+      <!-- Add all your speakers in order and positions -->
+    </div>
+    <div id="sorting-container" aria-label="Speaker sorting grid" tabindex="0"></div>
+  </div>
+</section>
