@@ -1,374 +1,176 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Speaker Sorting Task</title>
-<style>
-  /* Center intro box exactly as originally was */
-  body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+/* Center intro box exactly as originally was */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .intro-box {
-    background: white;
-    padding: 2rem 3rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    width: 320px;
-    text-align: center;
-  }
+.intro-box {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 320px;
+  text-align: center;
+}
 
-  h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: #333;
-  }
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
 
-  label {
-    display: block;
-    font-weight: bold;
-    margin-top: 1rem;
-    margin-bottom: 0.3rem;
-    text-align: left;
-    color: #444;
-  }
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  text-align: left;
+  color: #444;
+}
 
-  input[type="number"],
-  input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .blue-button {
-    margin-top: 1.5rem;
-    background-color: #2978f0;
-    color: white;
-    border: none;
-    padding: 0.7rem 0;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: 600;
-  }
+.blue-button {
+  margin-top: 1.5rem;
+  background-color: #2978f0;
+  color: white;
+  border: none;
+  padding: 0.7rem 0;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
 
-  .blue-button:hover,
-  .blue-button:focus {
-    background-color: #1a5edb;
-    outline: none;
-  }
+.blue-button:hover,
+.blue-button:focus {
+  background-color: #1a5edb;
+  outline: none;
+}
 
-  #error-message {
-    color: red;
-    font-weight: bold;
-    margin-top: 1rem;
-    display: none;
-    text-align: center;
-  }
+#error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+  display: none;
+  text-align: center;
+}
 
-  /* Sorting screen styles */
-  #sorting-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    font-family: Arial, sans-serif;
-    color: #222;
-    height: 100vh;
-    box-sizing: border-box;
-  }
+/* Sorting screen styles */
+#sorting-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: Arial, sans-serif;
+  color: #222;
+  height: 100vh;
+  box-sizing: border-box;
+}
 
-  #task-wrapper {
-    display: flex;
-    gap: 20px;
-    position: relative; /* Add relative positioning for stacking context */
-  }
+/* Added relative positioning here */
+#task-wrapper {
+  display: flex;
+  gap: 20px;
+  position: relative; /* Added for stacking context */
+}
 
-  /* Left container for speakers */
-  #speaker-list {
-    border: 1px solid #ccc;
-    width: 150px;
-    min-height: 400px;
-    padding: 8px;
-    position: relative; /* Needed for absolute children */
-    overflow-y: auto;
-    background: #fafafa;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    height: 500px;
+/* Left container for speakers */
+#speaker-list {
+  border: 1px solid #ccc;
+  width: 150px;
+  min-height: 400px;
+  padding: 8px;
+  position: relative; /* Needed for absolute children */
+  overflow-y: auto;
+  background: #fafafa;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  height: 500px;
 
-    /* Remove flexbox to allow absolute positioning */
-    display: block;
-  }
+  /* Remove flexbox to allow absolute positioning */
+  display: block;
+}
 
-  /* Right container with dashed grid */
-  #sorting-container {
-    border: 2px dashed #666;
-    width: 800px;
-    height: 500px;
-    position: relative;
-    z-index: 1; /* Make sure grid is below draggable icons */
-    background: white;
+/* Right container with dashed grid */
+#sorting-container {
+  border: 2px dashed #666;
+  width: 800px;
+  height: 500px;
+  position: relative; /* keep this */
+  z-index: 1;         /* make sure it is below draggable */
+  background: white;
 
-    /* Grid lines */
-    background-image:
-      linear-gradient(to right, #ddd 1px, transparent 1px),
-      linear-gradient(to bottom, #ddd 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
+  /* Grid lines */
+  background-image:
+    linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+  background-size: 40px 40px;
+}
 
-  /* New top layer container for draggable speakers */
-  #top-layer-container {
-    position: relative;
-    z-index: 3000; /* Higher than draggable and sorting container */
-    width: 0;
-    height: 0;
-  }
+/* New container for draggable speakers on top */
+#top-layer-container {
+  position: relative;
+  z-index: 3000; /* High z-index to keep draggable elements on top */
+  width: 0;
+  height: 0;
+}
 
-  /* Draggable speaker boxes */
-  .draggable {
-    position: absolute;
-    width: 50px;
-    height: 35px;
-    background-color: #111;
-    color: white;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: grab;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    user-select: none;
-    touch-action: none;
-    margin: 0;
-    z-index: 2000; /* Keep this high, inside top layer */
-  }
+/* Draggable speaker boxes */
+.draggable {
+  position: absolute;
+  width: 50px;
+  height: 35px;
+  background-color: #111;
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: grab;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  user-select: none;
+  touch-action: none;
+  margin: 0;
+  z-index: 2000;       /* keep this high */
+}
 
-  .draggable:active {
-    cursor: grabbing;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-  }
+.draggable:active {
+  cursor: grabbing;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+}
 
-  /* Button inside each speaker */
-  .speaker-button {
-    width: 100%;
-    height: 100%;
-    background: none;
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    user-select: none;
-  }
+/* Button inside each speaker */
+.speaker-button {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
 
-  .speaker-button:focus {
-    outline: 2px solid #2a85ff;
-    outline-offset: 2px;
-  }
-</style>
-</head>
-<body>
-
-<!-- First Page Intro -->
-<section id="intro-section">
-  <div class="intro-box">
-    <h1>Welcome to the Speaker Sorting Task</h1>
-    <form id="age-gender-form" novalidate>
-      <label for="age">Age (4-17):</label>
-      <input type="number" id="age" name="age" min="4" max="17" required />
-      <label for="gender">Gender:</label>
-      <input type="text" id="gender" name="gender" required />
-      <button type="submit" class="blue-button">Start Task</button>
-    </form>
-    <div id="error-message" role="alert" aria-live="assertive"></div>
-  </div>
-</section>
-
-<!-- Sorting page -->
-<section id="sorting-section" aria-label="Speaker sorting task">
-  <h2>Instructions</h2>
-  <p>Drag the speaker icons from the left into the grid area on the right and arrange them as you prefer.</p>
-
-  <div id="task-wrapper">
-    <div id="speaker-list"></div>
-    <div id="sorting-container"></div>
-    <div id="top-layer-container"></div> <!-- New container for draggable icons on top -->
-  </div>
-</section>
-
-<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-<script>
-  const conditions = {
-    M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
-    M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
-    M_SSEvsL1: ['US','TK','MB','KN','EQ','MF','GI','TV','QN','FI','DM','RU'],
-    M_SSEvsL2: ['TD','DG','KD','EK','QE','XU','VI','HS','WI','EL','PP','WW'],
-    F_SSEvsP1: ['XL','WN','KY','GQ','YR','VW','RX','BN','KX','BK','MP','PM'],
-    F_SSEvsP2: ['IT','KZ','JS','RN','MW','XN','RF','LM','ZY','DI','PR','HG'],
-    F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
-    F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
-  };
-
-  let audioPlaying = null;
-
-  function getConditionFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const cond = urlParams.get('cond');
-    if (cond && conditions[cond]) return cond;
-    const keys = Object.keys(conditions);
-    return keys[Math.floor(Math.random() * keys.length)];
-  }
-
-  function setupAudioControl(button, audio) {
-    button.addEventListener('click', () => {
-      if (audioPlaying && audioPlaying !== audio) {
-        audioPlaying.pause();
-        audioPlaying.currentTime = 0;
-      }
-      if (audio.paused) {
-        audio.play();
-        audioPlaying = audio;
-      } else {
-        audio.pause();
-        audioPlaying = null;
-      }
-    });
-  }
-
-  function createSpeakerDiv(initials) {
-    const div = document.createElement('div');
-    div.className = 'draggable';
-    div.dataset.id = initials;
-
-    const audio = document.createElement('audio');
-    audio.src = `audio/${initials}.wav`;
-    audio.preload = 'none';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = initials;
-    btn.className = 'speaker-button';
-
-    setupAudioControl(btn, audio);
-
-    div.appendChild(btn);
-    div.appendChild(audio);
-
-    div.style.position = 'absolute';
-    div.style.transform = '';
-    div.setAttribute('data-x', 0);
-    div.setAttribute('data-y', 0);
-
-    return div;
-  }
-
-  function initSorting(conditionKey) {
-    const speakers = conditions[conditionKey];
-    const container = document.getElementById('sorting-container');
-    const speakerList = document.getElementById('speaker-list');
-    const topLayer = document.getElementById('top-layer-container');
-
-    // Clear previous content
-    speakerList.innerHTML = '';
-    container.innerHTML = '';
-    topLayer.innerHTML = '';
-
-    const colWidth = 60;
-    const rowHeight = 40;
-
-    // Position speakers in two vertical columns on left (#speaker-list)
-    speakers.forEach((initials, index) => {
-      const speakerDiv = createSpeakerDiv(initials);
-
-      const col = index % 2;
-      const row = Math.floor(index / 2);
-
-      const x = col * colWidth;
-      const y = row * rowHeight;
-
-      speakerDiv.style.left = `${x}px`;
-      speakerDiv.style.top = `${y}px`;
-
-      speakerDiv.setAttribute('data-x', x);
-      speakerDiv.setAttribute('data-y', y);
-
-      // Append speaker to the new top-layer container instead of #speaker-list
-      topLayer.appendChild(speakerDiv);
-    });
-
-    // Enable dragging on all .draggable elements, free movement anywhere on page
-    interact('.draggable').draggable({
-      inertia: true,
-      listeners: {
-        move(event) {
-          const target = event.target;
-          let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-          let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          target.setAttribute('data-x', x);
-          target.setAttribute('data-y', y);
-        }
-      }
-    });
-  }
-
-  function showError(msg) {
-    const errEl = document.getElementById('error-message');
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
-
-  function hideError() {
-    const errEl = document.getElementById('error-message');
-    errEl.textContent = '';
-    errEl.style.display = 'none';
-  }
-
-  document.getElementById('age-gender-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    hideError();
-
-    const ageInput = document.getElementById('age');
-    const genderInput = document.getElementById('gender');
-    const age = parseInt(ageInput.value, 10);
-    const gender = genderInput.value.trim();
-
-    if (isNaN(age) || age < 4 || age > 17) {
-      showError('Please enter a valid age between 4 and 17.');
-      ageInput.focus();
-      return;
-    }
-
-    if (!gender) {
-      showError('Please enter your gender.');
-      genderInput.focus();
-      return;
-    }
-
-    document.getElementById('intro-section').style.display = 'none';
-    document.getElementById('sorting-section').style.display = 'flex';
-
-    const condition = getConditionFromUrl();
-    initSorting(condition);
-  });
-</script>
-
-</body>
-</html>
-
+.speaker-button:focus {
+  outline: 2px solid #2a85ff;
+  outline-offset: 2px;
+}
