@@ -56,12 +56,26 @@ input, select {
   text-align: center;
 }
 
+/* Rotate warning only shown on second screen mobile portrait */
 #rotate-warning {
   display: none;
-  text-align: center;
+  z-index: 9999;
   background: #ffecb3;
-  padding: 10px;
+  text-align: center;
   font-weight: bold;
+}
+
+.full-screen-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #sorting-section {
@@ -133,12 +147,12 @@ input, select {
   cursor: pointer;
 }
 
-.mobile-only {
+#instruction-buttons {
   display: none;
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
-  .mobile-only {
+  #instruction-buttons {
     display: block;
   }
 
@@ -156,11 +170,12 @@ input, select {
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
-  #rotate-warning {
-    display: block;
+  body.task-active #rotate-warning {
+    display: flex;
   }
 
   #sorting-section {
     display: none !important;
   }
 }
+
