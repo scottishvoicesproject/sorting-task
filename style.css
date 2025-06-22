@@ -59,11 +59,11 @@ select {
 
 #rotate-warning {
   display: none;
+  position: fixed;
   z-index: 9999;
   background: #ffecb3;
   text-align: center;
   font-weight: bold;
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -163,26 +163,34 @@ select {
   cursor: pointer;
 }
 
-@media (max-width: 768px) and (orientation: landscape) {
-  #rotate-warning {
-    display: none;
-  }
+.submit-wrapper {
+  margin-top: 20px;
+}
 
+#completion-section {
+  display: none;
+  padding: 50px;
+  text-align: center;
+}
+
+.completion-message {
+  background: white;
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
   .task-flex {
-    transform: scale(0.5);
+    transform: scale(0.35);
     transform-origin: top left;
     height: 400px;
     overflow: visible;
   }
-
   #sorting-container {
-    width: 600px;
-    height: 300px;
     left: 160px;
-  }
-
-  .draggable {
-    transform: scale(0.9);
   }
 }
 
@@ -190,10 +198,10 @@ select {
   body.task-active #rotate-warning {
     display: flex;
   }
-
   #sorting-section {
     display: none !important;
   }
 }
+
 
 
