@@ -1,4 +1,4 @@
-// Responsive speaker layout strategy (no overlapping)
+// Responsive speaker layout strategy with improved zig-zag positioning and spacing
 
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
@@ -62,10 +62,23 @@ function initSorting(conditionKey) {
   sortingContainer.innerHTML = '';
   speakerArea.innerHTML = '';
 
-  speakers.forEach((initials, i) => {
+  // Create two vertical columns for zig-zag positioning
+  const col1 = document.createElement('div');
+  const col2 = document.createElement('div');
+  col1.className = 'speaker-col';
+  col2.className = 'speaker-col';
+
+  speakers.forEach((initials, index) => {
     const speakerDiv = createSpeakerDiv(initials);
-    speakerArea.appendChild(speakerDiv);
+    if (index % 2 === 0) {
+      col1.appendChild(speakerDiv);
+    } else {
+      col2.appendChild(speakerDiv);
+    }
   });
+
+  speakerArea.appendChild(col1);
+  speakerArea.appendChild(col2);
 
   interact('.draggable').draggable({
     inertia: true,
