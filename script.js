@@ -56,15 +56,14 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const iconColumn = document.getElementById('icon-column');
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  iconColumn.innerHTML = '';
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = 10;
-  const colRight = 75;
+  const colLeft = 50;   // Updated to be closer to the grid
+  const colRight = 110;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -77,11 +76,11 @@ function initSorting(conditionKey) {
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      speakerDiv.style.top = `${60 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
       speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      speakerDiv.style.top = `${60 + rowRight * rowHeight}px`;
       rowRight++;
     }
 
@@ -115,6 +114,20 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
+function checkOrientationWarning() {
+  const rotateWarning = document.getElementById('rotate-warning');
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  const isTaskActive = document.body.classList.contains('task-active');
+  if (rotateWarning) {
+    rotateWarning.style.display = (isPortrait && isTaskActive) ? 'flex' : 'none';
+  }
+}
+
+window.addEventListener('resize', checkOrientationWarning);
+window.addEventListener('orientationchange', checkOrientationWarning);
+
+// FORM SUBMISSION
+
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -132,25 +145,15 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   }
 
   document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('sorting-section').style.display = 'block';
+  document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
+  checkOrientationWarning();
 
-  checkOrientation(); // Check rotate on entry
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
-function checkOrientation() {
-  const warning = document.getElementById('rotate-warning');
-  const isPortrait = window.innerHeight > window.innerWidth;
-  if (isPortrait && document.body.classList.contains('task-active')) {
-    warning.style.display = 'flex';
-  } else {
-    warning.style.display = 'none';
-  }
-}
-
-window.addEventListener('resize', checkOrientation);
+// INSTRUCTIONS TOGGLE
 
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
@@ -165,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hideBtn.style.display = 'none';
       showBtn.style.display = 'inline-block';
     });
-
     showBtn.addEventListener('click', () => {
       instructions.classList.remove('hide');
       hideBtn.style.display = 'inline-block';
@@ -173,10 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.getElementById('submit-button').addEventListener('click', () => {
-    if (confirm("Are you sure you want to submit your task?")) {
-      window.location.href = "thankyou.html"; // Placeholder page
-    }
-  });
+  const submitBtn = document.getElementById('submit-task');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to submit the task?")) {
+        window.location.href = 'thankyou.html';
+      }
+    });
+  }
 });
+
 
