@@ -74,7 +74,7 @@ select {
   justify-content: center;
 }
 
-/* Main Sorting Section */
+/* === Layout Containers === */
 #sorting-section {
   padding: 20px;
   display: none;
@@ -106,21 +106,25 @@ select {
   gap: 10px;
 }
 
-/* === TASK AREA === */
-#task-wrapper {
-  position: relative;
-  max-width: 1000px;
-  height: 500px;
-  margin: 30px auto;
+/* Center task area */
+.task-flex {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
+}
+
+#task-wrapper {
+  position: relative;
+  width: 1000px;
+  height: 500px;
 }
 
 /* Grid */
 #sorting-container {
   position: absolute;
-  left: 200px; /* adjusted for better centering */
+  left: 200px;
   top: 0;
   width: 700px;
   height: 400px;
@@ -163,18 +167,17 @@ select {
   cursor: pointer;
 }
 
-/* MOBILE LANDSCAPE */
+/* Mobile Landscape Fix */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
   }
 
-  #task-wrapper {
+  .task-flex {
     transform: scale(0.55);
     transform-origin: top left;
     height: 400px;
     overflow: visible;
-    margin-top: 0;
   }
 
   #sorting-container {
@@ -188,7 +191,7 @@ select {
   }
 }
 
-/* MOBILE PORTRAIT */
+/* Portrait - block task */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
@@ -198,3 +201,4 @@ select {
     display: none !important;
   }
 }
+
