@@ -5,7 +5,6 @@ html, body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 /* === INTRO PAGE === */
@@ -83,14 +82,6 @@ select {
   display: none;
 }
 
-#scaled-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform-origin: top center;
-}
-
-/* ICONS + GRID CONTAINER */
 #task-wrapper {
   display: flex;
   justify-content: center;
@@ -98,7 +89,12 @@ select {
   margin-top: 20px;
   position: relative;
   min-height: 500px;
-  overflow: visible;
+}
+
+#task-inner {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 #icon-column {
@@ -182,17 +178,12 @@ select {
     transform-origin: top center;
   }
 
-  #scaled-wrapper {
+  #task-inner {
     transform: scale(0.45);
     transform-origin: top center;
   }
 
   #submit-button {
     margin-top: 10px;
-  }
-
-  #task-wrapper {
-    flex-direction: column;
-    align-items: center;
   }
 }
