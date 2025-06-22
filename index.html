@@ -28,21 +28,23 @@
   <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
 
   <section id="sorting-section" style="display:none;">
-    <div id="instructions-wrapper">
-      <button id="toggle-instructions">Show Instructions</button>
-      <div id="instructions">
+    <div id="instructions-wrapper" class="mobile-only">
+      <div id="instructions" class="show">
+        <button id="hide-instructions">Hide Instructions</button>
         <p>
           These 12 icons have the initials of 12 speakers who all are saying the same sentence.
           Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
           and to move the rectangles onto the grid to group them together by how similar they sound in
           how they speak. Place the blocks close to each other if you think they belong to one group and
-          further apart if they sound different.
+          further apart if they sound different. The distance between different groups does not matter.
+          You can listen to the speakers as often as you want to, and you can build as few or as many
+          groupings as you like.
         </p>
       </div>
+      <button id="show-instructions" style="display:none;">Show Instructions</button>
     </div>
 
     <div id="task-wrapper">
-      <div id="speaker-area" aria-label="List of speakers"></div>
       <div id="sorting-container" aria-label="Sorting area"></div>
     </div>
   </section>
@@ -50,5 +52,4 @@
   <script src="script.js"></script>
 </body>
 </html>
-
 
