@@ -1,4 +1,4 @@
-// Responsive speaker layout strategy with improved zig-zag positioning and spacing
+// Restored previous layout logic with improved icon spacing and non-overlapping grid
 
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
@@ -51,42 +51,50 @@ function createSpeakerDiv(initials) {
 
   div.appendChild(btn);
   div.appendChild(audio);
+  div.setAttribute('data-x', 0);
+  div.setAttribute('data-y', 0);
   return div;
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
+  const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
-  const speakerArea = document.getElementById('speaker-area');
 
-  sortingContainer.innerHTML = '';
-  speakerArea.innerHTML = '';
+  // Remove previous icons
+  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  // Create two vertical columns for zig-zag positioning
-  const col1 = document.createElement('div');
-  const col2 = document.createElement('div');
-  col1.className = 'speaker-col';
-  col2.className = 'speaker-col';
+  const colLeft = 10;   // Adjusted closer to grid
+  const colRight = 85;  // Adjusted closer to grid
+  const rowHeight = 50;
+  let rowLeft = 0;
+  let rowRight = 0;
 
-  speakers.forEach((initials, index) => {
+  for (let i = 0; i < speakers.length; i++) {
+    const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
-    if (index % 2 === 0) {
-      col1.appendChild(speakerDiv);
-    } else {
-      col2.appendChild(speakerDiv);
-    }
-  });
+    speakerDiv.style.position = 'absolute';
 
-  speakerArea.appendChild(col1);
-  speakerArea.appendChild(col2);
+    if (i % 2 === 0) {
+      speakerDiv.style.left = `${colLeft}px`;
+      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      rowLeft++;
+    } else {
+      speakerDiv.style.left = `${colRight}px`;
+      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      rowRight++;
+    }
+
+    taskWrapper.appendChild(speakerDiv);
+  }
 
   interact('.draggable').draggable({
     inertia: true,
     listeners: {
       move(event) {
         const target = event.target;
-        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
