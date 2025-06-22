@@ -10,7 +10,6 @@ const conditions = {
 };
 
 let audioPlaying = null;
-let taskStarted = false;
 
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -57,8 +56,9 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const iconsArea = document.getElementById('icons-area');
-  iconsArea.innerHTML = '';
+  const taskWrapper = document.getElementById('task-wrapper');
+
+  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const colLeft = 10;
   const colRight = 85;
@@ -70,6 +70,7 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
+    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -81,11 +82,12 @@ function initSorting(conditionKey) {
       rowRight++;
     }
 
-    iconsArea.appendChild(speakerDiv);
+    taskWrapper.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
-    inertia: false,
+    inertia: true,
+    modifiers: [],
     listeners: {
       move(event) {
         const target = event.target;
@@ -111,6 +113,22 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
+function checkRotateWarning() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const rotateWarning = document.getElementById('rotate-warning');
+  const isTaskPage = document.body.classList.contains('task-active');
+
+  if (isMobile && isTaskPage && isPortrait) {
+    rotateWarning.style.display = 'flex';
+  } else {
+    rotateWarning.style.display = 'none';
+  }
+}
+
+window.addEventListener('resize', checkRotateWarning);
+window.addEventListener('orientationchange', checkRotateWarning);
+
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -127,28 +145,21 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
-  taskStarted = true;
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
+  checkRotateWarning();
 
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
-document.getElementById('submit-task').addEventListener('click', () => {
-  const confirmSubmit = confirm('Are you sure you want to submit the task?');
-  if (confirmSubmit) {
-    document.getElementById('sorting-section').style.display = 'none';
-    document.getElementById('completion-section').style.display = 'block';
-  }
-});
-
 document.addEventListener('DOMContentLoaded', () => {
+  hideError();
+
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
-  const rotateWarning = document.getElementById('rotate-warning');
 
   if (hideBtn && showBtn && instructions) {
     hideBtn.addEventListener('click', () => {
@@ -163,11 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.addEventListener('orientationchange', () => {
-    if (window.innerWidth < 768 && window.innerHeight > window.innerWidth && taskStarted) {
-      rotateWarning.style.display = 'flex';
-    } else {
-      rotateWarning.style.display = 'none';
+  document.getElementById('submit-task').addEventListener('click', () => {
+    if (confirm("Are you sure you want to submit the task?")) {
+      window.location.href = "debrief.html";
     }
   });
 });
