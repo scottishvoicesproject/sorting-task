@@ -68,7 +68,6 @@ select {
 
 #instructions {
   max-width: 800px;
-  margin-bottom: 10px;
   font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
@@ -83,18 +82,18 @@ select {
 
 #task-wrapper {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 80px;
+  gap: 100px;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
   position: relative;
 }
 
 #sorting-container {
   position: relative;
-  width: 600px;
-  height: 300px;
+  width: 800px;
+  height: 500px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -130,7 +129,7 @@ select {
   cursor: pointer;
 }
 
-#submit-task {
+#submit-button {
   margin-top: 30px;
   padding: 10px 20px;
   font-size: 1rem;
@@ -139,7 +138,6 @@ select {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  width: fit-content;
 }
 
 /* Rotate warning */
@@ -162,7 +160,7 @@ select {
 /* === MOBILE OPTIMIZATION === */
 @media (max-width: 768px) {
   .intro-box {
-    transform: scale(0.8);
+    transform: scale(0.9);
     transform-origin: top center;
   }
 
@@ -179,12 +177,13 @@ select {
   }
 
   #sorting-container {
-    width: 600px;
-    height: 300px;
+    width: 800px;
+    height: 500px;
   }
 
-  #submit-task {
+  #submit-button {
     width: 200px;
     text-align: center;
   }
 }
+
