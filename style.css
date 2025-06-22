@@ -106,19 +106,21 @@ select {
   gap: 10px;
 }
 
+/* === TASK AREA === */
 #task-wrapper {
   position: relative;
-  width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   height: 500px;
-  margin: 0 auto;
-  margin-top: 30px;
+  margin: 30px auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* Sorting Grid */
+/* Grid */
 #sorting-container {
   position: absolute;
-  left: 180px;
+  left: 200px; /* adjusted for better centering */
   top: 0;
   width: 700px;
   height: 400px;
@@ -132,7 +134,7 @@ select {
   z-index: 1;
 }
 
-/* Draggable Icons */
+/* Icons */
 .draggable {
   position: absolute;
   width: 60px;
@@ -161,23 +163,24 @@ select {
   cursor: pointer;
 }
 
-/* Landscape Mobile */
+/* MOBILE LANDSCAPE */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
   }
 
   #task-wrapper {
-    transform: scale(0.7);
+    transform: scale(0.55);
     transform-origin: top left;
     height: 400px;
     overflow: visible;
+    margin-top: 0;
   }
 
   #sorting-container {
     width: 600px;
     height: 300px;
-    left: 140px;
+    left: 160px;
   }
 
   .draggable {
@@ -185,7 +188,7 @@ select {
   }
 }
 
-/* Portrait Mobile: Show warning and hide task */
+/* MOBILE PORTRAIT */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
@@ -195,7 +198,3 @@ select {
     display: none !important;
   }
 }
-
-
-
-
