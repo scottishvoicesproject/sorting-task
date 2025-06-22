@@ -68,13 +68,14 @@ select {
 
 #instructions {
   max-width: 800px;
+  margin-bottom: 10px;
   font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  text-align: left;
+  text-align: center;
 }
 
 #instructions.hide {
@@ -83,16 +84,14 @@ select {
 
 #task-wrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 100px;
+  gap: 40px;
+  margin: 0 auto;
+  max-width: 1200px;
   position: relative;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
 }
 
-/* Sorting Grid */
 #sorting-container {
   position: relative;
   width: 800px;
@@ -107,7 +106,6 @@ select {
   overflow: hidden;
 }
 
-/* Draggable icons */
 .draggable {
   width: 60px;
   height: 40px;
@@ -134,7 +132,7 @@ select {
 }
 
 #submit-button {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 10px 20px;
   font-size: 1rem;
   border: none;
@@ -163,20 +161,19 @@ select {
 
 /* === MOBILE OPTIMIZATION === */
 @media (max-width: 768px) {
-  .intro-box {
-    transform: scale(0.85);
+  body {
+    transform: scale(0.65);
     transform-origin: top center;
   }
 
-  #sorting-section {
-    transform: scale(0.6);
-    transform-origin: top center;
-    padding: 0;
+  .intro-box {
+    margin: 40px auto;
   }
 
   #task-wrapper {
     flex-direction: column;
-    gap: 30px;
+    align-items: center;
+    gap: 20px;
   }
 
   #sorting-container {
@@ -187,5 +184,11 @@ select {
   #submit-button {
     width: 200px;
     text-align: center;
+  }
+
+  .draggable {
+    font-size: 0.9rem;
+    width: 56px;
+    height: 38px;
   }
 }
