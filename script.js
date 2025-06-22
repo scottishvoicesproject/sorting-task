@@ -1,5 +1,3 @@
-// ✅ script.js
-
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
   M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
@@ -58,16 +56,14 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
   const iconsArea = document.getElementById('icons-area');
   const sortingContainer = document.getElementById('sorting-container');
 
   // Remove previous icons
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
-  iconsArea.innerHTML = '';
+  iconsArea.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const colLeft = 0;
-  const colRight = 70;
+  const colRight = 75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -79,11 +75,11 @@ function initSorting(conditionKey) {
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
+      speakerDiv.style.top = `${rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
       speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
+      speakerDiv.style.top = `${rowRight * rowHeight}px`;
       rowRight++;
     }
 
@@ -153,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
+  const submitBtn = document.getElementById('submit-task');
+  const completion = document.getElementById('completion-section');
 
   if (hideBtn && showBtn && instructions) {
     hideBtn.addEventListener('click', () => {
@@ -167,13 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const submitBtn = document.getElementById('submit-task');
-  if (submitBtn) {
+  if (submitBtn && completion) {
     submitBtn.addEventListener('click', () => {
-      const confirmed = confirm('Are you sure you want to submit your task?');
-      if (confirmed) {
+      const confirmSubmit = confirm('Are you sure you want to submit your task now?');
+      if (confirmSubmit) {
         document.getElementById('sorting-section').style.display = 'none';
-        document.getElementById('completion-section').style.display = 'block';
+        completion.style.display = 'block';
       }
     });
   }
