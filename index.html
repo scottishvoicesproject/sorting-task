@@ -2,19 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1. maximum-scale=1.0" />
   <title>Scottish Voices Project</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-  <!-- Intro Form -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="4" max="17" />
-      
+
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -28,12 +27,10 @@
     </form>
   </div>
 
-  <!-- Rotate warning -->
   <div id="rotate-warning">
     🔄 Please rotate your device to landscape to continue.
   </div>
 
-  <!-- Main Sorting Section -->
   <section id="sorting-section">
     <div id="instructions-wrapper">
       <div id="instruction-buttons">
@@ -55,10 +52,10 @@
 
     <div class="task-flex">
       <div id="task-wrapper">
-        <!-- Icons appear here -->
         <div id="sorting-container" aria-label="Sorting grid"></div>
       </div>
     </div>
+
   </section>
 
   <script src="script.js"></script>
