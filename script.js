@@ -10,6 +10,7 @@ const conditions = {
 };
 
 let audioPlaying = null;
+let taskStarted = false;
 
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -56,10 +57,8 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const iconArea = document.getElementById('icons-area');
-  const sortingContainer = document.getElementById('sorting-container');
-  iconArea.innerHTML = '';
-  sortingContainer.innerHTML = '';
+  const iconsArea = document.getElementById('icons-area');
+  iconsArea.innerHTML = '';
 
   const colLeft = 10;
   const colRight = 85;
@@ -71,29 +70,22 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
-    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${rowLeft * rowHeight}px`;
+      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
       speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${rowRight * rowHeight}px`;
+      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
       rowRight++;
     }
 
-    iconArea.appendChild(speakerDiv);
+    iconsArea.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
-    inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: false
-      })
-    ],
+    inertia: false,
     listeners: {
       move(event) {
         const target = event.target;
@@ -135,51 +127,47 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     return;
   }
 
+  taskStarted = true;
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
 
   const cond = getConditionFromUrl();
   initSorting(cond);
+});
 
-  checkOrientation(); // Ensure warning on mobile if needed
+document.getElementById('submit-task').addEventListener('click', () => {
+  const confirmSubmit = confirm('Are you sure you want to submit the task?');
+  if (confirmSubmit) {
+    document.getElementById('sorting-section').style.display = 'none';
+    document.getElementById('completion-section').style.display = 'block';
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  hideError();
-
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
+  const rotateWarning = document.getElementById('rotate-warning');
 
-  hideBtn.addEventListener('click', () => {
-    instructions.classList.add('hide');
-    hideBtn.style.display = 'none';
-    showBtn.style.display = 'inline-block';
-  });
+  if (hideBtn && showBtn && instructions) {
+    hideBtn.addEventListener('click', () => {
+      instructions.classList.add('hide');
+      hideBtn.style.display = 'none';
+      showBtn.style.display = 'inline-block';
+    });
+    showBtn.addEventListener('click', () => {
+      instructions.classList.remove('hide');
+      hideBtn.style.display = 'inline-block';
+      showBtn.style.display = 'none';
+    });
+  }
 
-  showBtn.addEventListener('click', () => {
-    instructions.classList.remove('hide');
-    hideBtn.style.display = 'inline-block';
-    showBtn.style.display = 'none';
-  });
-
-  document.getElementById('submit-task').addEventListener('click', () => {
-    if (confirm('Are you sure you want to submit your task?')) {
-      document.getElementById('sorting-section').style.display = 'none';
-      document.getElementById('completion-section').style.display = 'block';
+  window.addEventListener('orientationchange', () => {
+    if (window.innerWidth < 768 && window.innerHeight > window.innerWidth && taskStarted) {
+      rotateWarning.style.display = 'flex';
+    } else {
+      rotateWarning.style.display = 'none';
     }
   });
 });
-
-function checkOrientation() {
-  const warning = document.getElementById('rotate-warning');
-  const sortingSection = document.getElementById('sorting-section');
-  if (window.innerWidth < window.innerHeight && sortingSection.style.display !== 'none') {
-    warning.style.display = 'flex';
-  } else {
-    warning.style.display = 'none';
-  }
-}
-
-window.addEventListener('resize', checkOrientation);
