@@ -57,11 +57,12 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
+  const sortingContainer = document.getElementById('sorting-container');
 
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const colLeft = 10;
-  const colRight = 85;
+  const colRight = 75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -70,7 +71,6 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
-    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -113,22 +113,6 @@ function hideError() {
   errEl.style.display = 'none';
 }
 
-function checkRotateWarning() {
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  const rotateWarning = document.getElementById('rotate-warning');
-  const isTaskPage = document.body.classList.contains('task-active');
-
-  if (isMobile && isTaskPage && isPortrait) {
-    rotateWarning.style.display = 'flex';
-  } else {
-    rotateWarning.style.display = 'none';
-  }
-}
-
-window.addEventListener('resize', checkRotateWarning);
-window.addEventListener('orientationchange', checkRotateWarning);
-
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
@@ -148,7 +132,6 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
-  checkRotateWarning();
 
   const cond = getConditionFromUrl();
   initSorting(cond);
@@ -174,9 +157,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Rotate warning logic
+  function checkOrientation() {
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    const isTaskActive = document.body.classList.contains('task-active');
+    document.getElementById('rotate-warning').style.display =
+      (isPortrait && isTaskActive) ? 'flex' : 'none';
+  }
+
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  checkOrientation();
+
+  // Submit button
   document.getElementById('submit-task').addEventListener('click', () => {
     if (confirm("Are you sure you want to submit the task?")) {
-      window.location.href = "debrief.html";
+      window.location.href = "thankyou.html";
     }
   });
 });
