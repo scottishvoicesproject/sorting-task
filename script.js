@@ -115,39 +115,42 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'block';
+  document.body.classList.add('task-active');
 
   const cond = getConditionFromUrl();
   initSorting(cond);
-  checkOrientation(); // update rotate warning on load
+  checkOrientation();
 });
 
 document.getElementById('hide-instructions').addEventListener('click', () => {
   document.getElementById('instructions').classList.remove('show');
   document.getElementById('instructions').classList.add('hide');
+  document.getElementById('hide-instructions').style.display = 'none';
   document.getElementById('show-instructions').style.display = 'inline-block';
 });
 
 document.getElementById('show-instructions').addEventListener('click', () => {
-  document.getElementById('instructions').classList.add('show');
   document.getElementById('instructions').classList.remove('hide');
+  document.getElementById('instructions').classList.add('show');
   document.getElementById('show-instructions').style.display = 'none';
+  document.getElementById('hide-instructions').style.display = 'inline-block';
 });
 
 function checkOrientation() {
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
   const isMobile = window.innerWidth <= 768;
-  const rotateWarning = document.getElementById('rotate-warning');
-  const sortingSectionVisible = document.getElementById('sorting-section').style.display === 'block';
+  const sortingVisible = document.getElementById('sorting-section').style.display === 'block';
+  const warning = document.getElementById('rotate-warning');
 
-  if (isMobile && isPortrait && sortingSectionVisible) {
-    rotateWarning.style.display = 'block';
+  if (isMobile && isPortrait && sortingVisible) {
+    warning.style.display = 'flex';
   } else {
-    rotateWarning.style.display = 'none';
+    warning.style.display = 'none';
   }
 }
 
-window.addEventListener('orientationchange', checkOrientation);
 window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
 
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
