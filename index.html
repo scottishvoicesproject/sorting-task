@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scottish Voices Project</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
@@ -47,8 +47,12 @@
     </div>
     <button id="show-instructions" class="blue-button" style="display:none; margin-bottom:10px;">Show Instructions</button>
 
+    <!-- New container wraps icons + grid -->
     <div id="task-wrapper">
-      <div id="sorting-container" aria-label="Sorting Grid"></div>
+      <div id="task-inner-container">
+        <div id="sorting-container" aria-label="Sorting Grid"></div>
+        <!-- Icons will be dynamically injected and positioned absolutely inside #task-inner-container -->
+      </div>
     </div>
 
     <button id="submit-button">Submit Task</button>
@@ -57,5 +61,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
