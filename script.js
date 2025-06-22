@@ -59,10 +59,11 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = -140;
-  const colRight = -75;
+  const colLeft = -160;
+  const colRight = -95;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -179,3 +180,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
