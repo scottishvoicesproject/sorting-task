@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scottish Voices Project</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scottish Voices Task</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-  <!-- Age/Gender Form -->
-  <div id="intro-box" class="intro-box">
+  <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
-      <input type="number" id="age" name="age" min="4" max="17" required>
-
+      <input type="number" id="age" name="age" required min="4" max="17" />
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -22,39 +20,37 @@
         <option value="F">Female</option>
         <option value="O">Other</option>
       </select>
-
       <button type="submit" class="blue-button">Start Task</button>
       <div id="error-message"></div>
     </form>
   </div>
 
-  <!-- Rotate warning only shown after intro -->
   <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
 
-  <!-- Main Sorting Task -->
   <section id="sorting-section" style="display: none;">
     <div id="instructions">
       <p>
-        These 12 icons have the initials of 12 speakers who all are saying the same sentence. Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak.
+        These 12 icons represent different speakers. Click to listen and drag to group them by how similar they sound.
+        You can listen as many times as you want. Place icons closer together for similar-sounding speakers.
       </p>
       <button id="hide-instructions">Hide Instructions</button>
-      <button id="show-instructions" style="display:none;">Show Instructions</button>
+      <button id="show-instructions" style="display: none;">Show Instructions</button>
     </div>
 
     <div id="task-wrapper">
-      <div id="icons-area" aria-label="Speaker Icons"></div>
-      <div id="sorting-container" aria-label="Sorting Grid"></div>
+      <div id="icons-area"></div>
+      <div id="sorting-container"></div>
     </div>
 
-    <button id="submit-task" class="blue-button">Submit</button>
+    <button id="submit-task">Submit Task</button>
   </section>
 
-  <!-- Completion / Debrief Page Placeholder -->
-  <section id="completion-section" style="display:none;">
-    <h2>Thank you for participating!</h2>
-    <p>You may now close this window.</p>
+  <section id="completion-section" style="display: none;">
+    <h2>Thank you for completing the task!</h2>
+    <p>Your submission has been received.</p>
   </section>
 
   <script src="script.js"></script>
 </body>
 </html>
+
