@@ -7,6 +7,7 @@ body {
   overflow-x: hidden;
 }
 
+/* First (intro) page */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -58,23 +59,25 @@ select {
   text-align: center;
 }
 
-/* Task section */
+/* Task section layout */
 #sorting-section {
   padding: 20px;
   display: none;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
+  align-items: center;
 }
 
 #instructions {
   max-width: 800px;
+  margin-bottom: 10px;
+  font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  font-size: 1rem;
+  text-align: left;
 }
 
 #instructions.hide {
@@ -143,7 +146,7 @@ select {
   cursor: pointer;
 }
 
-/* Rotate warning */
+/* Rotate warning overlay */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -163,20 +166,20 @@ select {
 /* === MOBILE STYLES === */
 @media (max-width: 768px) {
   .intro-box {
-    transform: scale(0.88);
+    transform: scale(0.85);
     transform-origin: top center;
   }
 
   #sorting-section {
-    transform: scale(0.55);
+    transform: scale(0.5);
     transform-origin: top center;
     padding: 0;
+    margin-bottom: -100px;
   }
 
   #task-wrapper {
     flex-direction: column;
     align-items: center;
-    gap: 10px;
   }
 
   #sorting-container {
@@ -185,9 +188,9 @@ select {
   }
 
   #submit-button {
-    margin-top: 10px;
-    width: 200px;
+    width: 220px;
     text-align: center;
+    margin-top: 20px;
   }
 }
 
