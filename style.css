@@ -27,7 +27,8 @@ label {
   font-weight: bold;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -73,6 +74,7 @@ input, select {
   justify-content: center;
 }
 
+/* Main Sorting Section */
 #sorting-section {
   padding: 20px;
   display: none;
@@ -113,9 +115,11 @@ input, select {
   margin-top: 30px;
 }
 
+/* Sorting Grid */
 #sorting-container {
-  position: relative;
-  left: 160px; /* leave space for icon columns */
+  position: absolute;
+  left: 180px;
+  top: 0;
   width: 700px;
   height: 400px;
   border: 2px dashed #aaa;
@@ -125,9 +129,10 @@ input, select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  overflow: visible;
+  z-index: 1;
 }
 
+/* Draggable Icons */
 .draggable {
   position: absolute;
   width: 60px;
@@ -162,19 +167,25 @@ input, select {
     display: none;
   }
 
-  #sorting-container {
-    max-width: 90vw;
-    height: 320px;
-    left: 120px;
+  #task-wrapper {
+    transform: scale(0.7);
+    transform-origin: top left;
+    height: 400px;
+    overflow: visible;
   }
 
-  #task-wrapper {
-    height: 450px;
-    margin-top: 10px;
+  #sorting-container {
+    width: 600px;
+    height: 300px;
+    left: 140px;
+  }
+
+  .draggable {
+    transform: scale(0.9);
   }
 }
 
-/* Portrait Mobile: show rotate warning */
+/* Portrait Mobile: Show warning and hide task */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
