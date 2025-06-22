@@ -14,7 +14,7 @@ let audioPlaying = null;
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
-  return (cond && conditions[cond]) ? cond : Object.keys(conditions)[Math.floor(Math.random() * 8)];
+  return (cond && conditions[cond]) ? cond : Object.keys(conditions)[Math.floor(Math.random() * Object.keys(conditions).length)];
 }
 
 function createSpeakerDiv(initials, x, y) {
@@ -49,22 +49,24 @@ function createSpeakerDiv(initials, x, y) {
   div.appendChild(audio);
   div.style.left = `${x}px`;
   div.style.top = `${y}px`;
+  div.style.position = 'absolute';
 
   document.body.appendChild(div);
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  let startX = 20;
-  let startY = 120;
-  let spacingY = 50;
-  let left = true;
+  const spacingY = 50;
+  const leftX = 20;
+  const rightX = 90;
+  let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
-    const x = left ? 20 : 90;
-    const y = startY + spacingY * Math.floor(i / 2);
+    const isLeft = i % 2 === 0;
+    const x = isLeft ? leftX : rightX;
+    const y = 120 + row * spacingY;
     createSpeakerDiv(speakers[i], x, y);
-    left = !left;
+    if (!isLeft) row++;
   }
 
   interact('.draggable').draggable({
@@ -98,7 +100,7 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
   hideError();
 
-  const age = document.getElementById('age').value.trim();
+  const age = parseInt(document.getElementById('age').value.trim());
   const gender = document.getElementById('gender').value;
 
   if (!age || age < 1 || age > 120) {
@@ -116,13 +118,38 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
   const cond = getConditionFromUrl();
   initSorting(cond);
+  checkOrientation(); // update rotate warning on load
 });
 
-document.getElementById('toggle-instructions').addEventListener('click', () => {
-  document.getElementById('instructions').classList.toggle('show');
+document.getElementById('hide-instructions').addEventListener('click', () => {
+  document.getElementById('instructions').classList.remove('show');
+  document.getElementById('instructions').classList.add('hide');
+  document.getElementById('show-instructions').style.display = 'inline-block';
 });
 
-window.addEventListener('orientationchange', () => {
-  document.body.classList.toggle('landscape', window.orientation === 90 || window.orientation === -90);
+document.getElementById('show-instructions').addEventListener('click', () => {
+  document.getElementById('instructions').classList.add('show');
+  document.getElementById('instructions').classList.remove('hide');
+  document.getElementById('show-instructions').style.display = 'none';
 });
 
+function checkOrientation() {
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  const isMobile = window.innerWidth <= 768;
+  const rotateWarning = document.getElementById('rotate-warning');
+  const sortingSectionVisible = document.getElementById('sorting-section').style.display === 'block';
+
+  if (isMobile && isPortrait && sortingSectionVisible) {
+    rotateWarning.style.display = 'block';
+  } else {
+    rotateWarning.style.display = 'none';
+  }
+}
+
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('resize', checkOrientation);
+
+document.addEventListener('DOMContentLoaded', () => {
+  hideError();
+  checkOrientation();
+});
