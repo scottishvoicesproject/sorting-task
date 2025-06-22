@@ -57,14 +57,14 @@ function createSpeakerDiv(initials, x, y) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const spacingY = 50;
-  const leftX = 20;
-  const rightX = 90;
+  const leftX = window.innerWidth >= 768 ? 50 : 10;
+  const rightX = window.innerWidth >= 768 ? 120 : 80;
   let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
     const isLeft = i % 2 === 0;
     const x = isLeft ? leftX : rightX;
-    const y = 120 + row * spacingY;
+    const y = 220 + row * spacingY;
     createSpeakerDiv(speakers[i], x, y);
     if (!isLeft) row++;
   }
