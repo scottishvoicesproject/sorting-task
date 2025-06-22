@@ -1,3 +1,5 @@
+// ✅ script.js
+
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
   M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
@@ -57,11 +59,15 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
+  const iconsArea = document.getElementById('icons-area');
+  const sortingContainer = document.getElementById('sorting-container');
 
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
+  iconsArea.innerHTML = '';
 
-  const colLeft = 10;
-  const colRight = 85;
+  const colLeft = 0;
+  const colRight = 70;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -70,7 +76,6 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
-    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -82,7 +87,7 @@ function initSorting(conditionKey) {
       rowRight++;
     }
 
-    taskWrapper.appendChild(speakerDiv);
+    iconsArea.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
@@ -142,7 +147,6 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   initSorting(cond);
 });
 
-// Show/hide instructions
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
 
@@ -162,14 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
       showBtn.style.display = 'none';
     });
   }
-});
 
-// Submit button placeholder logic
-document.getElementById('submit-task').addEventListener('click', () => {
-  if (confirm('Are you sure you would like to submit the task now?')) {
-    document.getElementById('sorting-section').style.display = 'none';
-    document.getElementById('completion-section').style.display = 'block';
+  const submitBtn = document.getElementById('submit-task');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      const confirmed = confirm('Are you sure you want to submit your task?');
+      if (confirmed) {
+        document.getElementById('sorting-section').style.display = 'none';
+        document.getElementById('completion-section').style.display = 'block';
+      }
+    });
   }
 });
-
-
