@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scottish Voices Task</title>
+  <title>Scottish Voices Project</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
+  <!-- Intro Page -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="4" max="17" />
+      
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -20,34 +22,38 @@
         <option value="F">Female</option>
         <option value="O">Other</option>
       </select>
+
       <button type="submit" class="blue-button">Start Task</button>
       <div id="error-message"></div>
     </form>
   </div>
 
-  <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
+  <!-- Rotate Warning (Mobile Portrait Only, Task Page) -->
+  <div id="rotate-warning">
+    🔄 Please rotate your device to landscape to continue.
+  </div>
 
-  <section id="sorting-section" style="display: none;">
+  <!-- Task Page -->
+  <section id="sorting-section">
     <div id="instructions">
       <p>
-        These 12 icons represent different speakers. Click to listen and drag to group them by how similar they sound.
-        You can listen as many times as you want. Place icons closer together for similar-sounding speakers.
+        These 12 icons have the initials of 12 speakers who all are saying the same sentence.
+        Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+        and to move the rectangles onto the grid to group them together by how similar they sound in
+        how they speak. Place the blocks close to each other if you think they belong to one group and
+        further apart if they sound different. The distance between different groups does not matter.
+        You can listen to the speakers as often as you want to, and you can build as few or as many
+        groupings as you like.
       </p>
       <button id="hide-instructions">Hide Instructions</button>
-      <button id="show-instructions" style="display: none;">Show Instructions</button>
     </div>
+    <button id="show-instructions" style="display:none;">Show Instructions</button>
 
     <div id="task-wrapper">
-      <div id="icons-area"></div>
-      <div id="sorting-container"></div>
+      <div id="sorting-container" aria-label="Sorting grid"></div>
     </div>
 
     <button id="submit-task">Submit Task</button>
-  </section>
-
-  <section id="completion-section" style="display: none;">
-    <h2>Thank you for completing the task!</h2>
-    <p>Your submission has been received.</p>
   </section>
 
   <script src="script.js"></script>
