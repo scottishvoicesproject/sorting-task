@@ -119,6 +119,10 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
   const cond = getConditionFromUrl();
   initSorting(cond);
+
+  document.getElementById('instructions').classList.add('show');
+  document.getElementById('instructions').classList.remove('hide');
+
   checkOrientation();
 });
 
