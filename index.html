@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scottish Voices Project</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
+  <!-- Intro Page -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
@@ -27,8 +28,10 @@
     </form>
   </div>
 
+  <!-- Rotate Warning -->
   <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
 
+  <!-- Task Section -->
   <section id="sorting-section">
     <div id="instructions">
       <p>
@@ -40,13 +43,13 @@
         You can listen to the speakers as often as you want to, and you can build as few or as many
         groupings as you like.
       </p>
-      <button id="hide-instructions">Hide Instructions</button>
+      <button id="hide-instructions" class="blue-button" style="margin-top:10px;">Hide Instructions</button>
     </div>
-    <button id="show-instructions" style="display: none;">Show Instructions</button>
+    <button id="show-instructions" class="blue-button" style="display:none; margin-bottom:10px;">Show Instructions</button>
 
     <div id="task-wrapper">
-      <!-- Icons injected by JS -->
-      <div id="sorting-container" aria-label="Sorting area"></div>
+      <div id="icon-column" aria-label="Speaker Icons"></div>
+      <div id="sorting-container" aria-label="Sorting Grid"></div>
     </div>
 
     <button id="submit-button">Submit Task</button>
@@ -55,4 +58,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
