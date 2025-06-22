@@ -58,8 +58,8 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const spacingY = 50;
   const isMobile = window.innerWidth <= 768;
-  const leftX = isMobile ? 10 : 50; // adjusted closer for PC
-  const rightX = isMobile ? 90 : 130;
+  const leftX = isMobile ? 10 : 10; // adjusted closer for PC
+  const rightX = isMobile ? 90 : 90;
   let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
@@ -155,7 +155,7 @@ function checkOrientation() {
 
   const section = document.getElementById('sorting-section');
   if (isMobile && !isPortrait) {
-    section.style.transform = 'scale(0.55)';
+    section.style.transform = 'scale(0.45)';
     section.style.transformOrigin = 'top center';
   } else {
     section.style.transform = 'scale(1)';
@@ -169,5 +169,4 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   checkOrientation();
 });
-
 
