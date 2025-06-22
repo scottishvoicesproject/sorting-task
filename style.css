@@ -112,15 +112,19 @@ input, select {
   margin-top: 20px;
 }
 
+/* Speaker area with two vertical columns */
 #speaker-area {
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  max-height: 400px;
-  width: 140px;
   gap: 10px;
 }
 
+.speaker-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Grid container */
 #sorting-container {
   position: relative;
   width: 700px;
@@ -161,7 +165,7 @@ input, select {
   cursor: pointer;
 }
 
-/* Mobile adjustments */
+/* Landscape Mobile Layout */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
@@ -177,11 +181,16 @@ input, select {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    width: auto;
-    max-height: none;
+  }
+
+  #sorting-container {
+    width: 100%;
+    max-width: 90vw;
+    height: 320px;
   }
 }
 
+/* Portrait Mobile Layout */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
@@ -191,6 +200,7 @@ input, select {
     display: none !important;
   }
 }
+
 
 
 
