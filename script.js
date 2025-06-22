@@ -56,14 +56,16 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
+  const iconColumn = document.getElementById('icon-column');
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
+  iconColumn.innerHTML = '';
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const colLeft = 10;
-  const colRight = 85;
-  const rowHeight = 45;
+  const colRight = 75;
+  const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
 
@@ -130,13 +132,25 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   }
 
   document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('sorting-section').style.display = 'flex';
+  document.getElementById('sorting-section').style.display = 'block';
   document.body.classList.add('task-active');
-  checkRotateWarning(); // start monitoring
 
+  checkOrientation(); // Check rotate on entry
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
+
+function checkOrientation() {
+  const warning = document.getElementById('rotate-warning');
+  const isPortrait = window.innerHeight > window.innerWidth;
+  if (isPortrait && document.body.classList.contains('task-active')) {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
+window.addEventListener('resize', checkOrientation);
 
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
@@ -151,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       hideBtn.style.display = 'none';
       showBtn.style.display = 'inline-block';
     });
+
     showBtn.addEventListener('click', () => {
       instructions.classList.remove('hide');
       hideBtn.style.display = 'inline-block';
@@ -159,27 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('submit-button').addEventListener('click', () => {
-    if (confirm("Are you sure you want to submit the task?")) {
-      window.location.href = "thankyou.html";
+    if (confirm("Are you sure you want to submit your task?")) {
+      window.location.href = "thankyou.html"; // Placeholder page
     }
   });
 });
-
-// Rotate warning logic
-function checkRotateWarning() {
-  const warning = document.getElementById('rotate-warning');
-  function updateWarning() {
-    const isPortrait = window.innerHeight > window.innerWidth;
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-    const onTaskPage = document.body.classList.contains('task-active');
-    if (isPortrait && isMobile && onTaskPage) {
-      warning.style.display = 'flex';
-    } else {
-      warning.style.display = 'none';
-    }
-  }
-
-  updateWarning();
-  window.addEventListener('resize', updateWarning);
-}
 
