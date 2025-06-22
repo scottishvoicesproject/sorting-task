@@ -7,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* First (intro) page */
+/* Intro Page */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -66,7 +66,6 @@ select {
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  position: relative;
 }
 
 #instructions {
@@ -137,7 +136,7 @@ select {
 
 /* Submit button */
 #submit-button {
-  margin-top: 10px; /* was 30px */
+  margin-top: 20px;
   padding: 10px 24px;
   font-size: 1rem;
   border: none;
@@ -145,9 +144,10 @@ select {
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  align-self: center;
 }
 
-/* Rotate warning overlay */
+/* Rotate warning */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -167,19 +167,20 @@ select {
 /* === MOBILE STYLES === */
 @media (max-width: 768px) {
   .intro-box {
-    transform: scale(0.85);
+    zoom: 0.85;
     transform-origin: top center;
   }
 
   #sorting-section {
-    transform: scale(0.5);
+    zoom: 0.4;
     transform-origin: top center;
-    padding: 10px;
+    padding: 0;
   }
 
   #task-wrapper {
     flex-direction: column;
     align-items: center;
+    gap: 10px;
   }
 
   #sorting-container {
@@ -188,8 +189,13 @@ select {
   }
 
   #submit-button {
-    width: 220px;
+    width: 200px;
     text-align: center;
+    margin-top: 10px;
+  }
+
+  #rotate-warning {
+    zoom: 1 !important;
   }
 }
 
