@@ -1,4 +1,4 @@
-// Restored previous layout logic with improved icon spacing and non-overlapping grid
+// Fixed layout and instructions toggle
 
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
@@ -74,6 +74,7 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
+    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -90,6 +91,12 @@ function initSorting(conditionKey) {
 
   interact('.draggable').draggable({
     inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent',
+        endOnly: false
+      })
+    ],
     listeners: {
       move(event) {
         const target = event.target;
@@ -132,7 +139,6 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   }
 
   document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
 
@@ -142,19 +148,21 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
-  const instructions = document.getElementById('instructions');
-  if (instructions) instructions.style.display = 'none';
 
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
-  hideBtn?.addEventListener('click', () => {
-    document.getElementById('instructions').classList.add('hide');
-    hideBtn.style.display = 'none';
-    showBtn.style.display = 'inline-block';
-  });
-  showBtn?.addEventListener('click', () => {
-    document.getElementById('instructions').classList.remove('hide');
-    hideBtn.style.display = 'inline-block';
-    showBtn.style.display = 'none';
-  });
+  const instructions = document.getElementById('instructions');
+
+  if (hideBtn && showBtn && instructions) {
+    hideBtn.addEventListener('click', () => {
+      instructions.classList.add('hide');
+      hideBtn.style.display = 'none';
+      showBtn.style.display = 'inline-block';
+    });
+    showBtn.addEventListener('click', () => {
+      instructions.classList.remove('hide');
+      hideBtn.style.display = 'inline-block';
+      showBtn.style.display = 'none';
+    });
+  }
 });
