@@ -14,12 +14,10 @@ let audioPlaying = null;
 function getConditionFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   const cond = urlParams.get('cond');
-  if (cond && conditions[cond]) return cond;
-  const keys = Object.keys(conditions);
-  return keys[Math.floor(Math.random() * keys.length)];
+  return (cond && conditions[cond]) ? cond : Object.keys(conditions)[Math.floor(Math.random() * 8)];
 }
 
-function createSpeakerDiv(initials) {
+function createSpeakerDiv(initials, x, y) {
   const div = document.createElement('div');
   div.className = 'draggable';
   div.dataset.id = initials;
@@ -49,38 +47,24 @@ function createSpeakerDiv(initials) {
 
   div.appendChild(btn);
   div.appendChild(audio);
-  div.setAttribute('data-x', 0);
-  div.setAttribute('data-y', 0);
-  return div;
+  div.style.left = `${x}px`;
+  div.style.top = `${y}px`;
+
+  document.body.appendChild(div);
 }
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const sortingContainer = document.getElementById('sorting-container');
-  sortingContainer.innerHTML = '';
-
-  const iconWidth = 60;
-  const iconHeight = 40;
-  const padding = 20;
-  const columns = 3;
+  let startX = 20;
+  let startY = 120;
+  let spacingY = 50;
+  let left = true;
 
   for (let i = 0; i < speakers.length; i++) {
-    const initials = speakers[i];
-    const speakerDiv = createSpeakerDiv(initials);
-
-    const row = Math.floor(i / columns);
-    const col = i % columns;
-    const isEvenRow = row % 2 === 0;
-    const adjustedCol = isEvenRow ? col : columns - 1 - col;
-
-    const x = padding + adjustedCol * (iconWidth + 30);
-    const y = padding + row * (iconHeight + 20);
-
-    speakerDiv.style.left = `${x}px`;
-    speakerDiv.style.top = `${y}px`;
-    speakerDiv.style.position = 'absolute';
-
-    sortingContainer.appendChild(speakerDiv);
+    const x = left ? 20 : 90;
+    const y = startY + spacingY * Math.floor(i / 2);
+    createSpeakerDiv(speakers[i], x, y);
+    left = !left;
   }
 
   interact('.draggable').draggable({
@@ -121,38 +105,24 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     showError('Please enter a valid age between 1 and 120.');
     return;
   }
+
   if (!gender) {
     showError('Please select a gender.');
     return;
   }
 
   document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('instructions').style.display = 'block';
-  document.getElementById('sorting-section').style.display = 'flex';
-  checkOrientation();
+  document.getElementById('sorting-section').style.display = 'block';
 
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
-function checkOrientation() {
-  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  const isMobile = window.innerWidth <= 768;
-  const warning = document.getElementById('rotate-warning');
-  const isTaskVisible = document.getElementById('sorting-section').style.display === 'flex';
-  if (isMobile && isPortrait && isTaskVisible) {
-    warning.style.display = 'block';
-  } else {
-    warning.style.display = 'none';
-  }
-}
+document.getElementById('toggle-instructions').addEventListener('click', () => {
+  document.getElementById('instructions').classList.toggle('show');
+});
 
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', checkOrientation);
-
-document.addEventListener('DOMContentLoaded', () => {
-  hideError();
-  document.getElementById('instructions').style.display = 'none';
-  checkOrientation();
+window.addEventListener('orientationchange', () => {
+  document.body.classList.toggle('landscape', window.orientation === 90 || window.orientation === -90);
 });
 
