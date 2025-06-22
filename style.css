@@ -1,9 +1,9 @@
+/* Global styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f4f4;
-  overflow-x: hidden;
 }
 
 .intro-box {
@@ -15,18 +15,17 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Form elements */
 h1 {
   margin-top: 0;
   font-size: 1.8rem;
   text-align: center;
 }
-
 label {
   display: block;
   margin-top: 20px;
   font-weight: bold;
 }
-
 input,
 select {
   width: 100%;
@@ -36,7 +35,6 @@ select {
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
-
 .blue-button {
   display: block;
   width: 100%;
@@ -49,7 +47,6 @@ select {
   border-radius: 6px;
   cursor: pointer;
 }
-
 #error-message {
   color: red;
   margin-top: 15px;
@@ -57,74 +54,52 @@ select {
   text-align: center;
 }
 
-#rotate-warning {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  background: #ffecb3;
-  text-align: center;
-  font-weight: bold;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 20px;
-  font-size: 1.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
-#sorting-section {
-  padding: 20px;
-  display: none;
+.task-flex {
+  display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 }
 
-#instructions-wrapper {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
+/* Instructions styling */
 #instructions {
+  max-width: 700px;
+  margin-bottom: 20px;
+  font-size: 1rem;
   background: #fffbe6;
-  border: 1px solid #e6c200;
   padding: 16px;
   border-radius: 8px;
-  margin: 10px auto;
-  max-width: 800px;
+  border: 1px solid #e6c200;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-
 #instructions.hide {
   display: none;
 }
-
-#instruction-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+#hide-instructions,
+#show-instructions {
+  margin-top: 15px;
+  background: #444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.task-flex {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  overflow: hidden;
-}
-
+/* Grid + layout */
 #task-wrapper {
   position: relative;
-  width: 1000px;
+  width: 900px;
   height: 500px;
+  margin-bottom: 20px;
 }
 
 #sorting-container {
   position: absolute;
-  left: 160px;
+  left: 180px;
   top: 0;
   width: 700px;
-  height: 400px;
+  height: 500px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -132,9 +107,10 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  z-index: 1;
+  overflow: hidden;
 }
 
+/* Draggable speaker icons */
 .draggable {
   position: absolute;
   width: 60px;
@@ -150,9 +126,7 @@ select {
   cursor: grab;
   user-select: none;
   z-index: 10;
-  touch-action: none;
 }
-
 .speaker-button {
   all: unset;
   width: 100%;
@@ -163,43 +137,37 @@ select {
   cursor: pointer;
 }
 
-.submit-wrapper {
-  margin-top: 20px;
+/* Submit button */
+.submit-button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-#completion-section {
-  display: none;
-  padding: 50px;
-  text-align: center;
-}
-
-.completion-message {
-  background: white;
-  padding: 30px;
+/* Completion screen */
+.completion-box {
   max-width: 600px;
-  margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin: 100px auto;
+  text-align: center;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) and (orientation: landscape) {
+/* Responsive Mobile Scaling */
+@media screen and (max-width: 768px) and (orientation: landscape) {
   .task-flex {
     transform: scale(0.35);
     transform-origin: top left;
-    height: 400px;
-    overflow: visible;
-  }
-  #sorting-container {
-    left: 160px;
-  }
-}
-
-@media (max-width: 768px) and (orientation: portrait) {
-  body.task-active #rotate-warning {
-    display: flex;
-  }
-  #sorting-section {
-    display: none !important;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
   }
 }
 
