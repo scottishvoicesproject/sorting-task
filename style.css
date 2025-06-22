@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background: #f4f4f4;
-  position: relative;
+  overflow-x: hidden;
 }
 
 .intro-box {
@@ -75,11 +75,13 @@ input, select {
 
 #sorting-section {
   padding: 20px;
+  transform: scale(1);
 }
 
 #instructions-wrapper {
   text-align: center;
   margin-bottom: 10px;
+  padding-top: 20px;
 }
 
 #instructions {
@@ -88,6 +90,8 @@ input, select {
   padding: 16px;
   border-radius: 8px;
   margin: 10px;
+  max-width: 800px;
+  margin-inline: auto;
 }
 
 #instructions.hide {
@@ -98,13 +102,15 @@ input, select {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px;
+  gap: 40px;
+  padding-top: 40px;
+  flex-wrap: wrap;
 }
 
 #sorting-container {
   position: relative;
-  width: 600px;
-  height: 500px;
+  width: 700px;
+  height: 400px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
@@ -130,6 +136,7 @@ input, select {
   cursor: grab;
   user-select: none;
   z-index: 2;
+  touch-action: none;
 }
 
 .speaker-button {
@@ -161,6 +168,11 @@ input, select {
 
   #rotate-warning {
     display: none;
+  }
+
+  #sorting-section {
+    transform: scale(0.9);
+    transform-origin: top;
   }
 }
 
