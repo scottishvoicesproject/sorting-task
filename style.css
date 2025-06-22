@@ -1,13 +1,14 @@
 /* === GLOBAL STYLES === */
-body {
-  font-family: Arial, sans-serif;
+html, body {
   margin: 0;
   padding: 0;
+  font-family: Arial, sans-serif;
   background: #f4f4f4;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
-/* First (intro) page */
+/* === INTRO PAGE === */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -59,9 +60,8 @@ select {
   text-align: center;
 }
 
-/* Task section layout */
+/* === TASK PAGE === */
 #sorting-section {
-  padding: 20px 0;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -70,7 +70,6 @@ select {
 
 #instructions {
   max-width: 800px;
-  margin-bottom: 10px;
   font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
@@ -84,17 +83,24 @@ select {
   display: none;
 }
 
+#scaled-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+}
+
+/* ICONS + GRID CONTAINER */
 #task-wrapper {
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  margin-top: 10px;
-  min-height: 500px;
+  align-items: flex-start;
+  margin-top: 20px;
   position: relative;
+  min-height: 400px;
 }
 
 #sorting-container {
-  position: relative;
   width: 800px;
   height: 400px;
   border: 2px dashed #aaa;
@@ -108,7 +114,7 @@ select {
   z-index: 1;
 }
 
-/* Icon styles */
+/* ICONS */
 .draggable {
   width: 60px;
   height: 40px;
@@ -134,9 +140,9 @@ select {
   cursor: pointer;
 }
 
-/* Submit button */
+/* SUBMIT BUTTON */
 #submit-button {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 10px 24px;
   font-size: 1rem;
   border: none;
@@ -146,7 +152,7 @@ select {
   cursor: pointer;
 }
 
-/* Rotate warning overlay */
+/* ROTATE WARNING */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -163,40 +169,19 @@ select {
   z-index: 9999;
 }
 
-/* === MOBILE STYLES === */
+/* === MOBILE === */
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    touch-action: none;
-  }
-
   .intro-box {
     transform: scale(0.8);
     transform-origin: top center;
   }
 
-  #sorting-section {
-    transform: scale(0.55);
+  #scaled-wrapper {
+    transform: scale(0.45);
     transform-origin: top center;
-    padding: 0;
-  }
-
-  #task-wrapper {
-    flex-direction: column;
-    align-items: center;
-    min-height: 0;
-  }
-
-  #sorting-container {
-    width: 800px;
-    height: 400px;
   }
 
   #submit-button {
     margin-top: 10px;
-    width: 220px;
-    text-align: center;
   }
 }
-
