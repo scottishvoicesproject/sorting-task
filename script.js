@@ -58,8 +58,8 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const spacingY = 50;
   const isMobile = window.innerWidth <= 768;
-  const leftX = isMobile ? 10 : 250; // adjusted closer for PC
-  const rightX = isMobile ? 90 : 330;
+  const leftX = isMobile ? 10 : 50; // adjusted closer for PC
+  const rightX = isMobile ? 90 : 130;
   let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
@@ -104,8 +104,8 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   const age = parseInt(document.getElementById('age').value.trim());
   const gender = document.getElementById('gender').value;
 
-  if (!age || age < 3 || age > 18) {
-    showError('Please enter a valid age between 4 and 17.');
+  if (!age || age < 4 || age > 17) {
+    showError('Please enter a valid age between 1 and 120.');
     return;
   }
 
@@ -155,7 +155,7 @@ function checkOrientation() {
 
   const section = document.getElementById('sorting-section');
   if (isMobile && !isPortrait) {
-    section.style.transform = 'scale(0.65)';
+    section.style.transform = 'scale(0.55)';
     section.style.transformOrigin = 'top center';
   } else {
     section.style.transform = 'scale(1)';
@@ -169,4 +169,5 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   checkOrientation();
 });
+
 
