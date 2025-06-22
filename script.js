@@ -59,15 +59,10 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const containerRect = sortingContainer.getBoundingClientRect();
-  const gridTop = containerRect.top + window.scrollY;
-  const gridLeft = containerRect.left + window.scrollX;
-
-  const colLeft = gridLeft - 110; // Icons on the left of grid
-  const colRight = gridLeft - 50;
+  const colLeft = 50;
+  const colRight = 120;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -78,15 +73,13 @@ function initSorting(conditionKey) {
     speakerDiv.style.position = 'absolute';
     speakerDiv.style.zIndex = '10';
 
-    const verticalOffset = containerRect.height / 2 - (6 * rowHeight);
-
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${gridTop + verticalOffset + rowLeft * rowHeight}px`;
+      speakerDiv.style.top = `${100 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
       speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${gridTop + verticalOffset + rowRight * rowHeight}px`;
+      speakerDiv.style.top = `${100 + rowRight * rowHeight}px`;
       rowRight++;
     }
 
@@ -170,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hideBtn.style.display = 'none';
       showBtn.style.display = 'inline-block';
     });
-
     showBtn.addEventListener('click', () => {
       instructions.classList.remove('hide');
       hideBtn.style.display = 'inline-block';
@@ -181,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = document.getElementById('submit-button');
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to submit the task?")) {
+      if (confirm("Are you sure you want to submit your task?")) {
         window.location.href = 'thankyou.html';
       }
     });
