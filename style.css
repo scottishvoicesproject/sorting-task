@@ -163,7 +163,7 @@ input, select {
   }
 
   #sorting-section {
-    transform: scale(0.55); /* more zoomed out */
+    transform: scale(0.45);
     transform-origin: top center;
   }
 }
