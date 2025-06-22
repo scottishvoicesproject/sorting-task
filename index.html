@@ -8,7 +8,6 @@
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-  <!-- Page 1: Age & Gender Form -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
@@ -28,35 +27,31 @@
     </form>
   </div>
 
-  <!-- Page 2: Sorting Task -->
-  <section id="sorting-section" style="display: none;">
-    <div class="task-flex">
-      <div id="instructions">
-        <p>
-          These 12 icons have the initials of 12 speakers who all are saying the same sentence.
-          Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
-          and to move the rectangles onto the grid to group them together by how similar they sound in
-          how they speak. Place the blocks close to each other if you think they belong to one group and
-          further apart if they sound different. The distance between different groups does not matter.
-          You can listen to the speakers as often as you want to, and you can build as few or as many
-          groupings as you like.
-        </p>
-        <button id="hide-instructions">Hide Instructions</button>
-        <button id="show-instructions" style="display:none;">Show Instructions</button>
-      </div>
+  <div id="rotate-warning">
+    🔄 Please rotate your device to landscape to continue.
+  </div>
 
-      <div id="task-wrapper">
-        <div id="sorting-container" aria-label="Sorting area">
-          <div id="grid-overlay"></div>
-        </div>
-      </div>
-
-      <button id="submit-task" class="submit-button">Submit Task</button>
+  <section id="sorting-section" style="display:none;">
+    <div class="instructions" id="instructions">
+      <p>
+        These 12 icons have the initials of 12 speakers who all are saying the same sentence.
+        Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+        and to move the rectangles onto the grid to group them together by how similar they sound in
+        how they speak.
+      </p>
+      <button id="hide-instructions">Hide Instructions</button>
+      <button id="show-instructions" style="display:none;">Show Instructions</button>
     </div>
+
+    <div id="task-wrapper">
+      <div id="icons-area"></div>
+      <div id="sorting-container"></div>
+    </div>
+
+    <button id="submit-task" class="submit-button">Submit Task</button>
   </section>
 
-  <!-- Page 3: Completion -->
-  <section id="completion-section" style="display: none;">
+  <section id="completion-section" style="display:none;">
     <div class="completion-box">
       <h2>Thank you for completing the task!</h2>
       <p>You may now close the browser or return to the study instructions.</p>
