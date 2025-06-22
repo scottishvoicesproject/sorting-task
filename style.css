@@ -89,9 +89,8 @@ input, select {
   border: 1px solid #e6c200;
   padding: 16px;
   border-radius: 8px;
-  margin: 10px;
+  margin: 10px auto;
   max-width: 800px;
-  margin-inline: auto;
 }
 
 #instructions.hide {
@@ -102,8 +101,8 @@ input, select {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px; /* reduced from 40px */
-  padding-top: 20px; /* reduced from 40px */
+  gap: 20px;
+  padding-top: 20px;
   flex-wrap: wrap;
 }
 
@@ -157,17 +156,19 @@ input, select {
   flex-wrap: wrap;
 }
 
+/* Landscape Mobile Scaling */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
   }
 
   #sorting-section {
-    transform: scale(0.75);
+    transform: scale(0.65);
     transform-origin: top center;
   }
 }
 
+/* Portrait Mobile Warning */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
@@ -177,3 +178,4 @@ input, select {
     display: none !important;
   }
 }
+
