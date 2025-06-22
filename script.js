@@ -59,10 +59,11 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = -100;
-  const colRight = -40;
+  const colLeft = -140;   // Far enough left to not overlap grid
+  const colRight = -75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
