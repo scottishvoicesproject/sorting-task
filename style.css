@@ -4,6 +4,24 @@ body {
   margin: 0;
   padding: 0;
   background: #f4f4f4;
+  overflow-x: hidden;
+}
+
+#rotate-warning {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  color: #000;
+  font-size: 1.5rem;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
 }
 
 /* Intro box styling */
@@ -39,7 +57,6 @@ select {
   box-sizing: border-box;
 }
 
-/* Start button styling */
 .blue-button {
   display: block;
   width: 100%;
@@ -61,18 +78,18 @@ select {
   text-align: center;
 }
 
-/* Sorting section */
+/* Sorting section layout */
 #sorting-section {
   padding: 20px;
   display: none;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
+  align-items: center;
 }
 
 /* Instructions styling */
 #instructions {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   font-size: 1rem;
   background: #fffbe6;
@@ -81,50 +98,52 @@ select {
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: left;
+  position: relative;
 }
-
 #instructions.hide {
   display: none;
 }
-
-/* Hide/show buttons */
-#hide-instructions, #show-instructions {
-  margin-top: 10px;
-  padding: 6px 10px;
-  background: #ccc;
+#hide-instructions,
+#show-instructions {
+  background-color: #007bff;
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 6px 12px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Task layout */
+/* Task wrapper layout */
 #task-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 400px;
-  margin-top: 20px;
   width: 100%;
+  max-width: 1000px;
+  position: relative;
+  height: 600px;
+  margin: 0 auto;
+  margin-top: 20px;
 }
 
-/* Grid styling */
+/* Sorting grid */
 #sorting-container {
-  position: relative;
-  width: 800px;       /* More rectangular */
-  height: 400px;
+  position: absolute;
+  left: 230px;
+  top: 0;
+  width: 720px;
+  height: 500px;
   border: 2px dashed #aaa;
   border-radius: 12px;
   background: #fff;
   background-image:
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
-  background-size: 40px 40px;
-  z-index: 1;
+  background-size: 60px 60px;
+  overflow: hidden;
 }
 
 /* Draggable icons */
 .draggable {
+  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -137,10 +156,9 @@ select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 10;
+  z-index: 2;
 }
 
-/* Button inside icon */
 .speaker-button {
   all: unset;
   width: 100%;
@@ -151,48 +169,46 @@ select {
   cursor: pointer;
 }
 
-/* Rotate warning */
-#rotate-warning {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.85);
-  color: white;
-  font-size: 1.8rem;
-  text-align: center;
-  padding-top: 40vh;
-  z-index: 9999;
-}
-
 /* Submit button */
 #submit-task {
   margin-top: 30px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  background-color: #007bff;
+  background: #28a745;
   color: white;
+  font-weight: bold;
+  padding: 10px 18px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
-/* Mobile responsiveness */
+/* Responsive layout for mobile */
 @media (max-width: 768px) {
-  #sorting-section {
-    transform: scale(0.35); /* Dramatic zoom out */
-    transform-origin: top center;
+  body {
+    transform: scale(0.5);
+    transform-origin: top left;
+    width: 200%;
+  }
+
+  #sorting-container {
+    left: 180px;
+    width: 720px;
+    height: 500px;
+  }
+
+  .draggable {
+    font-size: 0.8rem;
+  }
+
+  #task-wrapper {
+    height: 550px;
   }
 
   #submit-task {
-    transform: scale(2);
-    margin-top: 40px;
+    margin-top: 10px;
   }
 
-  #instructions {
-    font-size: 1.4rem;
-    max-width: 90vw;
+  #hide-instructions,
+  #show-instructions {
+    font-size: 0.9rem;
   }
 }
