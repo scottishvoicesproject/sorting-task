@@ -68,11 +68,28 @@ input, select {
   padding: 20px;
 }
 
+#instructions-wrapper {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#instructions {
+  background: #fffbe6;
+  border: 1px solid #e6c200;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 10px;
+}
+
+#instructions.hide {
+  display: none;
+}
+
 #task-wrapper {
   display: flex;
   justify-content: center;
-  gap: 40px;
   align-items: flex-start;
+  gap: 20px;
 }
 
 #sorting-container {
@@ -121,21 +138,8 @@ input, select {
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
-  #rotate-warning {
-    display: none;
-  }
-
   .mobile-only {
     display: block;
-    text-align: center;
-  }
-
-  #instructions {
-    background: #fffbe6;
-    border: 1px solid #e6c200;
-    padding: 16px;
-    border-radius: 8px;
-    margin: 0 10px 10px 10px;
   }
 
   #instructions.show {
@@ -143,6 +147,10 @@ input, select {
   }
 
   #instructions.hide {
+    display: none;
+  }
+
+  #rotate-warning {
     display: none;
   }
 }
