@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scottish Voices Project</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
-  <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
-
-  <div class="intro-box" id="intro-box">
+  <!-- Age/Gender Form -->
+  <div id="intro-box" class="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
       <label for="age">Age:</label>
-      <input type="number" id="age" name="age" required min="4" max="17" />
+      <input type="number" id="age" name="age" min="4" max="17" required>
 
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
@@ -29,33 +28,33 @@
     </form>
   </div>
 
-  <section id="sorting-section" style="display:none;">
-    <div id="instructions" class="instructions">
+  <!-- Rotate warning only shown after intro -->
+  <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
+
+  <!-- Main Sorting Task -->
+  <section id="sorting-section" style="display: none;">
+    <div id="instructions">
       <p>
-        These 12 icons have the initials of 12 speakers who all are saying the same sentence.
-        Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
-        and to move the rectangles onto the grid to group them together by how similar they sound in
-        how they speak. Place the blocks close to each other if you think they belong to one group and
-        further apart if they sound different.
+        These 12 icons have the initials of 12 speakers who all are saying the same sentence. Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers and to move the rectangles onto the grid to group them together by how similar they sound in how they speak.
       </p>
-      <button id="hide-instructions" class="blue-button" style="margin-top:10px;">Hide Instructions</button>
+      <button id="hide-instructions">Hide Instructions</button>
+      <button id="show-instructions" style="display:none;">Show Instructions</button>
     </div>
-    <button id="show-instructions" class="blue-button" style="display:none;margin:10px auto;">Show Instructions</button>
 
     <div id="task-wrapper">
-      <div id="icons-area" aria-label="Speaker icons area"></div>
-      <div id="sorting-container" aria-label="Sorting area"></div>
+      <div id="icons-area" aria-label="Speaker Icons"></div>
+      <div id="sorting-container" aria-label="Sorting Grid"></div>
     </div>
 
-    <button id="submit-task" class="submit-button">Submit</button>
+    <button id="submit-task" class="blue-button">Submit</button>
   </section>
 
-  <section id="completion-section" class="completion-box" style="display:none;">
-    <h2>Thank you!</h2>
-    <p>Your task has been submitted.</p>
+  <!-- Completion / Debrief Page Placeholder -->
+  <section id="completion-section" style="display:none;">
+    <h2>Thank you for participating!</h2>
+    <p>You may now close this window.</p>
   </section>
 
   <script src="script.js"></script>
 </body>
 </html>
-
