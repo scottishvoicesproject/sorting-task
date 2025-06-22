@@ -59,10 +59,11 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
+  // Remove previous icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = 50;
-  const colRight = 110;
+  const colLeft = 20;   // Far left for icons
+  const colRight = 85;  // Second column
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -88,12 +89,6 @@ function initSorting(conditionKey) {
 
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: false
-      })
-    ],
     listeners: {
       move(event) {
         const target = event.target;
@@ -120,10 +115,12 @@ function hideError() {
 }
 
 function checkOrientationWarning() {
-  const warning = document.getElementById('rotate-warning');
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const onTaskPage = document.body.classList.contains('task-active');
-  warning.style.display = (isPortrait && onTaskPage) ? 'flex' : 'none';
+  const rotateWarning = document.getElementById('rotate-warning');
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  const isTaskActive = document.body.classList.contains('task-active');
+  if (rotateWarning) {
+    rotateWarning.style.display = (isPortrait && isTaskActive) ? 'flex' : 'none';
+  }
 }
 
 window.addEventListener('resize', checkOrientationWarning);
@@ -167,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hideBtn.style.display = 'none';
       showBtn.style.display = 'inline-block';
     });
-
     showBtn.addEventListener('click', () => {
       instructions.classList.remove('hide');
       hideBtn.style.display = 'inline-block';
@@ -184,3 +180,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
