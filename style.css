@@ -1,4 +1,3 @@
-/* Global styles */ 
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -6,7 +5,6 @@ body {
   background: #f4f4f4;
 }
 
-/* Intro box styling - restored compact look */
 .intro-box {
   width: 360px;
   margin: 100px auto;
@@ -16,7 +14,6 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form elements */
 h1 {
   margin-top: 0;
   font-size: 1.8rem;
@@ -39,7 +36,6 @@ select {
   box-sizing: border-box;
 }
 
-/* Start button styling */
 .blue-button {
   display: block;
   width: 100%;
@@ -53,7 +49,6 @@ select {
   cursor: pointer;
 }
 
-/* Error message */
 #error-message {
   color: red;
   margin-top: 15px;
@@ -61,7 +56,6 @@ select {
   text-align: center;
 }
 
-/* Sorting section */
 #sorting-section {
   padding: 20px;
   display: flex;
@@ -69,7 +63,6 @@ select {
   gap: 20px;
 }
 
-/* Instructions styling */
 #instructions {
   max-width: 800px;
   margin: 0 auto;
@@ -82,29 +75,12 @@ select {
   text-align: left;
 }
 
-/* Task wrapper layout */
 #task-wrapper {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  flex-wrap: nowrap;
   align-items: flex-start;
 }
 
-/* Speaker list on the left */
-#speaker-list {
-  display: grid;
-  grid-template-columns: 60px 60px;
-  gap: 10px;
-  padding: 10px;
-  background: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  height: 500px;
-  overflow-y: auto;
-}
-
-/* Sorting grid in the center */
 #sorting-container {
   position: relative;
   width: 600px;
@@ -119,9 +95,7 @@ select {
   overflow: hidden;
 }
 
-/* Draggable icon */
 .draggable {
-  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -135,9 +109,9 @@ select {
   cursor: grab;
   user-select: none;
   z-index: 2;
+  position: absolute;
 }
 
-/* Speaker button inside draggable */
 .speaker-button {
   all: unset;
   width: 100%;
@@ -148,7 +122,23 @@ select {
   cursor: pointer;
 }
 
-/* Hide unused container */
-#drag-layer {
+#rotate-warning {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #ffdf91;
+  color: #333;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 9999;
+}
+
+/* On desktop always hide rotate warning */
+@media screen and (min-width: 769px) {
+  #rotate-warning {
+    display: none !important;
+  }
 }
