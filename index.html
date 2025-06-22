@@ -8,6 +8,9 @@
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
+  <!-- Rotate warning (only shows on task page in portrait mobile) -->
+  <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
+
   <!-- Intro Page -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
@@ -28,11 +31,6 @@
     </form>
   </div>
 
-  <!-- Rotate Warning (Mobile Portrait Only, Task Page) -->
-  <div id="rotate-warning">
-    🔄 Please rotate your device to landscape to continue.
-  </div>
-
   <!-- Task Page -->
   <section id="sorting-section">
     <div id="instructions">
@@ -46,17 +44,19 @@
         groupings as you like.
       </p>
       <button id="hide-instructions">Hide Instructions</button>
+      <button id="show-instructions" style="display:none;">Show Instructions</button>
     </div>
-    <button id="show-instructions" style="display:none;">Show Instructions</button>
 
     <div id="task-wrapper">
-      <div id="sorting-container" aria-label="Sorting grid"></div>
+      <div id="sorting-container" aria-label="Sorting area">
+        <div id="grid-overlay"></div>
+      </div>
     </div>
 
     <button id="submit-task">Submit Task</button>
   </section>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
-
