@@ -57,8 +57,8 @@ function createSpeakerDiv(initials, x, y) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const spacingY = 50;
-  const leftX = window.innerWidth >= 768 ? 20 : 10;
-  const rightX = window.innerWidth >= 768 ? 100 : 80;
+  const leftX = window.innerWidth >= 768 ? 10 : 5; // even closer to grid on PC
+  const rightX = window.innerWidth >= 768 ? 85 : 65;
   let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
@@ -154,7 +154,7 @@ function checkOrientation() {
 
   const section = document.getElementById('sorting-section');
   if (isMobile && !isPortrait) {
-    section.style.transform = 'scale(0.85)';
+    section.style.transform = 'scale(0.75)';
     section.style.transformOrigin = 'top center';
   } else {
     section.style.transform = 'scale(1)';
@@ -168,4 +168,3 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   checkOrientation();
 });
-
