@@ -25,12 +25,11 @@
     </form>
   </div>
 
-  <div id="rotate-warning">🔄 Please rotate your device to landscape to continue.</div>
+  <div id="rotate-warning" class="full-screen-warning">🔄 Please rotate your device to landscape to continue.</div>
 
   <section id="sorting-section" style="display:none;">
-    <div id="instructions-wrapper" class="mobile-only">
+    <div id="instructions-wrapper">
       <div id="instructions" class="show">
-        <button id="hide-instructions">Hide Instructions</button>
         <p>
           These 12 icons have the initials of 12 speakers who all are saying the same sentence.
           Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
@@ -40,7 +39,10 @@
           and you can create as few or as many groupings as you'd like.
         </p>
       </div>
-      <button id="show-instructions" style="display:none;">Show Instructions</button>
+      <div id="instruction-buttons">
+        <button id="hide-instructions">Hide Instructions</button>
+        <button id="show-instructions" style="display: none;">Show Instructions</button>
+      </div>
     </div>
 
     <div id="task-wrapper">
