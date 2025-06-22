@@ -163,8 +163,14 @@ input, select {
   }
 
   #sorting-section {
-    transform: scale(0.45);
+    transform: scale(0.2);
     transform-origin: top center;
+    margin-top: -100px;
+  }
+
+  #task-wrapper {
+    gap: 10px;
+    padding-top: 10px;
   }
 }
 
@@ -178,5 +184,6 @@ input, select {
     display: none !important;
   }
 }
+
 
 
