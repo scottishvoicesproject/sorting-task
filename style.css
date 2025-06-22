@@ -7,7 +7,6 @@ body {
   overflow-x: hidden;
 }
 
-/* First (intro) page */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -59,25 +58,23 @@ select {
   text-align: center;
 }
 
-/* Task section layout */
+/* Task section */
 #sorting-section {
   padding: 20px;
   display: none;
   flex-direction: column;
-  gap: 20px;
   align-items: center;
+  gap: 20px;
 }
 
 #instructions {
   max-width: 800px;
-  margin-bottom: 10px;
-  font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e6c200;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  text-align: left;
+  font-size: 1rem;
 }
 
 #instructions.hide {
@@ -91,7 +88,6 @@ select {
   position: relative;
   margin-top: 10px;
   min-height: 500px;
-  flex-direction: column;
 }
 
 #sorting-container {
@@ -107,7 +103,6 @@ select {
   background-size: 40px 40px;
   overflow: hidden;
   z-index: 1;
-  margin: 0 auto;
 }
 
 /* Icon styles */
@@ -146,10 +141,9 @@ select {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  align-self: center;
 }
 
-/* Rotate warning overlay */
+/* Rotate warning */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -164,27 +158,24 @@ select {
   font-size: 1.6rem;
   padding: 30px;
   z-index: 9999;
-  transform: none !important;
 }
 
 /* === MOBILE STYLES === */
 @media (max-width: 768px) {
   .intro-box {
-    transform: scale(0.85);
+    transform: scale(0.88);
     transform-origin: top center;
   }
 
   #sorting-section {
-    transform: scale(0.5);
+    transform: scale(0.55);
     transform-origin: top center;
-    margin-top: -80px;
-    margin-bottom: -60px;
+    padding: 0;
   }
 
   #task-wrapper {
     flex-direction: column;
     align-items: center;
-    margin-bottom: 0;
     gap: 10px;
   }
 
@@ -194,13 +185,9 @@ select {
   }
 
   #submit-button {
-    width: 200px;
     margin-top: 10px;
-    margin-bottom: 0;
-  }
-
-  #rotate-warning {
-    transform: none !important;
-    font-size: 1.6rem;
+    width: 200px;
+    text-align: center;
   }
 }
+
