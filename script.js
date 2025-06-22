@@ -58,11 +58,12 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
+
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = 20;
+  const colLeft = 10;
   const colRight = 85;
-  const rowHeight = 50;
+  const rowHeight = 45;
   let rowLeft = 0;
   let rowRight = 0;
 
@@ -70,6 +71,7 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
+    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -130,15 +132,10 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
   document.body.classList.add('task-active');
+  checkRotateWarning(); // start monitoring
 
   const cond = getConditionFromUrl();
   initSorting(cond);
-});
-
-document.getElementById('submit-button').addEventListener('click', () => {
-  if (confirm('Are you sure you want to submit your task?')) {
-    window.location.href = 'thankyou.html';
-  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -161,12 +158,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.addEventListener('orientationchange', () => {
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    const sectionVisible = document.body.classList.contains('task-active');
-    document.getElementById('rotate-warning').style.display = (isPortrait && sectionVisible) ? 'block' : 'none';
+  document.getElementById('submit-button').addEventListener('click', () => {
+    if (confirm("Are you sure you want to submit the task?")) {
+      window.location.href = "thankyou.html";
+    }
   });
-
-  window.dispatchEvent(new Event('orientationchange'));
 });
+
+// Rotate warning logic
+function checkRotateWarning() {
+  const warning = document.getElementById('rotate-warning');
+  function updateWarning() {
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    const onTaskPage = document.body.classList.contains('task-active');
+    if (isPortrait && isMobile && onTaskPage) {
+      warning.style.display = 'flex';
+    } else {
+      warning.style.display = 'none';
+    }
+  }
+
+  updateWarning();
+  window.addEventListener('resize', updateWarning);
+}
 
