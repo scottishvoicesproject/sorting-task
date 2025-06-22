@@ -7,6 +7,7 @@ body {
   overflow-x: hidden;
 }
 
+/* First (intro) page */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -58,7 +59,7 @@ select {
   text-align: center;
 }
 
-/* Task Section */
+/* Task section layout */
 #sorting-section {
   padding: 20px;
   display: none;
@@ -107,7 +108,7 @@ select {
   z-index: 1;
 }
 
-/* Draggable icons */
+/* Icon styles */
 .draggable {
   width: 60px;
   height: 40px;
@@ -170,18 +171,15 @@ select {
   }
 
   #sorting-section {
-    transform: scale(0.45); /* Shrinks the task page significantly */
+    transform: scale(0.5);
     transform-origin: top center;
-    padding: 0;
-    margin-top: -40px;
   }
 
   #submit-button {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   #rotate-warning {
     transform: none !important;
-    font-size: 1.6rem;
   }
 }
