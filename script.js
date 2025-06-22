@@ -58,11 +58,10 @@ function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
-
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = 10;
-  const colRight = 75;
+  const colLeft = 20;
+  const colRight = 85;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -87,7 +86,6 @@ function initSorting(conditionKey) {
 
   interact('.draggable').draggable({
     inertia: true,
-    modifiers: [],
     listeners: {
       move(event) {
         const target = event.target;
@@ -137,6 +135,12 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   initSorting(cond);
 });
 
+document.getElementById('submit-button').addEventListener('click', () => {
+  if (confirm('Are you sure you want to submit your task?')) {
+    window.location.href = 'thankyou.html';
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
 
@@ -157,22 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Rotate warning logic
-  function checkOrientation() {
+  window.addEventListener('orientationchange', () => {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    const isTaskActive = document.body.classList.contains('task-active');
-    document.getElementById('rotate-warning').style.display =
-      (isPortrait && isTaskActive) ? 'flex' : 'none';
-  }
-
-  window.addEventListener('orientationchange', checkOrientation);
-  window.addEventListener('resize', checkOrientation);
-  checkOrientation();
-
-  // Submit button
-  document.getElementById('submit-task').addEventListener('click', () => {
-    if (confirm("Are you sure you want to submit the task?")) {
-      window.location.href = "thankyou.html";
-    }
+    const sectionVisible = document.body.classList.contains('task-active');
+    document.getElementById('rotate-warning').style.display = (isPortrait && sectionVisible) ? 'block' : 'none';
   });
+
+  window.dispatchEvent(new Event('orientationchange'));
 });
+
