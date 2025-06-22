@@ -56,37 +56,31 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
-
-  // Remove previous icons
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
   sortingContainer.innerHTML = '';
 
-  const colLeft = 20;   // X position for left column
-  const colRight = 90;  // X position for right column
-  const rowHeight = 45; // Y space between items
-  let rowLeft = 0;
-  let rowRight = 0;
+  const iconWidth = 60;
+  const iconHeight = 40;
+  const padding = 20;
+  const columns = 3;
 
   for (let i = 0; i < speakers.length; i++) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
+
+    const row = Math.floor(i / columns);
+    const col = i % columns;
+    const isEvenRow = row % 2 === 0;
+    const adjustedCol = isEvenRow ? col : columns - 1 - col;
+
+    const x = padding + adjustedCol * (iconWidth + 30);
+    const y = padding + row * (iconHeight + 20);
+
+    speakerDiv.style.left = `${x}px`;
+    speakerDiv.style.top = `${y}px`;
     speakerDiv.style.position = 'absolute';
 
-    if (i % 2 === 0) {
-      // Left column
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${20 + rowLeft * rowHeight}px`;
-      rowLeft++;
-    } else {
-      // Right column
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${20 + rowRight * rowHeight}px`;
-      rowRight++;
-    }
-
-    taskWrapper.appendChild(speakerDiv);
+    sortingContainer.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
@@ -135,13 +129,30 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('instructions').style.display = 'block';
   document.getElementById('sorting-section').style.display = 'flex';
+  checkOrientation();
 
   const cond = getConditionFromUrl();
   initSorting(cond);
 });
 
+function checkOrientation() {
+  const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+  const isMobile = window.innerWidth <= 768;
+  const warning = document.getElementById('rotate-warning');
+  const isTaskVisible = document.getElementById('sorting-section').style.display === 'flex';
+  if (isMobile && isPortrait && isTaskVisible) {
+    warning.style.display = 'block';
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
-  const instructions = document.getElementById('instructions');
-  if (instructions) instructions.style.display = 'none';
+  document.getElementById('instructions').style.display = 'none';
+  checkOrientation();
 });
+
