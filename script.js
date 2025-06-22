@@ -61,8 +61,8 @@ function initSorting(conditionKey) {
 
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = 50;
-  const colRight = 120;
+  const colLeft = -100;
+  const colRight = -40;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -75,11 +75,11 @@ function initSorting(conditionKey) {
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${100 + rowLeft * rowHeight}px`;
+      speakerDiv.style.top = `${60 + rowLeft * rowHeight}px`;
       rowLeft++;
     } else {
       speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${100 + rowRight * rowHeight}px`;
+      speakerDiv.style.top = `${60 + rowRight * rowHeight}px`;
       rowRight++;
     }
 
@@ -173,9 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = document.getElementById('submit-button');
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to submit your task?")) {
+      if (confirm("Are you sure you want to submit the task?")) {
         window.location.href = 'thankyou.html';
       }
     });
   }
 });
+
