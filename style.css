@@ -7,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Intro page */
+/* First (intro) page */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -59,13 +59,13 @@ select {
   text-align: center;
 }
 
-/* Task layout */
+/* Task section layout */
 #sorting-section {
-  padding: 20px;
+  padding: 20px 0;
   display: none;
   flex-direction: column;
-  gap: 20px;
   align-items: center;
+  gap: 20px;
 }
 
 #instructions {
@@ -85,32 +85,14 @@ select {
 }
 
 #task-wrapper {
-  width: 100%;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
   margin-top: 10px;
   min-height: 500px;
-}
-
-#task-inner {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 30px;
   position: relative;
-  max-width: 100%;
-  overflow: hidden;
 }
 
-#icon-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: relative;
-  padding-top: 10px;
-}
-
-/* Grid box */
 #sorting-container {
   position: relative;
   width: 800px;
@@ -126,7 +108,7 @@ select {
   z-index: 1;
 }
 
-/* Icons */
+/* Icon styles */
 .draggable {
   width: 60px;
   height: 40px;
@@ -154,7 +136,7 @@ select {
 
 /* Submit button */
 #submit-button {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 10px 24px;
   font-size: 1rem;
   border: none;
@@ -183,21 +165,36 @@ select {
 
 /* === MOBILE STYLES === */
 @media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    touch-action: none;
+  }
+
   .intro-box {
-    transform: scale(0.9);
+    transform: scale(0.8);
     transform-origin: top center;
   }
 
-  #task-inner {
-    zoom: 0.55;
+  #sorting-section {
+    transform: scale(0.55);
+    transform-origin: top center;
+    padding: 0;
   }
 
-  #sorting-section {
-    padding: 10px;
+  #task-wrapper {
+    flex-direction: column;
+    align-items: center;
+    min-height: 0;
+  }
+
+  #sorting-container {
+    width: 800px;
+    height: 400px;
   }
 
   #submit-button {
-    margin-top: 15px;
+    margin-top: 10px;
     width: 220px;
     text-align: center;
   }
