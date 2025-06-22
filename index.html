@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
 <body>
+  <!-- Intro Form -->
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
@@ -27,10 +28,12 @@
     </form>
   </div>
 
+  <!-- Rotate warning -->
   <div id="rotate-warning">
     🔄 Please rotate your device to landscape to continue.
   </div>
 
+  <!-- Main Sorting Section -->
   <section id="sorting-section">
     <div id="instructions-wrapper">
       <div id="instruction-buttons">
@@ -40,7 +43,7 @@
       <div id="instructions">
         <p>
           These 12 icons have the initials of 12 speakers who all are saying the same sentence.
-          Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+          Click on an icon to hear the speaker. Your task is to listen to all speakers
           and to move the rectangles onto the grid to group them together by how similar they sound in
           how they speak. Place the blocks close to each other if you think they belong to one group and
           further apart if they sound different. The distance between different groups does not matter.
@@ -51,10 +54,13 @@
     </div>
 
     <div id="task-wrapper">
+      <!-- Speaker icons will be inserted here -->
       <div id="sorting-container" aria-label="Sorting grid"></div>
     </div>
   </section>
 
+  <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
+
