@@ -136,7 +136,8 @@ select {
 
 /* Submit button */
 #submit-button {
-  margin-top: 30px;
+  margin-top: 60px;
+  margin-bottom: 20px;
   padding: 10px 24px;
   font-size: 1rem;
   border: none;
@@ -161,17 +162,18 @@ select {
   font-size: 1.6rem;
   padding: 30px;
   z-index: 9999;
+  transform: none !important;
 }
 
 /* === MOBILE STYLES === */
 @media (max-width: 768px) {
   .intro-box {
-    transform: scale(0.9);
+    transform: scale(0.85);
     transform-origin: top center;
   }
 
   #sorting-section {
-    transform: scale(0.65);
+    transform: scale(0.55);
     transform-origin: top center;
     padding: 10px;
   }
@@ -189,6 +191,7 @@ select {
   #submit-button {
     width: 220px;
     text-align: center;
+    margin-top: 60px;
   }
 }
 
