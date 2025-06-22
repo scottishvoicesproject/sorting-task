@@ -1,3 +1,5 @@
+/* style.css */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -15,10 +17,6 @@ body {
   text-align: center;
 }
 
-h1, h2 {
-  margin-top: 0;
-}
-
 label {
   display: block;
   margin-top: 20px;
@@ -31,7 +29,6 @@ input, select {
   margin-top: 5px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  box-sizing: border-box;
 }
 
 .blue-button, .submit-button {
@@ -62,7 +59,10 @@ input, select {
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e6c200;
-  text-align: left;
+}
+
+.instructions.hide {
+  display: none;
 }
 
 #task-wrapper {
@@ -71,13 +71,12 @@ input, select {
   align-items: flex-start;
   gap: 20px;
   margin-top: 20px;
-  flex-wrap: nowrap;
 }
 
 #icons-area {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  width: 160px;
+  position: relative;
+  height: 500px;
 }
 
 #sorting-container {
@@ -138,53 +137,27 @@ input, select {
   padding: 40px;
 }
 
-/* Landscape Mobile Adjustments */
+/* 📱 Mobile tweaks */
 @media (max-width: 768px) and (orientation: landscape) {
   #task-wrapper {
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    margin-left: 10px;
-    transform: scale(0.85);
+    transform: scale(0.6);
     transform-origin: top left;
-  }
-
-  #icons-area {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    gap: 6px;
-  }
-
-  #sorting-container {
-    width: 500px;
-    height: 420px;
-  }
-
-  .instructions {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-
-  .submit-button {
-    font-size: 1rem;
-    padding: 10px;
+    margin-left: -60px;
   }
 }
 
 @media (orientation: portrait) and (max-width: 768px) {
   #rotate-warning {
+    display: none;
+  }
+  body.task-active #rotate-warning {
     display: flex;
   }
-  #intro-box, #sorting-section, #completion-section {
+  body.task-active #sorting-section,
+  body.task-active #completion-section {
+    display: none !important;
+  }
+  body:not(.task-active) #rotate-warning {
     display: none !important;
   }
 }
-
-.instructions.hide {
-  display: none;
-}
-
-
-
-
