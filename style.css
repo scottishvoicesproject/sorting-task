@@ -26,8 +26,7 @@ label {
   font-weight: bold;
 }
 
-input,
-select {
+input, select {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -56,29 +55,46 @@ select {
   text-align: center;
 }
 
+#rotate-warning {
+  display: none;
+  text-align: center;
+  background: #ffecb3;
+  padding: 10px;
+  font-weight: bold;
+}
+
 #sorting-section {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+}
+
+#instructions-wrapper {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 #instructions {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 10px auto;
   font-size: 1rem;
   background: #fffbe6;
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e6c200;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  text-align: left;
+  display: none;
 }
 
 #task-wrapper {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+}
+
+#speaker-area {
+  position: relative;
+  width: 180px;
+  height: 600px;
+  margin-bottom: 20px;
 }
 
 #sorting-container {
@@ -96,6 +112,7 @@ select {
 }
 
 .draggable {
+  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -109,7 +126,6 @@ select {
   cursor: grab;
   user-select: none;
   z-index: 2;
-  position: absolute;
 }
 
 .speaker-button {
@@ -122,23 +138,20 @@ select {
   cursor: pointer;
 }
 
-#rotate-warning {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #ffdf91;
-  color: #333;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
-  z-index: 9999;
-}
-
-/* On desktop always hide rotate warning */
-@media screen and (min-width: 769px) {
+@media (max-width: 768px) {
   #rotate-warning {
-    display: none !important;
+    display: block;
+  }
+
+  body.landscape #rotate-warning {
+    display: none;
+  }
+
+  #instructions {
+    display: none;
+  }
+
+  #instructions.show {
+    display: block;
   }
 }
