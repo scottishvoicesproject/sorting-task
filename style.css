@@ -74,7 +74,6 @@ select {
   justify-content: center;
 }
 
-/* === Layout Containers === */
 #sorting-section {
   padding: 20px;
   display: none;
@@ -106,7 +105,6 @@ select {
   gap: 10px;
 }
 
-/* Center task area */
 .task-flex {
   display: flex;
   justify-content: center;
@@ -121,10 +119,9 @@ select {
   height: 500px;
 }
 
-/* Grid */
 #sorting-container {
   position: absolute;
-  left: 200px;
+  left: 160px;
   top: 0;
   width: 700px;
   height: 400px;
@@ -138,7 +135,6 @@ select {
   z-index: 1;
 }
 
-/* Icons */
 .draggable {
   position: absolute;
   width: 60px;
@@ -167,14 +163,13 @@ select {
   cursor: pointer;
 }
 
-/* Mobile Landscape Fix */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
   }
 
   .task-flex {
-    transform: scale(0.55);
+    transform: scale(0.5);
     transform-origin: top left;
     height: 400px;
     overflow: visible;
@@ -191,7 +186,6 @@ select {
   }
 }
 
-/* Portrait - block task */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
@@ -201,4 +195,5 @@ select {
     display: none !important;
   }
 }
+
 
