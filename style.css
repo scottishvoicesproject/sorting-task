@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background: #f4f4f4;
+  position: relative;
 }
 
 .intro-box {
@@ -67,34 +68,11 @@ input, select {
   padding: 20px;
 }
 
-#instructions-wrapper {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-#instructions {
-  max-width: 800px;
-  margin: 10px auto;
-  font-size: 1rem;
-  background: #fffbe6;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #e6c200;
-  display: none;
-}
-
 #task-wrapper {
-  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#speaker-area {
-  position: relative;
-  width: 180px;
-  height: 600px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 40px;
+  align-items: flex-start;
 }
 
 #sorting-container {
@@ -138,20 +116,43 @@ input, select {
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
-    display: block;
+    display: none;
   }
 
-  body.landscape #rotate-warning {
-    display: none;
+  .mobile-only {
+    display: block;
+    text-align: center;
   }
 
   #instructions {
-    display: none;
+    background: #fffbe6;
+    border: 1px solid #e6c200;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 0 10px 10px 10px;
   }
 
   #instructions.show {
     display: block;
+  }
+
+  #instructions.hide {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  #rotate-warning {
+    display: block;
+  }
+
+  #sorting-section {
+    display: none !important;
   }
 }
