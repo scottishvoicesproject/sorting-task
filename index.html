@@ -11,8 +11,9 @@
   <div class="intro-box" id="intro-box">
     <h1>Welcome to the Scottish Voices Project!</h1>
     <form id="age-gender-form">
-      <label for="age">Age (4–17):</label>
+      <label for="age">Age:</label>
       <input type="number" id="age" name="age" required min="4" max="17" />
+      
       <label for="gender">Gender:</label>
       <select id="gender" name="gender" required>
         <option value="">Select gender</option>
@@ -20,38 +21,42 @@
         <option value="F">Female</option>
         <option value="O">Other</option>
       </select>
+
       <button type="submit" class="blue-button">Start Task</button>
       <div id="error-message"></div>
     </form>
   </div>
 
-  <div id="rotate-warning" class="full-screen-warning">
+  <div id="rotate-warning">
     🔄 Please rotate your device to landscape to continue.
   </div>
 
   <section id="sorting-section" style="display:none;">
     <div id="instructions-wrapper">
-      <div id="instructions" class="show">
+      <div id="instruction-buttons">
+        <button id="hide-instructions" class="blue-button">Hide Instructions</button>
+        <button id="show-instructions" class="blue-button" style="display: none;">Show Instructions</button>
+      </div>
+      <div id="instructions">
         <p>
           These 12 icons have the initials of 12 speakers who all are saying the same sentence.
-          Click a block to hear them. Drag blocks to group similar-sounding speakers together. Placing them close to each other makes them a group.
-          You can make as few or as many groups as you'd like.
+          Once you click on an icon, you can hear the speaker. Your task is to listen to all speakers
+          and to move the rectangles onto the grid to group them together by how similar they sound in
+          how they speak. Place the blocks close to each other if you think they belong to one group and
+          further apart if they sound different. The distance between different groups does not matter.
+          You can listen to the speakers as often as you want to, and you can build as few or as many
+          groupings as you like.
         </p>
-      </div>
-      <div id="instruction-buttons">
-        <button id="hide-instructions">Hide Instructions</button>
-        <button id="show-instructions" style="display: none;">Show Instructions</button>
       </div>
     </div>
 
     <div id="task-wrapper">
-      <div id="sorting-container" aria-label="Sorting area"></div>
+      <div id="speaker-area" aria-label="Speaker icons area"></div>
+      <div id="sorting-container" aria-label="Sorting grid"></div>
     </div>
   </section>
 
   <script src="script.js"></script>
 </body>
 </html>
-     
-
 
