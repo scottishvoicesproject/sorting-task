@@ -57,8 +57,8 @@ function createSpeakerDiv(initials, x, y) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const spacingY = 50;
-  const leftX = window.innerWidth >= 768 ? 50 : 10;
-  const rightX = window.innerWidth >= 768 ? 120 : 80;
+  const leftX = window.innerWidth >= 768 ? 20 : 10;
+  const rightX = window.innerWidth >= 768 ? 100 : 80;
   let row = 0;
 
   for (let i = 0; i < speakers.length; i++) {
@@ -151,6 +151,14 @@ function checkOrientation() {
   } else {
     warning.style.display = 'none';
   }
+
+  const section = document.getElementById('sorting-section');
+  if (isMobile && !isPortrait) {
+    section.style.transform = 'scale(0.85)';
+    section.style.transformOrigin = 'top center';
+  } else {
+    section.style.transform = 'scale(1)';
+  }
 }
 
 window.addEventListener('resize', checkOrientation);
@@ -160,3 +168,4 @@ document.addEventListener('DOMContentLoaded', () => {
   hideError();
   checkOrientation();
 });
+
