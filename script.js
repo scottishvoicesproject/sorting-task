@@ -56,14 +56,13 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const iconsArea = document.getElementById('icons-area');
+  const iconArea = document.getElementById('icons-area');
   const sortingContainer = document.getElementById('sorting-container');
+  iconArea.innerHTML = '';
+  sortingContainer.innerHTML = '';
 
-  // Remove previous icons
-  iconsArea.querySelectorAll('.draggable').forEach(el => el.remove());
-
-  const colLeft = 0;
-  const colRight = 75;
+  const colLeft = 10;
+  const colRight = 85;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -72,6 +71,7 @@ function initSorting(conditionKey) {
     const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
+    speakerDiv.style.zIndex = '10';
 
     if (i % 2 === 0) {
       speakerDiv.style.left = `${colLeft}px`;
@@ -83,7 +83,7 @@ function initSorting(conditionKey) {
       rowRight++;
     }
 
-    iconsArea.appendChild(speakerDiv);
+    iconArea.appendChild(speakerDiv);
   }
 
   interact('.draggable').draggable({
@@ -141,6 +141,8 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
   const cond = getConditionFromUrl();
   initSorting(cond);
+
+  checkOrientation(); // Ensure warning on mobile if needed
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -149,29 +151,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
-  const submitBtn = document.getElementById('submit-task');
-  const completion = document.getElementById('completion-section');
 
-  if (hideBtn && showBtn && instructions) {
-    hideBtn.addEventListener('click', () => {
-      instructions.classList.add('hide');
-      hideBtn.style.display = 'none';
-      showBtn.style.display = 'inline-block';
-    });
-    showBtn.addEventListener('click', () => {
-      instructions.classList.remove('hide');
-      hideBtn.style.display = 'inline-block';
-      showBtn.style.display = 'none';
-    });
-  }
+  hideBtn.addEventListener('click', () => {
+    instructions.classList.add('hide');
+    hideBtn.style.display = 'none';
+    showBtn.style.display = 'inline-block';
+  });
 
-  if (submitBtn && completion) {
-    submitBtn.addEventListener('click', () => {
-      const confirmSubmit = confirm('Are you sure you want to submit your task now?');
-      if (confirmSubmit) {
-        document.getElementById('sorting-section').style.display = 'none';
-        completion.style.display = 'block';
-      }
-    });
-  }
+  showBtn.addEventListener('click', () => {
+    instructions.classList.remove('hide');
+    hideBtn.style.display = 'inline-block';
+    showBtn.style.display = 'none';
+  });
+
+  document.getElementById('submit-task').addEventListener('click', () => {
+    if (confirm('Are you sure you want to submit your task?')) {
+      document.getElementById('sorting-section').style.display = 'none';
+      document.getElementById('completion-section').style.display = 'block';
+    }
+  });
 });
+
+function checkOrientation() {
+  const warning = document.getElementById('rotate-warning');
+  const sortingSection = document.getElementById('sorting-section');
+  if (window.innerWidth < window.innerHeight && sortingSection.style.display !== 'none') {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
+window.addEventListener('resize', checkOrientation);
