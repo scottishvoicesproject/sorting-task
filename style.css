@@ -75,7 +75,6 @@ input, select {
 
 #sorting-section {
   padding: 20px;
-  transform: scale(1);
 }
 
 #instructions-wrapper {
@@ -97,13 +96,29 @@ input, select {
   display: none;
 }
 
+#instruction-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 #task-wrapper {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px;
-  padding-top: 20px;
+  gap: 40px;
   flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+#speaker-area {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 400px;
+  width: 140px;
+  gap: 10px;
 }
 
 #sorting-container {
@@ -121,7 +136,6 @@ input, select {
 }
 
 .draggable {
-  position: absolute;
   width: 60px;
   height: 40px;
   border-radius: 8px;
@@ -134,7 +148,6 @@ input, select {
   font-size: 1rem;
   cursor: grab;
   user-select: none;
-  z-index: 2;
   touch-action: none;
 }
 
@@ -148,33 +161,27 @@ input, select {
   cursor: pointer;
 }
 
-#instruction-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-
-/* Landscape Mobile Scaling */
+/* Mobile adjustments */
 @media (max-width: 768px) and (orientation: landscape) {
   #rotate-warning {
     display: none;
   }
 
-  #sorting-section {
-    transform: scale(0.2);
-    transform-origin: top center;
-    margin-top: -100px;
+  #task-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
-  #task-wrapper {
-    gap: 10px;
-    padding-top: 10px;
+  #speaker-area {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+    max-height: none;
   }
 }
 
-/* Portrait Mobile Warning */
 @media (max-width: 768px) and (orientation: portrait) {
   body.task-active #rotate-warning {
     display: flex;
