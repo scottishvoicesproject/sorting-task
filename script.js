@@ -228,41 +228,64 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const submitBtn = document.getElementById('submit-button');
-  if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-      const grid = document.getElementById('sorting-container');
-      const icons = document.querySelectorAll('.draggable');
-      const gridRect = grid.getBoundingClientRect();
+if (submitBtn) {
+  submitBtn.addEventListener('click', () => {
+    const grid = document.getElementById('sorting-container');
+    const icons = document.querySelectorAll('.draggable');
+    const gridRect = grid.getBoundingClientRect();
 
-      let allInside = true;
+    let allInside = true;
 
-      icons.forEach(icon => {
-        const iconRect = icon.getBoundingClientRect();
+    icons.forEach(icon => {
+      const iconRect = icon.getBoundingClientRect();
 
-        const isInside =
-          iconRect.left >= gridRect.left &&
-          iconRect.right <= gridRect.right &&
-          iconRect.top >= gridRect.top &&
-          iconRect.bottom <= gridRect.bottom;
+      const isInside =
+        iconRect.left >= gridRect.left &&
+        iconRect.right <= gridRect.right &&
+        iconRect.top >= gridRect.top &&
+        iconRect.bottom <= gridRect.bottom;
 
-        icon.classList.toggle('out-of-bounds', !isInside);
+      icon.classList.toggle('out-of-bounds', !isInside);
 
-        if (!isInside) allInside = false;
-      });
-
-      if (!allInside) {
-        alert('Oops! Please place all icons fully inside the grid before submitting.');
-        return;
-      }
-
-      if (confirm("Are you sure you want to submit the task?")) {
-        html2canvas(document.getElementById('task-wrapper')).then(canvas => {
-          const screenshotData = canvas.toDataURL('image/png');
-          sessionStorage.setItem('submissionScreenshot', screenshotData);
-          sessionStorage.setItem('assignedCondition', cond);
-          window.location.href = `thankyou.html?cond=${cond}`;
-        });
-      }
+      if (!isInside) allInside = false;
     });
-  }
-});
+
+    if (!allInside) {
+      alert('Oops! Please place all icons fully inside the grid before submitting.');
+      return;
+    }
+
+    if (confirm("Are you sure you want to submit the task?")) {
+      html2canvas(document.getElementById('task-wrapper')).then(canvas => {
+        const screenshotData = canvas.toDataURL('image/png');
+
+        const age = parseInt(document.getElementById('age').value.trim());
+        const gender = document.getElementById('gender').value;
+        const taskStart = Number(sessionStorage.getItem('taskStartTime'));
+        const taskDuration = Math.round((Date.now() - taskStart) / 1000);
+        const timestamp = new Date().toISOString();
+
+        const dataToSave = {
+          screenshot: screenshotData,
+          age,
+          gender,
+          condition: cond,
+          timestamp,
+          duration_seconds: taskDuration,
+          completion: 'complete'
+        };
+
+        // Optional: POST to your backend
+        // fetch('YOUR_WEB_APP_URL', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(dataToSave)
+        // });
+
+        sessionStorage.setItem('submissionScreenshot', screenshotData);
+        sessionStorage.setItem('assignedCondition', cond);
+        window.location.href = `thankyou.html?cond=${cond}`;
+      });
+    }
+  });
+}
