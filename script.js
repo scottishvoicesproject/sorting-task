@@ -71,9 +71,14 @@ function initSorting(conditionKey) {
 
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
+  const gridRect = sortingContainer.getBoundingClientRect();
+  const baseLeft = gridRect.left + window.scrollX;
+
   const isMobile = window.innerWidth < 768;
-  const colLeft = isMobile ? -160 : -140;
-  const colRight = isMobile ? -100 : -75;
+  const spacing = isMobile ? 60 : 65; // spacing between columns
+  const colRight = baseLeft - 40;     // closer to grid
+  const colLeft = colRight - spacing; // stacked left of that
+
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -168,7 +173,7 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
 
   const cond = getConditionFromUrl();
 
-  // Precision layout sync: run after layout and paint
+  // Paint sync: defer icon layout until grid is ready
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       initSorting(cond);
@@ -205,4 +210,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 
