@@ -188,7 +188,7 @@ select {
   }
 
   #task-inner {
-    transform: scale(0.55);
+    transform: scale(0.25);
     transform-origin: top center;
   }
 
