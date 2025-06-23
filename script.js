@@ -257,43 +257,41 @@ document.addEventListener('DOMContentLoaded', () => {
     return; // Skip manual form if auto-launched
   }
 
-  // ✅ FORM SUBMISSION HANDLER
-  const form = document.getElementById('age-gender-form');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      hideError();
+// ✅ FORM SUBMISSION HANDLER
+const form = document.getElementById('age-gender-form');
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    hideError();
 
-      const age = parseInt(document.getElementById('age').value.trim());
-      const gender = document.getElementById('gender').value;
+    const age = parseInt(document.getElementById('age').value.trim());
+    const gender = document.getElementById('gender').value;
 
-      if (!age || age < 4 || age > 17) {
-        showError('Please enter a valid age between 4 and 17.');
-        return;
-      }
+    if (!age || age < 4 || age > 17) {
+      showError('Please enter a valid age between 4 and 17.');
+      return;
+    }
 
-      if (!gender) {
-        showError('Please select a gender.');
-        return;
-      }
+    if (!gender) {
+      showError('Please select a gender.');
+      return;
+    }
 
-      sessionStorage.setItem('taskStartTime', Date.now());
-      cond = getConditionByAgePriority(age);
+    sessionStorage.setItem('taskStartTime', Date.now());
+    cond = getConditionByAgePriority(age);
 
-      document.getElementById('intro-box').style.display = 'none';
-      document.getElementById('sorting-section').style.display = 'flex';
-      document.body.classList.add('task-active');
-      checkOrientationWarning();
+    document.getElementById('intro-box').style.display = 'none';
+    document.getElementById('sorting-section').style.display = 'flex';
+    document.body.classList.add('task-active');
+    checkOrientationWarning();
 
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          initSorting(cond);
-        });
+        initSorting(cond);
       });
     });
-  }
-});
-
+  });
+}
 
 const submitBtn = document.getElementById('submit-button');
 if (submitBtn) {
@@ -339,21 +337,23 @@ if (submitBtn) {
           completion: "complete"
         })
         .then(docRef => {
-          return fetch(screenshotData)
-            .then(res => res.blob())
-            .then(blob => {
-              const filePath = `screenshots/${docRef.id}.png`;
-              const fileRef = ref(storage, filePath);
-              
-        console.log(`Uploading to: gs://github-b374d-storage-001.appspot.com/screenshots/${docRef.id}.png`);
+          const filePath = `screenshots/${docRef.id}.png`;
+          const fileRef = ref(storage, filePath);
+          const byteString = atob(screenshotData.split(',')[1]);
+          const arrayBuffer = new ArrayBuffer(byteString.length);
+          const intArray = new Uint8Array(arrayBuffer);
+          for (let i = 0; i < byteString.length; i++) {
+            intArray[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([intArray], { type: 'image/png' });
 
-              
-              return uploadBytes(fileRef, blob).then(() => {
-                return updateDoc(doc(db, "submissions", docRef.id), {
-                  screenshot: filePath
-                }).then(() => docRef.id);
-              });
-            });
+          console.log(`Uploading to: gs://github-b374d-storage-001.appspot.com/screenshots/${docRef.id}.png`);
+
+          return uploadBytes(fileRef, blob).then(() => {
+            return updateDoc(doc(db, "submissions", docRef.id), {
+              screenshot: filePath
+            }).then(() => docRef.id);
+          });
         })
         .then(docId => {
           sessionStorage.setItem('submissionScreenshot', screenshotData);
@@ -369,6 +369,3 @@ if (submitBtn) {
     }
   });
 }
-
-
-
