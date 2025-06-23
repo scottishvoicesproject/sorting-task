@@ -9,15 +9,68 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
-let audioPlaying = null;
+// 🎯 Condition target counts by age range
+const ageConditionTargets = {
+  "4-6": {
+    F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2
+  },
+  "7-8": {
+    F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0
+  },
+  "9-10": {
+    M_SSEvsL1: 2
+  },
+  "11-12": {
+    F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2
+  },
+  "13-15": {
+    F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5,
+    M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4
+  },
+  "16-17": {
+    F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4,
+    M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1
+  }
+};
 
-function getConditionFromUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const cond = urlParams.get('cond');
-  if (cond && conditions[cond]) return cond;
+// 🧠 Assign condition by most-needed condition in age range
+function getConditionByAgePriority(age) {
+  const ranges = {
+    "4-6": age >= 4 && age <= 6,
+    "7-8": age >= 7 && age <= 8,
+    "9-10": age >= 9 && age <= 10,
+    "11-12": age >= 11 && age <= 12,
+    "13-15": age >= 13 && age <= 15,
+    "16-17": age >= 16 && age <= 17
+  };
+
+  const selectedRange = Object.keys(ranges).find(r => ranges[r]);
+  if (!selectedRange || !ageConditionTargets[selectedRange]) {
+    return getRandomCondition();
+  }
+
+  const pool = ageConditionTargets[selectedRange];
+  const max = Math.max(...Object.values(pool));
+  const topConditions = Object.entries(pool)
+    .filter(([_, count]) => count === max && count > 0)
+    .map(([key]) => key);
+
+  if (topConditions.length === 0) return getRandomCondition();
+
+  const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
+  ageConditionTargets[selectedRange][selected]--; // optional per-session decrement
+  return selected;
+}
+
+function getRandomCondition() {
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
+
+let audioPlaying = null;
 
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
@@ -67,8 +120,6 @@ function createSpeakerDiv(initials) {
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
-  const sortingContainer = document.getElementById('sorting-container');
-
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const isMobile = window.innerWidth < 768;
@@ -142,8 +193,10 @@ function checkOrientationWarning() {
   }
 }
 
+ // 🔄 Recheck orientation when resizing or rotating
 window.addEventListener('resize', checkOrientationWarning);
 window.addEventListener('orientationchange', checkOrientationWarning);
+
 
 document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -156,6 +209,7 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     showError('Please enter a valid age between 4 and 17.');
     return;
   }
+
   if (!gender) {
     showError('Please select a gender.');
     return;
@@ -166,9 +220,8 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   document.body.classList.add('task-active');
   checkOrientationWarning();
 
-  const cond = getConditionFromUrl();
+  const cond = getConditionByAgePriority(age);
 
-  // Precision layout sync: run after layout and paint
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       initSorting(cond);
