@@ -275,35 +275,38 @@ if (submitBtn) {
         const taskDuration = Math.round((Date.now() - taskStart) / 1000);
         const timestamp = new Date().toISOString();
 
-        const dataToSave = {
-          screenshot: screenshotData,
+        db.collection("submissions").add({
           age,
           gender,
           condition: cond,
           timestamp,
           duration_seconds: taskDuration,
-          completion: 'complete'
-        };
-
-        fetch('https://script.google.com/macros/s/AKfycbwQrCgvA10RjQnhQKEDN0_gsFgLiAZJZ3EXBsqLj8iX3eEXG8UT3A3lKbVaX1HyqOHY/exec', {
-          method: 'POST',
-          body: JSON.stringify(dataToSave) // No headers = CORS-safe
+          completion: "complete"
         })
-        .then(response => response.text())
-        .then(result => {
-          console.log('✅ Success:', result);
-          alert('Server response: ' + result); // 👈 Pop-up to show what the server replied with
-          sessionStorage.setItem('submissionScreenshot', dataToSave.screenshot);
-          sessionStorage.setItem('assignedCondition', dataToSave.condition);
-          window.location.href = `thankyou.html?cond=${dataToSave.condition}`;
+        .then(docRef => {
+          return fetch(screenshotData)
+            .then(res => res.blob())
+            .then(blob => {
+              const fileRef = storage.ref().child(`screenshots/${docRef.id}.png`);
+              return fileRef.put(blob);
+            })
+            .then(() => docRef.id);
+        })
+        .then(docId => {
+          sessionStorage.setItem('submissionScreenshot', screenshotData);
+          sessionStorage.setItem('assignedCondition', cond);
+          console.log("✅ Submission complete — ID:", docId);
+          window.location.href = `thankyou.html?cond=${cond}`;
         })
         .catch(error => {
-          console.error('❌ Error:', error);
-          alert('Error submitting task. Please try again.');
+          console.error("❌ Firebase submission failed:", error);
+          alert("There was a problem submitting your task. Please try again.");
         });
       });
     }
   });
 }
+
+
 
 
