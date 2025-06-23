@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ✅ FORM HANDLING — moved here so it attaches correctly
+  // ✅ FORM SUBMISSION HANDLER
   const form = document.getElementById('age-gender-form');
   if (form) {
     form.addEventListener('submit', (e) => {
@@ -222,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Set task start time here 🕒
       sessionStorage.setItem('taskStartTime', Date.now());
 
       document.getElementById('intro-box').style.display = 'none';
@@ -240,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ✅ SUBMIT TASK HANDLER
   const submitBtn = document.getElementById('submit-button');
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
@@ -299,86 +299,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  hideError();
-
-  const hideBtn = document.getElementById('hide-instructions');
-  const showBtn = document.getElementById('show-instructions');
-  const instructions = document.getElementById('instructions');
-
-  if (hideBtn && showBtn && instructions) {
-    hideBtn.addEventListener('click', () => {
-      instructions.classList.add('hide');
-      hideBtn.style.display = 'none';
-      showBtn.style.display = 'inline-block';
-    });
-    showBtn.addEventListener('click', () => {
-      instructions.classList.remove('hide');
-      hideBtn.style.display = 'inline-block';
-      showBtn.style.display = 'none';
-    });
-  }
-
-  const submitBtn = document.getElementById('submit-button');
-if (submitBtn) {
-  submitBtn.addEventListener('click', () => {
-    const grid = document.getElementById('sorting-container');
-    const icons = document.querySelectorAll('.draggable');
-    const gridRect = grid.getBoundingClientRect();
-
-    let allInside = true;
-
-    icons.forEach(icon => {
-      const iconRect = icon.getBoundingClientRect();
-
-      const isInside =
-        iconRect.left >= gridRect.left &&
-        iconRect.right <= gridRect.right &&
-        iconRect.top >= gridRect.top &&
-        iconRect.bottom <= gridRect.bottom;
-
-      icon.classList.toggle('out-of-bounds', !isInside);
-
-      if (!isInside) allInside = false;
-    });
-
-    if (!allInside) {
-      alert('Oops! Please place all icons fully inside the grid before submitting.');
-      return;
-    }
-
-    if (confirm("Are you sure you want to submit the task?")) {
-      html2canvas(document.getElementById('task-wrapper')).then(canvas => {
-        const screenshotData = canvas.toDataURL('image/png');
-
-        const age = parseInt(document.getElementById('age').value.trim());
-        const gender = document.getElementById('gender').value;
-        const taskStart = Number(sessionStorage.getItem('taskStartTime'));
-        const taskDuration = Math.round((Date.now() - taskStart) / 1000);
-        const timestamp = new Date().toISOString();
-
-        const dataToSave = {
-          screenshot: screenshotData,
-          age,
-          gender,
-          condition: cond,
-          timestamp,
-          duration_seconds: taskDuration,
-          completion: 'complete'
-        };
-
-        fetch('https://script.google.com/macros/s/AKfycbwQrCgvA10RjQnhQKEDN0_gsFgLiAZJZ3EXBsqLj8iX3eEXG8UT3A3lKbVaX1HyqOHY/exec', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(dataToSave)
-});
-
-
-        sessionStorage.setItem('submissionScreenshot', screenshotData);
-        sessionStorage.setItem('assignedCondition', cond);
-        window.location.href = `thankyou.html?cond=${cond}`;
-      });
-    }
-  });
-}
