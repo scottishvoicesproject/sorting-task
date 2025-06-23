@@ -245,14 +245,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = document.getElementById('submit-button');
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to submit the task?")) {
-        html2canvas(document.getElementById('task-wrapper')).then(canvas => {
-          const screenshotData = canvas.toDataURL('image/png');
-          sessionStorage.setItem('submissionScreenshot', screenshotData);
-          sessionStorage.setItem('assignedCondition', cond);
-          window.location.href = `thankyou.html?cond=${cond}`;
-        });
-      }
+  const grid = document.getElementById('sorting-container');
+  const icons = document.querySelectorAll('.draggable');
+  const gridRect = grid.getBoundingClientRect();
+
+  let allInside = true;
+
+  icons.forEach(icon => {
+    const iconRect = icon.getBoundingClientRect();
+
+    const isInside =
+      iconRect.left >= gridRect.left &&
+      iconRect.right <= gridRect.right &&
+      iconRect.top >= gridRect.top &&
+      iconRect.bottom <= gridRect.bottom;
+
+    icon.classList.toggle('out-of-bounds', !isInside);
+
+    if (!isInside) allInside = false;
+  });
+
+  if (!allInside) {
+    alert('Oops! Please place all icons fully inside the grid before submitting.');
+    return;
+  }
+
+  // If confirmed and valid, continue submission
+  if (confirm("Are you sure you want to submit the task?")) {
+    html2canvas(document.getElementById('task-wrapper')).then(canvas => {
+      const screenshotData = canvas.toDataURL('image/png');
+      sessionStorage.setItem('submissionScreenshot', screenshotData);
+      sessionStorage.setItem('assignedCondition', cond);
+      window.location.href = `thankyou.html?cond=${cond}`;
     });
   }
 });
