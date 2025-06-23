@@ -308,20 +308,25 @@ if (submitBtn) {
           completion: "complete"
         })
         .then(docRef => {
-          return fetch(screenshotData)
-            .then(res => res.blob())
-            .then(blob => {
-              const fileRef = storage.ref().child(`screenshots/${docRef.id}.png`);
-              return fileRef.put(blob);
-            })
-            .then(() => docRef.id);
-        })
-        .then(docId => {
-          sessionStorage.setItem('submissionScreenshot', screenshotData);
-          sessionStorage.setItem('assignedCondition', cond);
-          console.log("✅ Submission complete — ID:", docId);
-          window.location.href = `thankyou.html?cond=${cond}`;
-        })
+  return fetch(screenshotData)
+    .then(res => res.blob())
+    .then(blob => {
+      const fileRef = storage.ref().child(`screenshots/${docRef.id}.png`);
+      return fileRef.put(blob).then(() => {
+        // ✅ Update Firestore doc to link screenshot path
+        return docRef.update({
+          screenshot: `screenshots/${docRef.id}.png`
+        }).then(() => docRef.id);
+      });
+    });
+})
+          .then(docId => {
+            sessionStorage.setItem('submissionScreenshot', screenshotData);
+            sessionStorage.setItem('assignedCondition', cond);
+            console.log("✅ Submission complete — ID:", docId);
+            window.location.href = `thankyou.html?cond=${cond}`;
+          })
+
         .catch(error => {
           console.error("❌ Firebase submission failed:", error);
           alert("There was a problem submitting your task. Please try again.");
