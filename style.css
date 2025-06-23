@@ -1,4 +1,4 @@
-/** === GLOBAL STYLES === */
+/* === GLOBAL STYLES === */
 html, body {
   margin: 0;
   padding: 0;
@@ -8,6 +8,7 @@ html, body {
   overflow-y: auto;
 }
 
+/* === INTRO PAGE === */
 .intro-box {
   width: 360px;
   margin: 80px auto;
@@ -59,11 +60,13 @@ select {
   text-align: center;
 }
 
+/* === TASK SECTION === */
 #sorting-section {
   display: none;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  padding: 20px;
 }
 
 #instructions {
@@ -85,9 +88,15 @@ select {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 20px;
+  margin-top: 10px;
   position: relative;
   min-height: 400px;
+}
+
+#task-inner {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
 }
 
 #sorting-container {
@@ -100,10 +109,11 @@ select {
     linear-gradient(to right, #eee 1px, transparent 1px),
     linear-gradient(to bottom, #eee 1px, transparent 1px);
   background-size: 40px 40px;
-  overflow: hidden;
+  position: relative;
   z-index: 1;
 }
 
+/* === ICONS === */
 .draggable {
   width: 60px;
   height: 40px;
@@ -129,6 +139,7 @@ select {
   cursor: pointer;
 }
 
+/* === SUBMIT BUTTON === */
 #submit-button {
   margin-top: 20px;
   padding: 10px 24px;
@@ -141,6 +152,7 @@ select {
   align-self: center;
 }
 
+/* === ROTATE WARNING === */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -157,36 +169,39 @@ select {
   z-index: 9999;
 }
 
+/* === MOBILE === */
 @media (max-width: 768px) {
+  html, body {
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
   .intro-box {
-    width: 320px;
-    margin: 40px auto;
-    padding: 20px;
+    transform: none;
+    width: 90%;
+    margin: 60px auto;
+  }
+
+  #task-inner {
+    flex-direction: row;
+    transform: scale(0.55);
+    transform-origin: top left;
   }
 
   #sorting-container {
     width: 400px;
     height: 200px;
-    background-size: 20px 20px;
   }
 
   .draggable {
     width: 40px;
-    height: 28px;
-    font-size: 0.75rem;
+    height: 30px;
+    font-size: 0.8rem;
   }
 
   #submit-button {
-    margin-top: 16px;
-    width: auto;
+    margin-top: 10px;
     align-self: center;
-  }
-
-  #task-wrapper {
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
   }
 }
 
