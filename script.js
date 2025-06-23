@@ -275,12 +275,12 @@ if (submitBtn) {
           completion: 'complete'
         };
 
-        // Optional: POST to your backend
-        // fetch('YOUR_WEB_APP_URL', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(dataToSave)
-        // });
+        fetch('https://script.google.com/macros/s/AKfycbwQrCgvA10RjQnhQKEDN0_gsFgLiAZJZ3EXBsqLj8iX3eEXG8UT3A3lKbVaX1HyqOHY/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(dataToSave)
+});
+
 
         sessionStorage.setItem('submissionScreenshot', screenshotData);
         sessionStorage.setItem('assignedCondition', cond);
