@@ -242,3 +242,15 @@ select {
   font-style: italic;
   opacity: 0.8;
 }
+
+.out-of-bounds {
+  outline: 3px dashed red;
+  animation: bounceIcon 0.4s ease;
+}
+
+@keyframes bounceIcon {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  70% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
