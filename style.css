@@ -7,6 +7,7 @@ html, body {
   overflow-y: auto;
 }
 
+/* === INTRO PAGE === */
 .intro-box {
   width: 360px;
   max-width: 90%;
@@ -59,6 +60,7 @@ select {
   text-align: center;
 }
 
+/* === TASK SECTION === */
 #sorting-section {
   display: none;
   flex-direction: column;
@@ -127,6 +129,8 @@ select {
   user-select: none;
   position: absolute;
   z-index: 10;
+  touch-action: none;
+  will-change: transform;
 }
 
 .speaker-button {
@@ -170,6 +174,7 @@ select {
   z-index: 9999;
 }
 
+/* === MOBILE LANDSCAPE TWEAKS === */
 @media screen and (max-width: 768px) and (orientation: landscape) {
   #sorting-section {
     padding: 10px;
