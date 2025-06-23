@@ -8,7 +8,6 @@ const conditions = {
   F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
-}
 
 let audioPlaying = null;
 
@@ -87,20 +86,20 @@ function initSorting(conditionKey) {
     taskWrapper.appendChild(speakerDiv);
   }
 
-interact('.draggable').draggable({
-  inertia: false, // 🔧 Disable inertia for immediate drag
-  listeners: {
-    move(event) {
-      const target = event.target;
-      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-      target.style.transform = `translate(${x}px, ${y}px)`;
-      target.setAttribute('data-x', x);
-      target.setAttribute('data-y', y);
+  interact('.draggable').draggable({
+    inertia: false,
+    listeners: {
+      move(event) {
+        const target = event.target;
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      }
     }
-  }
-});
-
+  });
+}
 
 function showError(msg) {
   const errEl = document.getElementById('error-message');
@@ -180,4 +179,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
