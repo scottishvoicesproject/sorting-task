@@ -272,11 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If confirmed and valid, continue submission
   if (confirm("Are you sure you want to submit the task?")) {
-    html2canvas(document.getElementById('task-wrapper')).then(canvas => {
-      const screenshotData = canvas.toDataURL('image/png');
-      sessionStorage.setItem('submissionScreenshot', screenshotData);
-      sessionStorage.setItem('assignedCondition', cond);
-      window.location.href = `thankyou.html?cond=${cond}`;
+        html2canvas(document.getElementById('task-wrapper')).then(canvas => {
+          const screenshotData = canvas.toDataURL('image/png');
+          sessionStorage.setItem('submissionScreenshot', screenshotData);
+          sessionStorage.setItem('assignedCondition', cond);
+          window.location.href = `thankyou.html?cond=${cond}`;
+        });
+      }
     });
   }
 });
