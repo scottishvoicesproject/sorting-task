@@ -72,8 +72,8 @@ function initSorting(conditionKey) {
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const isMobile = window.innerWidth < 768;
-  const colLeft = isMobile ? -120 : -140;
-  const colRight = isMobile ? -60 : -75;
+  const colLeft = isMobile ? -160 : -140;
+  const colRight = isMobile ? -20 : -75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -101,6 +101,9 @@ function initSorting(conditionKey) {
     inertia: false,
     modifiers: [],
     listeners: {
+      start(event) {
+        event.target.classList.add('dragging');
+      },
       move(event) {
         const target = event.target;
         let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -108,6 +111,9 @@ function initSorting(conditionKey) {
         target.style.transform = `translate(${x}px, ${y}px)`;
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
+      },
+      end(event) {
+        event.target.classList.remove('dragging');
       }
     }
   });
