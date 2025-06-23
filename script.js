@@ -1,20 +1,9 @@
+// Firebase SDK Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFirestore, collection, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
+// Firebase Config & Initialization
 const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
   authDomain: "github-b374d.firebaseapp.com",
@@ -27,11 +16,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
+const storage = getStorage(app); // Let Firebase infer the correct bucket
 
 let cond = null;
 let audioPlaying = null;
 
+// Speaker Condition Mapping
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
   M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
@@ -43,6 +33,7 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
+// Age-based Condition Assignment Pool
 const ageConditionTargets = {
   "4-6": { F_SSEvsL1: 8, F_SSEvsL2: 6, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 8, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 4 },
   "7-8": { F_SSEvsL1: 2, F_SSEvsL2: 0, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 2, M_SSEvsL2: 4, M_SSEvsP1: 4, M_SSEvsP2: 0 },
@@ -53,41 +44,34 @@ const ageConditionTargets = {
 };
 
 function getConditionByAgePriority(age) {
-  const ranges = {
-    "4-6": age >= 4 && age <= 6,
-    "7-8": age >= 7 && age <= 8,
-    "9-10": age >= 9 && age <= 10,
-    "11-12": age >= 11 && age <= 12,
-    "13-15": age >= 13 && age <= 15,
-    "16-17": age >= 16 && age <= 17
-  };
+  const selectedRange = Object.keys(ageConditionTargets).find(range =>
+    age >= parseInt(range.split('-')[0]) && age <= parseInt(range.split('-')[1])
+  );
 
-  const selectedRange = Object.keys(ranges).find(r => ranges[r]);
   const pool = selectedRange && ageConditionTargets[selectedRange];
-
   if (!pool) {
-    console.warn("No pool matched for age:", age);
+    console.warn("No matching pool for age:", age);
     return getRandomCondition();
   }
 
-  const topConditions = Object.entries(pool)
+  const available = Object.entries(pool)
     .filter(([_, count]) => count > 0)
     .map(([key]) => key);
 
-  if (topConditions.length === 0) {
-    console.info(`All targets used for ${selectedRange}, using fallback.`);
+  if (available.length === 0) {
+    console.info(`No targets remaining in ${selectedRange}. Falling back.`);
     return getRandomCondition();
   }
 
-  const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
-  ageConditionTargets[selectedRange][selected]--;
-  console.log(`Assigned condition "${selected}" for range ${selectedRange}`);
-  return selected;
+  const chosen = available[Math.floor(Math.random() * available.length)];
+  ageConditionTargets[selectedRange][chosen]--;
+  console.log(`Assigned condition: ${chosen} (age ${age}, group ${selectedRange})`);
+  return chosen;
 }
 
 function getRandomCondition() {
-  const keys = Object.keys(conditions);
-  return keys[Math.floor(Math.random() * keys.length)];
+  const all = Object.keys(conditions);
+  return all[Math.floor(Math.random() * all.length)];
 }
 
 function createSpeakerDiv(initials) {
@@ -108,8 +92,8 @@ function createSpeakerDiv(initials) {
     if (audioPlaying && audioPlaying !== audio) {
       audioPlaying.pause();
       audioPlaying.currentTime = 0;
-      const prev = audioPlaying.parentElement?.querySelector('.speaker-button');
-      if (prev) prev.classList.remove('playing');
+      const lastBtn = audioPlaying.parentElement?.querySelector('.speaker-button');
+      if (lastBtn) lastBtn.classList.remove('playing');
     }
 
     if (audio.paused) {
@@ -137,52 +121,45 @@ function createSpeakerDiv(initials) {
 
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
+  const wrapper = document.getElementById('task-wrapper');
+  wrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
   const isMobile = window.innerWidth < 768;
-  const colLeft = isMobile ? -160 : -140;
-  const colRight = isMobile ? -80 : -75;
-  const rowHeight = 50;
-  let rowLeft = 0;
-  let rowRight = 0;
+  const left = isMobile ? -160 : -140;
+  const right = isMobile ? -80 : -75;
+  const step = 50;
+  let leftRow = 0;
+  let rightRow = 0;
 
-  for (let i = 0; i < speakers.length; i++) {
-    const initials = speakers[i];
-    const speakerDiv = createSpeakerDiv(initials);
-    speakerDiv.style.position = 'absolute';
-    speakerDiv.style.zIndex = '10';
+  speakers.forEach((initials, i) => {
+    const speaker = createSpeakerDiv(initials);
+    speaker.style.position = 'absolute';
+    speaker.style.zIndex = '10';
 
-    if (i % 2 === 0) {
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${60 + rowLeft * rowHeight}px`;
-      rowLeft++;
-    } else {
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${60 + rowRight * rowHeight}px`;
-      rowRight++;
-    }
+    const x = i % 2 === 0 ? left : right;
+    const y = 60 + (i % 2 === 0 ? leftRow++ : rightRow++) * step;
+    speaker.style.left = `${x}px`;
+    speaker.style.top = `${y}px`;
 
-    taskWrapper.appendChild(speakerDiv);
-  }
+    wrapper.appendChild(speaker);
+  });
 
   interact('.draggable').draggable({
     inertia: false,
     modifiers: [],
     autoScroll: true,
-    delay: 0,
     touchAction: 'none',
     listeners: {
       start(event) {
         event.target.classList.add('dragging');
       },
       move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
+        const el = event.target;
+        let x = (parseFloat(el.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(el.getAttribute('data-y')) || 0) + event.dy;
+        el.style.transform = `translate(${x}px, ${y}px)`;
+        el.setAttribute('data-x', x);
+        el.setAttribute('data-y', y);
       },
       end(event) {
         event.target.classList.remove('dragging');
@@ -190,25 +167,12 @@ function initSorting(conditionKey) {
     }
   });
 }
-
-function showError(msg) {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = msg;
-  errEl.style.display = 'block';
-}
-
-function hideError() {
-  const errEl = document.getElementById('error-message');
-  errEl.textContent = '';
-  errEl.style.display = 'none';
-}
-
 function checkOrientationWarning() {
   const rotateWarning = document.getElementById('rotate-warning');
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-  const isTaskActive = document.body.classList.contains('task-active');
+  const isActive = document.body.classList.contains('task-active');
   if (rotateWarning) {
-    rotateWarning.style.display = (isPortrait && isTaskActive) ? 'flex' : 'none';
+    rotateWarning.style.display = (isPortrait && isActive) ? 'flex' : 'none';
   }
 }
 
@@ -230,27 +194,26 @@ function setupInstructionToggles() {
 
   if (!hideBtn || !showBtn || !instructions) return;
 
-  hideBtn.addEventListener('click', () => {
+  hideBtn.onclick = () => {
     instructions.classList.add('hide');
     hideBtn.style.display = 'none';
     showBtn.style.display = 'inline-block';
-  });
+  };
 
-  showBtn.addEventListener('click', () => {
+  showBtn.onclick = () => {
     instructions.classList.remove('hide');
     hideBtn.style.display = 'inline-block';
     showBtn.style.display = 'none';
-  });
+  };
 }
 
 function handleAutoStartFromURL() {
   const params = new URLSearchParams(window.location.search);
-  const urlAge = parseInt(params.get("age"));
-  const urlGender = params.get("gender");
+  const age = parseInt(params.get("age"));
+  const gender = params.get("gender");
 
-  if (urlAge && urlGender) {
-    cond = getConditionByAgePriority(urlAge);
-
+  if (age && gender) {
+    cond = getConditionByAgePriority(age);
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
       return;
@@ -261,10 +224,7 @@ function handleAutoStartFromURL() {
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
     checkOrientationWarning();
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => initSorting(cond));
-    });
+    requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
   }
 }
 
@@ -280,12 +240,12 @@ function setupManualFormFlow() {
     const gender = document.getElementById('gender').value;
 
     if (!age || age < 4 || age > 17) {
-      showError('Please enter a valid age between 4 and 17.');
+      showError("Please enter a valid age between 4 and 17.");
       return;
     }
 
     if (!gender) {
-      showError('Please select a gender.');
+      showError("Please select a gender.");
       return;
     }
 
@@ -300,10 +260,7 @@ function setupManualFormFlow() {
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
     checkOrientationWarning();
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => initSorting(cond));
-    });
+    requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
   });
 }
 
@@ -319,12 +276,13 @@ function setupSubmissionHandler() {
     let allInside = true;
     icons.forEach(icon => {
       const rect = icon.getBoundingClientRect();
-      const isInside = rect.left >= gridRect.left &&
-                       rect.right <= gridRect.right &&
-                       rect.top >= gridRect.top &&
-                       rect.bottom <= gridRect.bottom;
-      icon.classList.toggle('out-of-bounds', !isInside);
-      if (!isInside) allInside = false;
+      const inside = rect.left >= gridRect.left &&
+                     rect.right <= gridRect.right &&
+                     rect.top >= gridRect.top &&
+                     rect.bottom <= gridRect.bottom;
+
+      icon.classList.toggle('out-of-bounds', !inside);
+      if (!inside) allInside = false;
     });
 
     if (!allInside) {
@@ -353,19 +311,18 @@ function setupSubmissionHandler() {
       .then(docRef => {
         const filePath = `screenshots/${docRef.id}.png`;
         const fileRef = ref(storage, filePath);
+
         const byteString = atob(screenshotData.split(',')[1]);
-        const arrayBuffer = new ArrayBuffer(byteString.length);
-        const intArray = new Uint8Array(arrayBuffer);
+        const intArray = new Uint8Array(byteString.length);
         for (let i = 0; i < byteString.length; i++) {
           intArray[i] = byteString.charCodeAt(i);
         }
+
         const blob = new Blob([intArray], { type: 'image/png' });
 
-        return uploadBytes(fileRef, blob).then(() => {
-          return updateDoc(doc(db, "submissions", docRef.id), {
-            screenshot: filePath
-          }).then(() => docRef.id);
-        });
+        return uploadBytes(fileRef, blob)
+          .then(() => updateDoc(doc(db, "submissions", docRef.id), { screenshot: filePath }))
+          .then(() => docRef.id);
       })
       .then(docId => {
         sessionStorage.setItem('assignedCondition', cond);
@@ -373,7 +330,7 @@ function setupSubmissionHandler() {
       })
       .catch(err => {
         console.error("❌ Submission failed:", err);
-        alert("Something went wrong uploading your data. Please try again.");
+        alert("There was a problem uploading your data. Please try again.");
       });
     });
   });
