@@ -167,7 +167,13 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   checkOrientationWarning();
 
   const cond = getConditionFromUrl();
-  initSorting(cond);
+
+  // Precision layout sync: run after layout and paint
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initSorting(cond);
+    });
+  });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -199,3 +205,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
