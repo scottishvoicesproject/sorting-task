@@ -8,22 +8,31 @@
     body {
       font-family: "Segoe UI", sans-serif;
       background-color: #f9f9f9;
-      margin: 40px;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .thankyou-container {
       max-width: 800px;
+      margin: 0 auto;
       line-height: 1.6;
     }
+
     h2, h3 {
       color: #007b7f;
     }
+
     #participant-view img {
       max-width: 100%;
       border: 1px solid #ccc;
       margin-top: 10px;
     }
+
     ul#condition-info-list {
       padding-left: 0;
       list-style-type: none;
     }
+
     ul#condition-info-list li {
       background: #fff;
       padding: 8px 12px;
@@ -34,20 +43,21 @@
   </style>
 </head>
 <body>
-  <h2>Thank you for completing the task.</h2>
-  <p>
-    This project explores how people perceive differences in speech across Scotland. Each speaker you sorted came from one of three regions — Aberdeen, Dundee, or Glasgow — and spoke either in <strong>Scottish English</strong> or <strong>Scots</strong> (or <strong>Scots pronunciation</strong>, depending on your condition). Some participants notice patterns by region, others by variety, and many use a mix of cues without realizing it.
-  </p>
-  <p>
-    There wasn’t one “correct” answer — your groupings help us understand what stands out naturally to listeners.  
-    If you're curious, we've listed the speakers you heard and their background just below. You can compare them to your grouping to see whether region or variety might’ve influenced your decisions.
-  </p>
+  <div class="thankyou-container">
+    <h2>Thank you for completing the task.</h2>
+    <p>
+      This project explores how people perceive differences in speech across Scotland. Each speaker you sorted came from one of three regions — Aberdeen, Dundee, or Glasgow — and spoke either in <strong>Scottish English</strong> or <strong>Scots</strong> (or <strong>Scots pronunciation</strong>, depending on your condition). Some participants notice patterns by region, others by variety, and many use a mix of cues without realizing it.
+    </p>
+    <p>
+      There wasn’t one “correct” answer — your groupings help us understand what stands out naturally to listeners.  
+      If you're curious, we've listed the speakers you heard and their background just below. You can compare them to your grouping to see whether region or variety might’ve influenced your decisions.
+    </p>
 
-  <h3>Your groupings:</h3>
-  <div id="participant-view"></div>
+    <h3>Your groupings:</h3>
+    <div id="participant-view"></div>
 
-  <h3>Speakers you heard:</h3>
-  <ul id="condition-info-list"></ul>
+    <h3>Speakers you heard:</h3>
+    <ul id="condition-info-list"></ul>
 
   <script>
     const speakerInfo = {
@@ -136,36 +146,39 @@
       F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
     };
 
-    const params = new URLSearchParams(window.location.search);
-    const cond = params.get('cond');
-    const speakers = conditions[cond] || [];
+      const params = new URLSearchParams(window.location.search);
+      const cond = params.get('cond');
+      const speakers = conditions[cond] || [];
 
-    // Load saved screenshot
-    const imgData = sessionStorage.getItem('submissionScreenshot');
-    if (imgData) {
-      const img = new Image();
-      img.src = imgData;
-      img.alt = "Screenshot of your submission";
-      document.getElementById('participant-view').appendChild(img);
-    }
+      // Load saved screenshot
+      const imgData = sessionStorage.getItem('submissionScreenshot');
+      if (imgData) {
+        const img = new Image();
+        img.src = imgData;
+        img.alt = "Screenshot of your submission";
+        document.getElementById('participant-view').appendChild(img);
+      }
 
-    const isPronCondition = cond && (cond.includes("P1") || cond.includes("P2"));
-    const infoList = document.getElementById('condition-info-list');
+      const isPronCondition = cond && (cond.includes("P1") || cond.includes("P2"));
+      const infoList = document.getElementById('condition-info-list');
 
-    speakers.forEach(code => {
-      const info = speakerInfo[code];
-      if (!info) return;
+      speakers.forEach(code => {
+        const info = speakerInfo[code];
+        if (!info) return;
 
-      const varietyLabel = (info.variety === "Scots" && isPronCondition)
-        ? "Scots pronunciation"
-        : info.variety;
+        const varietyLabel = (info.variety === "Scots" && isPronCondition)
+          ? "Scots pronunciation"
+          : info.variety;
 
-      const li = document.createElement('li');
-      li.textContent = `${code} — ${info.region} — ${varietyLabel}`;
-      infoList.appendChild(li);
-    });
-  </script>
-  <p style="margin-top: 30px;">You may now close this tab. <strong>Thank you for taking part!</strong> 😊</p>
+        const li = document.createElement('li');
+        li.textContent = `${code} — ${info.region} — ${varietyLabel}`;
+        infoList.appendChild(li);
+      });
+    </script>
+
+    <p style="margin-top: 30px;">
+      You may now close this tab. <strong>Thank you for taking part!</strong> 😊
+    </p>
+  </div>
 </body>
 </html>
-
