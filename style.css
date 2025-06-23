@@ -5,9 +5,9 @@ html, body {
   background: #f4f4f4;
   overflow-x: hidden;
   overflow-y: auto;
+  touch-action: manipulation; /* smoother drag on mobile */
 }
 
-/* === INTRO PAGE === */
 .intro-box {
   width: 360px;
   max-width: 90%;
@@ -60,7 +60,6 @@ select {
   text-align: center;
 }
 
-/* === TASK SECTION === */
 #sorting-section {
   display: none;
   flex-direction: column;
