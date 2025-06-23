@@ -1,4 +1,4 @@
-let cond = null; // stores the assigned condition across functions
+let cond = null; // Global condition assignment
 let audioPlaying = null;
 
 const conditions = {
@@ -70,59 +70,49 @@ function getRandomCondition() {
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
-function initSorting(conditionKey) {
-  const speakers = conditions[conditionKey];
-  const taskWrapper = document.getElementById('task-wrapper');
-  taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
+function createSpeakerDiv(initials) {
+  const div = document.createElement('div');
+  div.className = 'draggable';
+  div.dataset.id = initials;
 
-  const isMobile = window.innerWidth < 768;
-  const colLeft = isMobile ? -160 : -140;
-  const colRight = isMobile ? -80 : -75;
-  const rowHeight = 50;
-  let rowLeft = 0;
-  let rowRight = 0;
+  const audio = document.createElement('audio');
+  audio.src = `audio/${initials}.wav`;
+  audio.preload = 'none';
 
-  for (let i = 0; i < speakers.length; i++) {
-    const initials = speakers[i];
-    const speakerDiv = createSpeakerDiv(initials);
-    speakerDiv.style.position = 'absolute';
-    speakerDiv.style.zIndex = '10';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = initials;
+  btn.className = 'speaker-button';
 
-    if (i % 2 === 0) {
-      speakerDiv.style.left = `${colLeft}px`;
-      speakerDiv.style.top = `${60 + rowLeft * rowHeight}px`;
-      rowLeft++;
+  btn.addEventListener('click', () => {
+    if (audioPlaying && audioPlaying !== audio) {
+      audioPlaying.pause();
+      audioPlaying.currentTime = 0;
+      const prev = audioPlaying.parentElement?.querySelector('.speaker-button');
+      if (prev) prev.classList.remove('playing');
+    }
+
+    if (audio.paused) {
+      audio.play();
+      audioPlaying = audio;
+      btn.classList.add('playing');
     } else {
-      speakerDiv.style.left = `${colRight}px`;
-      speakerDiv.style.top = `${60 + rowRight * rowHeight}px`;
-      rowRight++;
+      audio.pause();
+      audioPlaying = null;
+      btn.classList.remove('playing');
     }
 
-    taskWrapper.appendChild(speakerDiv);
-  }
-
-  interact('.draggable').draggable({
-    inertia: false,
-    modifiers: [],
-    autoScroll: false,
-    delay: 0,
-    listeners: {
-      start(event) {
-        event.target.classList.add('dragging');
-      },
-      move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      },
-      end(event) {
-        event.target.classList.remove('dragging');
-      }
-    }
+    audio.onended = () => {
+      btn.classList.remove('playing');
+      if (audioPlaying === audio) audioPlaying = null;
+    };
   });
+
+  div.appendChild(btn);
+  div.appendChild(audio);
+  div.setAttribute('data-x', 0);
+  div.setAttribute('data-y', 0);
+  return div;
 }
 
 function showError(msg) {
@@ -146,10 +136,39 @@ function checkOrientationWarning() {
   }
 }
 
-// 🔄 Recheck orientation on screen resize or rotation
 window.addEventListener('resize', checkOrientationWarning);
 window.addEventListener('orientationchange', checkOrientationWarning);
 
+document.getElementById('age-gender-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  hideError();
+
+  const age = parseInt(document.getElementById('age').value.trim());
+  const gender = document.getElementById('gender').value;
+
+  if (!age || age < 4 || age > 17) {
+    showError('Please enter a valid age between 4 and 17.');
+    return;
+  }
+
+  if (!gender) {
+    showError('Please select a gender.');
+    return;
+  }
+
+  document.getElementById('intro-box').style.display = 'none';
+  document.getElementById('sorting-section').style.display = 'flex';
+  document.body.classList.add('task-active');
+  checkOrientationWarning();
+
+  cond = getConditionByAgePriority(age);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initSorting(cond);
+    });
+  });
+});
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
 
