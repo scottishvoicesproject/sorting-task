@@ -30,12 +30,20 @@ function getConditionByAgePriority(age) {
     "13-15": age >= 13 && age <= 15,
     "16-17": age >= 16 && age <= 17
   };
+
   const selectedRange = Object.keys(ranges).find(r => ranges[r]);
   if (!selectedRange || !ageConditionTargets[selectedRange]) return getRandomCondition();
 
   const pool = ageConditionTargets[selectedRange];
   const max = Math.max(...Object.values(pool));
-  const topConditions = Object.entries(pool).filter(([_, count]) => count === max && count > 0).map(([key]) => key);
+
+  // ✅ NEW safety check: if all values are 0
+  if (max === 0) return getRandomCondition();
+
+  const topConditions = Object.entries(pool)
+    .filter(([_, count]) => count === max && count > 0)
+    .map(([key]) => key);
+
   if (topConditions.length === 0) return getRandomCondition();
 
   const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
