@@ -1,4 +1,4 @@
-let cond = null;
+let cond = null; // Global condition holder
 let audioPlaying = null;
 
 const conditions = {
@@ -13,12 +13,27 @@ const conditions = {
 };
 
 const ageConditionTargets = {
-  "4-6": { F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2 },
-  "7-8": { F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0 },
+  "4-6": {
+    F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2
+  },
+  "7-8": {
+    F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0
+  },
   "9-10": { M_SSEvsL1: 2 },
-  "11-12": { F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2 },
-  "13-15": { F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5, M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4 },
-  "16-17": { F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1 }
+  "11-12": {
+    F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2,
+    M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2
+  },
+  "13-15": {
+    F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5,
+    M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4
+  },
+  "16-17": {
+    F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4,
+    M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1
+  }
 };
 
 function getConditionByAgePriority(age) {
@@ -32,11 +47,16 @@ function getConditionByAgePriority(age) {
   };
 
   const selectedRange = Object.keys(ranges).find(r => ranges[r]);
-  if (!selectedRange || !ageConditionTargets[selectedRange]) return getRandomCondition();
+  if (!selectedRange || !ageConditionTargets[selectedRange]) {
+    return getRandomCondition();
+  }
 
   const pool = ageConditionTargets[selectedRange];
   const max = Math.max(...Object.values(pool));
-  const topConditions = Object.entries(pool).filter(([_, count]) => count === max && count > 0).map(([key]) => key);
+  const topConditions = Object.entries(pool)
+    .filter(([_, count]) => count === max && count > 0)
+    .map(([key]) => key);
+
   if (topConditions.length === 0) return getRandomCondition();
 
   const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
