@@ -218,9 +218,9 @@ window.addEventListener('orientationchange', checkOrientationWarning);
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
   setupInstructionToggles();
-  autoStartFromURLParams();
-  setupFormSubmission();
-  setupTaskSubmission();
+  handleAutoStartFromURL();
+  setupManualFormFlow();
+  setupSubmissionHandler();
 });
 
 function setupInstructionToggles() {
@@ -228,28 +228,29 @@ function setupInstructionToggles() {
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
 
-  if (hideBtn && showBtn && instructions) {
-    hideBtn.onclick = () => {
-      instructions.classList.add('hide');
-      hideBtn.style.display = 'none';
-      showBtn.style.display = 'inline-block';
-    };
+  if (!hideBtn || !showBtn || !instructions) return;
 
-    showBtn.onclick = () => {
-      instructions.classList.remove('hide');
-      hideBtn.style.display = 'inline-block';
-      showBtn.style.display = 'none';
-    };
-  }
+  hideBtn.addEventListener('click', () => {
+    instructions.classList.add('hide');
+    hideBtn.style.display = 'none';
+    showBtn.style.display = 'inline-block';
+  });
+
+  showBtn.addEventListener('click', () => {
+    instructions.classList.remove('hide');
+    hideBtn.style.display = 'inline-block';
+    showBtn.style.display = 'none';
+  });
 }
 
-function autoStartFromURLParams() {
+function handleAutoStartFromURL() {
   const params = new URLSearchParams(window.location.search);
-  const age = parseInt(params.get("age"));
-  const gender = params.get("gender");
+  const urlAge = parseInt(params.get("age"));
+  const urlGender = params.get("gender");
 
-  if (age && gender) {
-    cond = getConditionByAgePriority(age);
+  if (urlAge && urlGender) {
+    cond = getConditionByAgePriority(urlAge);
+
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
       return;
@@ -260,11 +261,14 @@ function autoStartFromURLParams() {
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
     checkOrientationWarning();
-    requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => initSorting(cond));
+    });
   }
 }
 
-function setupFormSubmission() {
+function setupManualFormFlow() {
   const form = document.getElementById('age-gender-form');
   if (!form) return;
 
@@ -296,11 +300,14 @@ function setupFormSubmission() {
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
     checkOrientationWarning();
-    requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => initSorting(cond));
+    });
   });
 }
 
-function setupTaskSubmission() {
+function setupSubmissionHandler() {
   const submitBtn = document.getElementById('submit-button');
   if (!submitBtn) return;
 
@@ -311,19 +318,17 @@ function setupTaskSubmission() {
 
     let allInside = true;
     icons.forEach(icon => {
-      const iconRect = icon.getBoundingClientRect();
-      const isInside =
-        iconRect.left >= gridRect.left &&
-        iconRect.right <= gridRect.right &&
-        iconRect.top >= gridRect.top &&
-        iconRect.bottom <= gridRect.bottom;
-
+      const rect = icon.getBoundingClientRect();
+      const isInside = rect.left >= gridRect.left &&
+                       rect.right <= gridRect.right &&
+                       rect.top >= gridRect.top &&
+                       rect.bottom <= gridRect.bottom;
       icon.classList.toggle('out-of-bounds', !isInside);
       if (!isInside) allInside = false;
     });
 
     if (!allInside) {
-      alert('Oops! Please place all icons fully inside the grid before submitting.');
+      alert("Oops! Please place all icons fully inside the grid before submitting.");
       return;
     }
 
@@ -333,8 +338,8 @@ function setupTaskSubmission() {
       const screenshotData = canvas.toDataURL('image/png');
       const age = parseInt(document.getElementById('age').value.trim());
       const gender = document.getElementById('gender').value;
-      const taskStart = Number(sessionStorage.getItem('taskStartTime'));
-      const taskDuration = Math.round((Date.now() - taskStart) / 1000);
+      const start = Number(sessionStorage.getItem('taskStartTime')) || Date.now();
+      const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
 
       addDoc(collection(db, "submissions"), {
@@ -342,13 +347,12 @@ function setupTaskSubmission() {
         gender,
         condition: cond,
         timestamp,
-        duration_seconds: taskDuration,
+        duration_seconds: duration,
         completion: "complete"
       })
       .then(docRef => {
         const filePath = `screenshots/${docRef.id}.png`;
         const fileRef = ref(storage, filePath);
-
         const byteString = atob(screenshotData.split(',')[1]);
         const arrayBuffer = new ArrayBuffer(byteString.length);
         const intArray = new Uint8Array(arrayBuffer);
@@ -364,15 +368,13 @@ function setupTaskSubmission() {
         });
       })
       .then(docId => {
-        sessionStorage.setItem('submissionScreenshot', screenshotData);
         sessionStorage.setItem('assignedCondition', cond);
         window.location.href = `thankyou.html?cond=${cond}`;
       })
-      .catch(error => {
-        console.error("❌ Firebase submission failed:", error);
-        alert("There was a problem submitting your task. Please try again.");
+      .catch(err => {
+        console.error("❌ Submission failed:", err);
+        alert("Something went wrong uploading your data. Please try again.");
       });
     });
   });
 }
-
