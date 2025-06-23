@@ -73,7 +73,7 @@ function initSorting(conditionKey) {
 
   const isMobile = window.innerWidth < 768;
   const colLeft = isMobile ? -160 : -140;
-  const colRight = isMobile ? -20 : -75;
+  const colRight = isMobile ? -100 : -75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
