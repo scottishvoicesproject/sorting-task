@@ -2,6 +2,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  ref,
+  uploadBytes
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
@@ -282,7 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ✅ SUBMIT TASK HANDLER
 const submitBtn = document.getElementById('submit-button');
 if (submitBtn) {
   submitBtn.addEventListener('click', () => {
@@ -318,7 +330,7 @@ if (submitBtn) {
         const taskDuration = Math.round((Date.now() - taskStart) / 1000);
         const timestamp = new Date().toISOString();
 
-        db.collection("submissions").add({
+        addDoc(collection(db, "submissions"), {
           age,
           gender,
           condition: cond,
@@ -327,25 +339,24 @@ if (submitBtn) {
           completion: "complete"
         })
         .then(docRef => {
-  return fetch(screenshotData)
-    .then(res => res.blob())
-    .then(blob => {
-      const fileRef = storage.ref().child(`screenshots/${docRef.id}.png`);
-      return fileRef.put(blob).then(() => {
-        // ✅ Update Firestore doc to link screenshot path
-        return docRef.update({
-          screenshot: `screenshots/${docRef.id}.png`
-        }).then(() => docRef.id);
-      });
-    });
-})
-          .then(docId => {
-            sessionStorage.setItem('submissionScreenshot', screenshotData);
-            sessionStorage.setItem('assignedCondition', cond);
-            console.log("✅ Submission complete — ID:", docId);
-            window.location.href = `thankyou.html?cond=${cond}`;
-          })
-
+          return fetch(screenshotData)
+            .then(res => res.blob())
+            .then(blob => {
+              const filePath = `screenshots/${docRef.id}.png`;
+              const fileRef = ref(storage, filePath);
+              return uploadBytes(fileRef, blob).then(() => {
+                return updateDoc(doc(db, "submissions", docRef.id), {
+                  screenshot: filePath
+                }).then(() => docRef.id);
+              });
+            });
+        })
+        .then(docId => {
+          sessionStorage.setItem('submissionScreenshot', screenshotData);
+          sessionStorage.setItem('assignedCondition', cond);
+          console.log("✅ Submission complete — ID:", docId);
+          window.location.href = `thankyou.html?cond=${cond}`;
+        })
         .catch(error => {
           console.error("❌ Firebase submission failed:", error);
           alert("There was a problem submitting your task. Please try again.");
@@ -354,7 +365,6 @@ if (submitBtn) {
     }
   });
 }
-
 
 
 
