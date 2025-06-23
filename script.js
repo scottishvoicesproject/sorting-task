@@ -1,3 +1,6 @@
+let cond = null; // stores the assigned condition across functions
+let audioPlaying = null;
+
 const conditions = {
   M_SSEvsP1: ['GI','PX','TV','BF','MB','CQ','KN','UI','EQ','TE','DM','EW'],
   M_SSEvsP2: ['TD','DG','WI','QE','HY','XU','VO','EL','JG','WR','UN','HZ'],
@@ -9,7 +12,6 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
-// 🎯 Condition target counts by age range
 const ageConditionTargets = {
   "4-6": {
     F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2,
@@ -36,7 +38,6 @@ const ageConditionTargets = {
   }
 };
 
-// 🧠 Assign condition by most-needed condition in age range
 function getConditionByAgePriority(age) {
   const ranges = {
     "4-6": age >= 4 && age <= 6,
@@ -61,7 +62,7 @@ function getConditionByAgePriority(age) {
   if (topConditions.length === 0) return getRandomCondition();
 
   const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
-  ageConditionTargets[selectedRange][selected]--; // optional per-session decrement
+  ageConditionTargets[selectedRange][selected]--;
   return selected;
 }
 
@@ -69,54 +70,6 @@ function getRandomCondition() {
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
-
-let audioPlaying = null;
-
-function createSpeakerDiv(initials) {
-  const div = document.createElement('div');
-  div.className = 'draggable';
-  div.dataset.id = initials;
-
-  const audio = document.createElement('audio');
-  audio.src = `audio/${initials}.wav`;
-  audio.preload = 'none';
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.textContent = initials;
-  btn.className = 'speaker-button';
-
-  btn.addEventListener('click', () => {
-    if (audioPlaying && audioPlaying !== audio) {
-      audioPlaying.pause();
-      audioPlaying.currentTime = 0;
-      const prev = audioPlaying.parentElement?.querySelector('.speaker-button');
-      if (prev) prev.classList.remove('playing');
-    }
-
-    if (audio.paused) {
-      audio.play();
-      audioPlaying = audio;
-      btn.classList.add('playing');
-    } else {
-      audio.pause();
-      audioPlaying = null;
-      btn.classList.remove('playing');
-    }
-
-    audio.onended = () => {
-      btn.classList.remove('playing');
-      if (audioPlaying === audio) audioPlaying = null;
-    };
-  });
-
-  div.appendChild(btn);
-  div.appendChild(audio);
-  div.setAttribute('data-x', 0);
-  div.setAttribute('data-y', 0);
-  return div;
-}
-
 function initSorting(conditionKey) {
   const speakers = conditions[conditionKey];
   const taskWrapper = document.getElementById('task-wrapper');
@@ -193,41 +146,9 @@ function checkOrientationWarning() {
   }
 }
 
- // 🔄 Recheck orientation when resizing or rotating
+// 🔄 Recheck orientation on screen resize or rotation
 window.addEventListener('resize', checkOrientationWarning);
 window.addEventListener('orientationchange', checkOrientationWarning);
-
-
-document.getElementById('age-gender-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  hideError();
-
-  const age = parseInt(document.getElementById('age').value.trim());
-  const gender = document.getElementById('gender').value;
-
-  if (!age || age < 4 || age > 17) {
-    showError('Please enter a valid age between 4 and 17.');
-    return;
-  }
-
-  if (!gender) {
-    showError('Please select a gender.');
-    return;
-  }
-
-  document.getElementById('intro-box').style.display = 'none';
-  document.getElementById('sorting-section').style.display = 'flex';
-  document.body.classList.add('task-active');
-  checkOrientationWarning();
-
-  const cond = getConditionByAgePriority(age);
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      initSorting(cond);
-    });
-  });
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
@@ -253,7 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
       if (confirm("Are you sure you want to submit the task?")) {
-        window.location.href = 'thankyou.html';
+        html2canvas(document.getElementById('task-wrapper')).then(canvas => {
+          const screenshotData = canvas.toDataURL('image/png');
+          sessionStorage.setItem('submissionScreenshot', screenshotData);
+          sessionStorage.setItem('assignedCondition', cond);
+          window.location.href = `thankyou.html?cond=${cond}`;
+        });
       }
     });
   }
