@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
- // ✅ SUBMIT TASK HANDLER
+// ✅ SUBMIT TASK HANDLER
 const submitBtn = document.getElementById('submit-button');
 if (submitBtn) {
   submitBtn.addEventListener('click', () => {
@@ -287,10 +287,7 @@ if (submitBtn) {
 
         fetch('https://script.google.com/macros/s/AKfycbwQrCgvA10RjQnhQKEDN0_gsFgLiAZJZ3EXBsqLj8iX3eEXG8UT3A3lKbVaX1HyqOHY/exec', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          body: JSON.stringify(dataToSave)
+          body: JSON.stringify(dataToSave) // No headers = no preflight
         })
         .then(response => response.text())
         .then(result => {
@@ -299,8 +296,12 @@ if (submitBtn) {
           sessionStorage.setItem('assignedCondition', cond);
           window.location.href = `thankyou.html?cond=${cond}`;
         })
-        .catch(error => console.error('❌ Error:', error));
+        .catch(error => {
+          console.error('❌ Error:', error);
+          alert("Something went wrong. Please try again.");
+        });
       });
     }
   });
 }
+
