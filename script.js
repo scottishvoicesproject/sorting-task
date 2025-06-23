@@ -20,7 +20,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
   authDomain: "github-b374d.firebaseapp.com",
   projectId: "github-b374d",
-  storageBucket: "github-b374d.appspot.com", // ✅ corrected here
+  storageBucket: "github-b374d-storage-001.appspot.com",
   messagingSenderId: "48472764273",
   appId: "1:48472764273:web:491df1cfe8aa57ee2590d0",
   measurementId: "G-YN6NKG5NH2"
@@ -344,6 +344,10 @@ if (submitBtn) {
             .then(blob => {
               const filePath = `screenshots/${docRef.id}.png`;
               const fileRef = ref(storage, filePath);
+              
+        console.log(`Uploading to: gs://github-b374d-storage-001.appspot.com/screenshots/${docRef.id}.png`);
+
+              
               return uploadBytes(fileRef, blob).then(() => {
                 return updateDoc(doc(db, "submissions", docRef.id), {
                   screenshot: filePath
