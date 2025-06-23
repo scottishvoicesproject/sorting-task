@@ -34,15 +34,13 @@ function createSpeakerDiv(initials) {
   btn.className = 'speaker-button';
 
   btn.addEventListener('click', () => {
-    // Stop any previously playing audio
     if (audioPlaying && audioPlaying !== audio) {
       audioPlaying.pause();
       audioPlaying.currentTime = 0;
-      const prevBtn = audioPlaying.parentElement?.querySelector('.speaker-button');
-      if (prevBtn) prevBtn.classList.remove('playing');
+      const prev = audioPlaying.parentElement?.querySelector('.speaker-button');
+      if (prev) prev.classList.remove('playing');
     }
 
-    // Toggle playback and highlight
     if (audio.paused) {
       audio.play();
       audioPlaying = audio;
@@ -71,19 +69,17 @@ function initSorting(conditionKey) {
   const taskWrapper = document.getElementById('task-wrapper');
   const sortingContainer = document.getElementById('sorting-container');
 
-  // Remove existing icons
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  // Mobile-aware layout offset
   const isMobile = window.innerWidth < 768;
-  const colLeft = isMobile ? -100 : -140;
-  const colRight = isMobile ? -20 : -75;
+  const colLeft = isMobile ? -120 : -140;
+  const colRight = isMobile ? -60 : -75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
 
-  // Add draggable icons
-  speakers.forEach((initials, i) => {
+  for (let i = 0; i < speakers.length; i++) {
+    const initials = speakers[i];
     const speakerDiv = createSpeakerDiv(initials);
     speakerDiv.style.position = 'absolute';
     speakerDiv.style.zIndex = '10';
@@ -99,11 +95,11 @@ function initSorting(conditionKey) {
     }
 
     taskWrapper.appendChild(speakerDiv);
-  });
+  }
 
-  // Enable dragging
   interact('.draggable').draggable({
     inertia: false,
+    modifiers: [],
     listeners: {
       move(event) {
         const target = event.target;
