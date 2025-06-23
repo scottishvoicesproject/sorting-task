@@ -2,13 +2,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
+  authDomain: "github-b374d.firebaseapp.com",
+  projectId: "github-b374d",
+  storageBucket: "github-b374d.appspot.com", // ✅ corrected here
+  messagingSenderId: "48472764273",
+  appId: "1:48472764273:web:491df1cfe8aa57ee2590d0",
+  measurementId: "G-YN6NKG5NH2"
 };
 
 const app = initializeApp(firebaseConfig);
