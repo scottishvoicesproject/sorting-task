@@ -167,6 +167,7 @@ function initSorting(conditionKey) {
     }
   }
 });
+}
 
 function showError(msg) {
   const errEl = document.getElementById('error-message');
