@@ -13,27 +13,12 @@ const conditions = {
 };
 
 const ageConditionTargets = {
-  "4-6": {
-    F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2,
-    M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2
-  },
-  "7-8": {
-    F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2,
-    M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0
-  },
+  "4-6": { F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2 },
+  "7-8": { F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0 },
   "9-10": { M_SSEvsL1: 2 },
-  "11-12": {
-    F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2,
-    M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2
-  },
-  "13-15": {
-    F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5,
-    M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4
-  },
-  "16-17": {
-    F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4,
-    M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1
-  }
+  "11-12": { F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2 },
+  "13-15": { F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5, M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4 },
+  "16-17": { F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1 }
 };
 
 function getConditionByAgePriority(age) {
@@ -45,18 +30,12 @@ function getConditionByAgePriority(age) {
     "13-15": age >= 13 && age <= 15,
     "16-17": age >= 16 && age <= 17
   };
-
   const selectedRange = Object.keys(ranges).find(r => ranges[r]);
-  if (!selectedRange || !ageConditionTargets[selectedRange]) {
-    return getRandomCondition();
-  }
+  if (!selectedRange || !ageConditionTargets[selectedRange]) return getRandomCondition();
 
   const pool = ageConditionTargets[selectedRange];
   const max = Math.max(...Object.values(pool));
-  const topConditions = Object.entries(pool)
-    .filter(([_, count]) => count === max && count > 0)
-    .map(([key]) => key);
-
+  const topConditions = Object.entries(pool).filter(([_, count]) => count === max && count > 0).map(([key]) => key);
   if (topConditions.length === 0) return getRandomCondition();
 
   const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
@@ -68,6 +47,7 @@ function getRandomCondition() {
   const keys = Object.keys(conditions);
   return keys[Math.floor(Math.random() * keys.length)];
 }
+
 function createSpeakerDiv(initials) {
   const div = document.createElement('div');
   div.className = 'draggable';
@@ -145,28 +125,28 @@ function initSorting(conditionKey) {
   }
 
   interact('.draggable').draggable({
-  inertia: false,
-  modifiers: [],
-  autoScroll: true, // smoother on scrollable containers
-  delay: 0, // no delay before dragging — instant response!
-  touchAction: 'none', // prevents scrolling interference on touch devices
-  listeners: {
-    start(event) {
-      event.target.classList.add('dragging');
-    },
-    move(event) {
-      const target = event.target;
-      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-      target.style.transform = `translate(${x}px, ${y}px)`;
-      target.setAttribute('data-x', x);
-      target.setAttribute('data-y', y);
-    },
-    end(event) {
-      event.target.classList.remove('dragging');
+    inertia: false,
+    modifiers: [],
+    autoScroll: true,
+    delay: 0,
+    touchAction: 'none',
+    listeners: {
+      start(event) {
+        event.target.classList.add('dragging');
+      },
+      move(event) {
+        const target = event.target;
+        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      },
+      end(event) {
+        event.target.classList.remove('dragging');
+      }
     }
-  }
-});
+  });
 }
 
 function showError(msg) {
@@ -200,7 +180,7 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
   const age = parseInt(document.getElementById('age').value.trim());
   const gender = document.getElementById('gender').value;
 
-  if (!age || age < 4 || age > 17) {
+    if (!age || age < 4 || age > 17) {
     showError('Please enter a valid age between 4 and 17.');
     return;
   }
@@ -209,6 +189,9 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     showError('Please select a gender.');
     return;
   }
+
+  // Set task start time here 🕒
+  sessionStorage.setItem('taskStartTime', Date.now());
 
   document.getElementById('intro-box').style.display = 'none';
   document.getElementById('sorting-section').style.display = 'flex';
@@ -223,6 +206,7 @@ document.getElementById('age-gender-form').addEventListener('submit', (e) => {
     });
   });
 });
+
 document.addEventListener('DOMContentLoaded', () => {
   hideError();
 
@@ -246,33 +230,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = document.getElementById('submit-button');
   if (submitBtn) {
     submitBtn.addEventListener('click', () => {
-  const grid = document.getElementById('sorting-container');
-  const icons = document.querySelectorAll('.draggable');
-  const gridRect = grid.getBoundingClientRect();
+      const grid = document.getElementById('sorting-container');
+      const icons = document.querySelectorAll('.draggable');
+      const gridRect = grid.getBoundingClientRect();
 
-  let allInside = true;
+      let allInside = true;
 
-  icons.forEach(icon => {
-    const iconRect = icon.getBoundingClientRect();
+      icons.forEach(icon => {
+        const iconRect = icon.getBoundingClientRect();
 
-    const isInside =
-      iconRect.left >= gridRect.left &&
-      iconRect.right <= gridRect.right &&
-      iconRect.top >= gridRect.top &&
-      iconRect.bottom <= gridRect.bottom;
+        const isInside =
+          iconRect.left >= gridRect.left &&
+          iconRect.right <= gridRect.right &&
+          iconRect.top >= gridRect.top &&
+          iconRect.bottom <= gridRect.bottom;
 
-    icon.classList.toggle('out-of-bounds', !isInside);
+        icon.classList.toggle('out-of-bounds', !isInside);
 
-    if (!isInside) allInside = false;
-  });
+        if (!isInside) allInside = false;
+      });
 
-  if (!allInside) {
-    alert('Oops! Please place all icons fully inside the grid before submitting.');
-    return;
-  }
+      if (!allInside) {
+        alert('Oops! Please place all icons fully inside the grid before submitting.');
+        return;
+      }
 
-  // If confirmed and valid, continue submission
-  if (confirm("Are you sure you want to submit the task?")) {
+      if (confirm("Are you sure you want to submit the task?")) {
         html2canvas(document.getElementById('task-wrapper')).then(canvas => {
           const screenshotData = canvas.toDataURL('image/png');
           sessionStorage.setItem('submissionScreenshot', screenshotData);
