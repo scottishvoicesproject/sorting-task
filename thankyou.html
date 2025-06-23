@@ -162,18 +162,26 @@
       const isPronCondition = cond && (cond.includes("P1") || cond.includes("P2"));
       const infoList = document.getElementById('condition-info-list');
 
-      speakers.forEach(code => {
-        const info = speakerInfo[code];
-        if (!info) return;
+      const sorted = speakers
+  .map(code => {
+    const info = speakerInfo[code];
+    if (!info) return null;
+    const variety = (info.variety === "Scots" && isPronCondition) ? "Scots pronunciation" : info.variety;
+    return { code, region: info.region, variety };
+  })
+  .filter(Boolean)
+  .sort((a, b) => {
+    const regionCompare = a.region.localeCompare(b.region);
+    if (regionCompare !== 0) return regionCompare;
+    return a.variety.localeCompare(b.variety);
+  });
 
-        const varietyLabel = (info.variety === "Scots" && isPronCondition)
-          ? "Scots pronunciation"
-          : info.variety;
+sorted.forEach(({ code, region, variety }) => {
+  const li = document.createElement('li');
+  li.textContent = `${code} — ${region} — ${variety}`;
+  infoList.appendChild(li);
+});
 
-        const li = document.createElement('li');
-        li.textContent = `${code} — ${info.region} — ${varietyLabel}`;
-        infoList.appendChild(li);
-      });
     </script>
 
     <div style="margin-top: 40px; text-align: center;">
