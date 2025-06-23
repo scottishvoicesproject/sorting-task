@@ -15,7 +15,6 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
   authDomain: "github-b374d.firebaseapp.com",
@@ -30,7 +29,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
 
-let cond = null; // Global condition holder
+let cond = null;
 let audioPlaying = null;
 
 const conditions = {
@@ -45,12 +44,12 @@ const conditions = {
 };
 
 const ageConditionTargets = {
-  "4-6": { F_SSEvsL1: 4, F_SSEvsL2: 3, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 4, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 2 },
-  "7-8": { F_SSEvsL1: 1, F_SSEvsL2: 0, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL1: 1, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0 },
-  "9-10": { M_SSEvsL1: 2 },
-  "11-12": { F_SSEvsL1: 2, F_SSEvsP1: 2, F_SSEvsP2: 2, M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 2 },
-  "13-15": { F_SSEvsL1: 5, F_SSEvsL2: 3, F_SSEvsP1: 5, F_SSEvsP2: 5, M_SSEvsL1: 3, M_SSEvsL2: 5, M_SSEvsP1: 5, M_SSEvsP2: 4 },
-  "16-17": { F_SSEvsL1: 3, F_SSEvsL2: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 3, M_SSEvsL2: 3, M_SSEvsP1: 3, M_SSEvsP2: 1 }
+  "4-6": { F_SSEvsL1: 8, F_SSEvsL2: 6, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 8, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 4 },
+  "7-8": { F_SSEvsL1: 2, F_SSEvsL2: 0, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 2, M_SSEvsL2: 4, M_SSEvsP1: 4, M_SSEvsP2: 0 },
+  "9-10": { M_SSEvsL1: 4 },
+  "11-12": { F_SSEvsL1: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL2: 6, M_SSEvsP1: 4, M_SSEvsP2: 4 },
+  "13-15": { F_SSEvsL1: 10, F_SSEvsL2: 6, F_SSEvsP1: 10, F_SSEvsP2: 10, M_SSEvsL1: 6, M_SSEvsL2: 10, M_SSEvsP1: 10, M_SSEvsP2: 8 },
+  "16-17": { F_SSEvsL1: 6, F_SSEvsL2: 8, F_SSEvsP1: 8, F_SSEvsP2: 8, M_SSEvsL1: 6, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 2 }
 };
 
 function getConditionByAgePriority(age) {
@@ -64,22 +63,25 @@ function getConditionByAgePriority(age) {
   };
 
   const selectedRange = Object.keys(ranges).find(r => ranges[r]);
-  if (!selectedRange || !ageConditionTargets[selectedRange]) return getRandomCondition();
+  const pool = selectedRange && ageConditionTargets[selectedRange];
 
-  const pool = ageConditionTargets[selectedRange];
-  const max = Math.max(...Object.values(pool));
-
-  // ✅ NEW safety check: if all values are 0
-  if (max === 0) return getRandomCondition();
+  if (!pool) {
+    console.warn("No pool matched for age:", age);
+    return getRandomCondition();
+  }
 
   const topConditions = Object.entries(pool)
-    .filter(([_, count]) => count === max && count > 0)
+    .filter(([_, count]) => count > 0)
     .map(([key]) => key);
 
-  if (topConditions.length === 0) return getRandomCondition();
+  if (topConditions.length === 0) {
+    console.info(`All targets used for ${selectedRange}, using fallback.`);
+    return getRandomCondition();
+  }
 
   const selected = topConditions[Math.floor(Math.random() * topConditions.length)];
   ageConditionTargets[selectedRange][selected]--;
+  console.log(`Assigned condition "${selected}" for range ${selectedRange}`);
   return selected;
 }
 
@@ -234,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ✅ Auto-start via URL parameters
   const params = new URLSearchParams(window.location.search);
   const urlAge = parseInt(params.get("age"));
   const urlGender = params.get("gender");
@@ -243,6 +244,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem('taskStartTime', Date.now());
     cond = getConditionByAgePriority(urlAge);
 
+    if (!conditions[cond]) {
+      showError("Something went wrong assigning your task. Please refresh and try again.");
+      return;
+    }
+
     document.getElementById('intro-box').style.display = 'none';
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
@@ -254,118 +260,125 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    return; // Skip manual form if auto-launched
+    return;
   }
 
-// ✅ FORM SUBMISSION HANDLER
-const form = document.getElementById('age-gender-form');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    hideError();
+  const form = document.getElementById('age-gender-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      hideError();
 
-    const age = parseInt(document.getElementById('age').value.trim());
-    const gender = document.getElementById('gender').value;
+      const age = parseInt(document.getElementById('age').value.trim());
+      const gender = document.getElementById('gender').value;
 
-    if (!age || age < 4 || age > 17) {
-      showError('Please enter a valid age between 4 and 17.');
-      return;
-    }
+      if (!age || age < 4 || age > 17) {
+        showError('Please enter a valid age between 4 and 17.');
+        return;
+      }
 
-    if (!gender) {
-      showError('Please select a gender.');
-      return;
-    }
+      if (!gender) {
+        showError('Please select a gender.');
+        return;
+      }
 
-    sessionStorage.setItem('taskStartTime', Date.now());
-    cond = getConditionByAgePriority(age);
+      sessionStorage.setItem('taskStartTime', Date.now());
+      cond = getConditionByAgePriority(age);
 
-    document.getElementById('intro-box').style.display = 'none';
-    document.getElementById('sorting-section').style.display = 'flex';
-    document.body.classList.add('task-active');
-    checkOrientationWarning();
+      if (!conditions[cond]) {
+        showError("Something went wrong assigning your task. Please refresh and try again.");
+        return;
+      }
 
-    requestAnimationFrame(() => {
+      document.getElementById('intro-box').style.display = 'none';
+      document.getElementById('sorting-section').style.display = 'flex';
+      document.body.classList.add('task-active');
+      checkOrientationWarning();
+
       requestAnimationFrame(() => {
-        initSorting(cond);
-      });
-    });
-  });
-}
-
-const submitBtn = document.getElementById('submit-button');
-if (submitBtn) {
-  submitBtn.addEventListener('click', () => {
-    const grid = document.getElementById('sorting-container');
-    const icons = document.querySelectorAll('.draggable');
-    const gridRect = grid.getBoundingClientRect();
-
-    let allInside = true;
-
-    icons.forEach(icon => {
-      const iconRect = icon.getBoundingClientRect();
-      const isInside =
-        iconRect.left >= gridRect.left &&
-        iconRect.right <= gridRect.right &&
-        iconRect.top >= gridRect.top &&
-        iconRect.bottom <= gridRect.bottom;
-
-      icon.classList.toggle('out-of-bounds', !isInside);
-      if (!isInside) allInside = false;
-    });
-
-    if (!allInside) {
-      alert('Oops! Please place all icons fully inside the grid before submitting.');
-      return;
-    }
-
-    if (confirm("Are you sure you want to submit the task?")) {
-      html2canvas(document.getElementById('task-wrapper')).then(canvas => {
-        const screenshotData = canvas.toDataURL('image/png');
-        const age = parseInt(document.getElementById('age').value.trim());
-        const gender = document.getElementById('gender').value;
-        const taskStart = Number(sessionStorage.getItem('taskStartTime'));
-        const taskDuration = Math.round((Date.now() - taskStart) / 1000);
-        const timestamp = new Date().toISOString();
-
-        addDoc(collection(db, "submissions"), {
-          age,
-          gender,
-          condition: cond,
-          timestamp,
-          duration_seconds: taskDuration,
-          completion: "complete"
-        })
-        .then(docRef => {
-          const filePath = `screenshots/${docRef.id}.png`;
-          const fileRef = ref(storage, filePath);
-          const byteString = atob(screenshotData.split(',')[1]);
-          const arrayBuffer = new ArrayBuffer(byteString.length);
-          const intArray = new Uint8Array(arrayBuffer);
-          for (let i = 0; i < byteString.length; i++) {
-            intArray[i] = byteString.charCodeAt(i);
-          }
-          const blob = new Blob([intArray], { type: 'image/png' });
-
-          console.log(`Uploading to: gs://github-b374d-storage-001.appspot.com/screenshots/${docRef.id}.png`);
-
-          return uploadBytes(fileRef, blob).then(() => {
-            return updateDoc(doc(db, "submissions", docRef.id), {
-              screenshot: filePath
-            }).then(() => docRef.id);
-          });
-        })
-        .then(docId => {
-          sessionStorage.setItem('submissionScreenshot', screenshotData);
-          sessionStorage.setItem('assignedCondition', cond);
-          console.log("✅ Submission complete — ID:", docId);
-          window.location.href = `thankyou.html?cond=${cond}`;
-        })
-        .catch(error => {
-          console.error("❌ Firebase submission failed:", error);
-          alert("There was a problem submitting your task. Please try again.");
+        requestAnimationFrame(() => {
+          initSorting(cond);
         });
       });
-    }
-  });
-}
+    });
+  }
+
+  const submitBtn = document.getElementById('submit-button');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', () => {
+      const grid = document.getElementById('sorting-container');
+      const icons = document.querySelectorAll('.draggable');
+      const gridRect = grid.getBoundingClientRect();
+
+      let allInside = true;
+
+      icons.forEach(icon => {
+        const iconRect = icon.getBoundingClientRect();
+        const isInside =
+          iconRect.left >= gridRect.left &&
+          iconRect.right <= gridRect.right &&
+          iconRect.top >= gridRect.top &&
+          iconRect.bottom <= gridRect.bottom;
+
+        icon.classList.toggle('out-of-bounds', !isInside);
+        if (!isInside) allInside = false;
+      });
+
+      if (!allInside) {
+        alert('Oops! Please place all icons fully inside the grid before submitting.');
+        return;
+      }
+
+      if (confirm("Are you sure you want to submit the task?")) {
+        html2canvas(document.getElementById('task-wrapper')).then(canvas => {
+          const screenshotData = canvas.toDataURL('image/png');
+          const age = parseInt(document.getElementById('age').value.trim());
+          const gender = document.getElementById('gender').value;
+          const taskStart = Number(sessionStorage.getItem('taskStartTime'));
+          const taskDuration = Math.round((Date.now() - taskStart) / 1000);
+          const timestamp = new Date().toISOString();
+
+          addDoc(collection(db, "submissions"), {
+            age,
+            gender,
+            condition: cond,
+            timestamp,
+            duration_seconds: taskDuration,
+            completion: "complete"
+          })
+          .then(docRef => {
+            const filePath = `screenshots/${docRef.id}.png`;
+            const fileRef = ref(storage, filePath);
+
+            const byteString = atob(screenshotData.split(',')[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const intArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+              intArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([intArray], { type: 'image/png' });
+
+            return uploadBytes(fileRef, blob).then(() => {
+              // Optional: use getDownloadURL if needed
+              // return getDownloadURL(fileRef).then(url => {
+              return updateDoc(doc(db, "submissions", docRef.id), {
+                screenshot: filePath
+                // , downloadUrl: url
+              }).then(() => docRef.id);
+              // });
+            });
+          })
+          .then(docId => {
+            sessionStorage.setItem('submissionScreenshot', screenshotData);
+            sessionStorage.setItem('assignedCondition', cond);
+            window.location.href = `thankyou.html?cond=${cond}`;
+          })
+          .catch(error => {
+            console.error("❌ Firebase submission failed:", error);
+            alert("There was a problem submitting your task. Please try again.");
+          });
+        });
+      }
+    });
+  }
+});
