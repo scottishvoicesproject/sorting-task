@@ -86,20 +86,20 @@ function initSorting(conditionKey) {
     taskWrapper.appendChild(speakerDiv);
   }
 
-  interact('.draggable').draggable({
-    inertia: true,
-    listeners: {
-      move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      }
+interact('.draggable').draggable({
+  inertia: false, // 🔧 Disable inertia for immediate drag
+  listeners: {
+    move(event) {
+      const target = event.target;
+      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+      target.style.transform = `translate(${x}px, ${y}px)`;
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
     }
-  });
-}
+  }
+});
+
 
 function showError(msg) {
   const errEl = document.getElementById('error-message');
