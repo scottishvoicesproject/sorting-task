@@ -167,6 +167,18 @@ function initSorting(conditionKey) {
     }
   });
 }
+function hideError() {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = '';
+  errEl.style.display = 'none';
+}
+
+function showError(msg) {
+  const errEl = document.getElementById('error-message');
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+}
+
 function checkOrientationWarning() {
   const rotateWarning = document.getElementById('rotate-warning');
   const isPortrait = window.matchMedia("(orientation: portrait)").matches;
