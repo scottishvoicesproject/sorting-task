@@ -145,28 +145,28 @@ function initSorting(conditionKey) {
   }
 
   interact('.draggable').draggable({
-    inertia: false,
-    modifiers: [],
-    autoScroll: false,
-    delay: 0,
-    listeners: {
-      start(event) {
-        event.target.classList.add('dragging');
-      },
-      move(event) {
-        const target = event.target;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        target.style.transform = `translate(${x}px, ${y}px)`;
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-      },
-      end(event) {
-        event.target.classList.remove('dragging');
-      }
+  inertia: false,
+  modifiers: [],
+  autoScroll: true, // smoother on scrollable containers
+  delay: 0, // no delay before dragging — instant response!
+  touchAction: 'none', // prevents scrolling interference on touch devices
+  listeners: {
+    start(event) {
+      event.target.classList.add('dragging');
+    },
+    move(event) {
+      const target = event.target;
+      let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+      let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+      target.style.transform = `translate(${x}px, ${y}px)`;
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
+    },
+    end(event) {
+      event.target.classList.remove('dragging');
     }
-  });
-}
+  }
+});
 
 function showError(msg) {
   const errEl = document.getElementById('error-message');
