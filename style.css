@@ -59,7 +59,7 @@ select {
   text-align: center;
 }
 
-/* === TASK PAGE === */
+/* === TASK SECTION === */
 #sorting-section {
   display: none;
   flex-direction: column;
@@ -83,13 +83,15 @@ select {
   display: none;
 }
 
+/* === TASK WRAPPER === */
 #task-wrapper {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 10px;
+  gap: 40px;
+  margin-top: 20px;
   position: relative;
-  min-height: 500px;
+  flex-wrap: nowrap;
 }
 
 #sorting-container {
@@ -106,7 +108,7 @@ select {
   z-index: 1;
 }
 
-/* ICONS */
+/* === ICONS === */
 .draggable {
   width: 60px;
   height: 40px;
@@ -132,9 +134,9 @@ select {
   cursor: pointer;
 }
 
-/* SUBMIT BUTTON */
+/* === SUBMIT BUTTON === */
 #submit-button {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 10px 24px;
   font-size: 1rem;
   border: none;
@@ -145,7 +147,7 @@ select {
   align-self: center;
 }
 
-/* ROTATE WARNING */
+/* === ROTATE WARNING === */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -162,7 +164,7 @@ select {
   z-index: 9999;
 }
 
-/* === MOBILE STYLES === */
+/* === MOBILE ONLY === */
 @media (max-width: 768px) {
   html, body {
     overflow-x: auto;
@@ -174,34 +176,36 @@ select {
     margin: 40px auto;
     padding: 20px;
     font-size: 0.9rem;
+    transform: none;
   }
 
   #sorting-section {
+    transform: none;
     padding: 10px;
   }
 
   #task-wrapper {
     flex-direction: column;
     align-items: center;
-    min-height: unset;
+    gap: 20px;
   }
 
   #sorting-container {
-    width: 500px;
+    width: 400px;
     height: 250px;
     background-size: 25px 25px;
   }
 
   .draggable {
-    width: 48px;
-    height: 34px;
-    font-size: 0.85rem;
+    width: 45px;
+    height: 30px;
+    font-size: 0.8rem;
   }
 
   #submit-button {
     margin-top: 15px;
-    width: 180px;
+    width: 200px;
     text-align: center;
-    align-self: center;
   }
 }
+
