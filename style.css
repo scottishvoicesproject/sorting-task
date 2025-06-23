@@ -129,6 +129,7 @@ select {
   user-select: none;
   position: absolute;
   z-index: 10;
+  touch-action: none; /* Improve responsiveness */
 }
 
 .speaker-button {
@@ -172,22 +173,20 @@ select {
 /* === MOBILE === */
 @media (max-width: 768px) {
   html, body {
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     touch-action: manipulation;
   }
 
   .intro-box {
-    width: 90%;
-    margin: 60px auto;
-    transform: none;
+    width: 95%;
+    margin: 40px auto;
   }
 
   #task-inner {
     flex-direction: row;
-    transform: scale(0.42);
+    zoom: 0.5;
     transform-origin: top left;
-    margin-top: 0;
   }
 
   #sorting-container {
@@ -206,3 +205,4 @@ select {
     align-self: center;
   }
 }
+
