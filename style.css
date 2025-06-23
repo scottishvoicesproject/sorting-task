@@ -91,6 +91,7 @@ select {
   margin-top: 10px;
   position: relative;
   min-height: 400px;
+  overflow: visible;
 }
 
 #task-inner {
@@ -99,6 +100,7 @@ select {
   align-items: flex-start;
 }
 
+/* Grid */
 #sorting-container {
   width: 800px;
   height: 400px;
@@ -129,7 +131,6 @@ select {
   user-select: none;
   position: absolute;
   z-index: 10;
-  touch-action: none; /* Improve responsiveness */
 }
 
 .speaker-button {
@@ -172,26 +173,28 @@ select {
 
 /* === MOBILE === */
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: auto;
-    overflow-y: auto;
-    touch-action: manipulation;
+
+  /* INTRO PAGE stays portrait */
+  .intro-box {
+    width: 90%;
+    margin: 40px auto;
   }
 
-  .intro-box {
-    width: 95%;
-    margin: 40px auto;
+  /* TASK page: only active in landscape mode */
+  body.task-active {
+    overflow-x: auto;
+    overflow-y: auto;
   }
 
   #task-inner {
     flex-direction: row;
-    zoom: 0.5;
-    transform-origin: top left;
+    gap: 20px;
   }
 
   #sorting-container {
     width: 400px;
     height: 200px;
+    background-size: 20px 20px;
   }
 
   .draggable {
@@ -201,7 +204,7 @@ select {
   }
 
   #submit-button {
-    margin-top: 15px;
+    margin-top: 10px;
     align-self: center;
   }
 }
