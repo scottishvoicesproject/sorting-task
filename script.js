@@ -28,7 +28,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
+const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
 
 let cond = null; // Global condition holder
 let audioPlaying = null;
