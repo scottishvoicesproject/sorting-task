@@ -37,14 +37,24 @@ function createSpeakerDiv(initials) {
     if (audioPlaying && audioPlaying !== audio) {
       audioPlaying.pause();
       audioPlaying.currentTime = 0;
+      const activeBtn = audioPlaying.parentElement.querySelector('.speaker-button');
+      if (activeBtn) activeBtn.classList.remove('playing');
     }
+
     if (audio.paused) {
       audio.play();
       audioPlaying = audio;
+      btn.classList.add('playing');
     } else {
       audio.pause();
       audioPlaying = null;
+      btn.classList.remove('playing');
     }
+
+    audio.onended = () => {
+      btn.classList.remove('playing');
+      if (audioPlaying === audio) audioPlaying = null;
+    };
   });
 
   div.appendChild(btn);
@@ -61,8 +71,9 @@ function initSorting(conditionKey) {
 
   taskWrapper.querySelectorAll('.draggable').forEach(el => el.remove());
 
-  const colLeft = -140;
-  const colRight = -75;
+  const isMobile = window.innerWidth < 768;
+  const colLeft = isMobile ? -60 : -140;
+  const colRight = isMobile ? 20 : -75;
   const rowHeight = 50;
   let rowLeft = 0;
   let rowRight = 0;
@@ -179,3 +190,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
