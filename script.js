@@ -202,6 +202,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ✅ Auto-start via URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const urlAge = parseInt(params.get("age"));
+  const urlGender = params.get("gender");
+
+  if (urlAge && urlGender) {
+    sessionStorage.setItem('taskStartTime', Date.now());
+    cond = getConditionByAgePriority(urlAge);
+
+    document.getElementById('intro-box').style.display = 'none';
+    document.getElementById('sorting-section').style.display = 'flex';
+    document.body.classList.add('task-active');
+    checkOrientationWarning();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        initSorting(cond);
+      });
+    });
+
+    return; // Skip manual form if auto-launched
+  }
+
   // ✅ FORM SUBMISSION HANDLER
   const form = document.getElementById('age-gender-form');
   if (form) {
@@ -223,13 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       sessionStorage.setItem('taskStartTime', Date.now());
+      cond = getConditionByAgePriority(age);
 
       document.getElementById('intro-box').style.display = 'none';
       document.getElementById('sorting-section').style.display = 'flex';
       document.body.classList.add('task-active');
       checkOrientationWarning();
-
-      cond = getConditionByAgePriority(age);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -238,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+});
+
 
 // ✅ SUBMIT TASK HANDLER
 const submitBtn = document.getElementById('submit-button');
