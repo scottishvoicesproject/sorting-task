@@ -8,6 +8,7 @@ const conditions = {
   F_SSEvsL1: ['YR','FN','WN','BK','XL','OS','BN','GQ','ZP','SJ','KL','VG'],
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
+}
 
 let audioPlaying = null;
 
