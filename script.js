@@ -287,21 +287,23 @@ if (submitBtn) {
 
         fetch('https://script.google.com/macros/s/AKfycbwQrCgvA10RjQnhQKEDN0_gsFgLiAZJZ3EXBsqLj8iX3eEXG8UT3A3lKbVaX1HyqOHY/exec', {
           method: 'POST',
-          body: JSON.stringify(dataToSave) // No headers = no preflight
+          body: JSON.stringify(dataToSave) // No headers = CORS-safe
         })
         .then(response => response.text())
         .then(result => {
           console.log('✅ Success:', result);
-          sessionStorage.setItem('submissionScreenshot', screenshotData);
-          sessionStorage.setItem('assignedCondition', cond);
-          window.location.href = `thankyou.html?cond=${cond}`;
+          alert('Server response: ' + result); // 👈 Pop-up to show what the server replied with
+          sessionStorage.setItem('submissionScreenshot', dataToSave.screenshot);
+          sessionStorage.setItem('assignedCondition', dataToSave.condition);
+          window.location.href = `thankyou.html?cond=${dataToSave.condition}`;
         })
         .catch(error => {
           console.error('❌ Error:', error);
-          alert("Something went wrong. Please try again.");
+          alert('Error submitting task. Please try again.');
         });
       });
     }
   });
 }
+
 
