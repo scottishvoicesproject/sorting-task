@@ -100,6 +100,8 @@ function initSorting(conditionKey) {
   interact('.draggable').draggable({
     inertia: false,
     modifiers: [],
+    autoScroll: false,
+    delay: 0,
     listeners: {
       start(event) {
         event.target.classList.add('dragging');
