@@ -4,14 +4,15 @@ html, body {
   padding: 0;
   font-family: Arial, sans-serif;
   background: #f4f4f4;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 /* === INTRO PAGE === */
 .intro-box {
   width: 360px;
-  margin: 80px auto;
+  max-width: 90%;
+  margin: 60px auto;
   background: white;
   padding: 30px;
   border-radius: 8px;
@@ -90,12 +91,12 @@ select {
   align-items: flex-start;
   margin-top: 10px;
   position: relative;
-  min-height: 400px;
   overflow: visible;
 }
 
 #task-inner {
   display: flex;
+  flex-direction: row;
   gap: 20px;
   align-items: flex-start;
 }
@@ -115,7 +116,7 @@ select {
   z-index: 1;
 }
 
-/* === ICONS === */
+/* Icons */
 .draggable {
   width: 60px;
   height: 40px;
@@ -141,7 +142,7 @@ select {
   cursor: pointer;
 }
 
-/* === SUBMIT BUTTON === */
+/* Submit Button */
 #submit-button {
   margin-top: 20px;
   padding: 10px 24px;
@@ -154,7 +155,7 @@ select {
   align-self: center;
 }
 
-/* === ROTATE WARNING === */
+/* Rotate Warning */
 #rotate-warning {
   position: fixed;
   top: 0;
@@ -171,29 +172,18 @@ select {
   z-index: 9999;
 }
 
-/* === MOBILE === */
-@media (max-width: 768px) {
-
-  /* INTRO PAGE stays portrait */
-  .intro-box {
-    width: 90%;
-    margin: 40px auto;
-  }
-
-  /* TASK page: only active in landscape mode */
-  body.task-active {
-    overflow-x: auto;
-    overflow-y: auto;
-  }
-
+/* === MOBILE LANDSCAPE FIX === */
+@media screen and (max-width: 768px) and (orientation: landscape) {
   #task-inner {
     flex-direction: row;
-    gap: 20px;
+    gap: 10px;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   #sorting-container {
     width: 400px;
-    height: 200px;
+    height: 220px;
     background-size: 20px 20px;
   }
 
