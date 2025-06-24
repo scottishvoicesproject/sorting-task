@@ -293,6 +293,8 @@ function setupSubmissionHandler() {
       const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
 
+      console.log("🖼 Screenshot size:", screenshotData.length);
+
       addDoc(collection(db, "submissions"), {
         age,
         gender,
@@ -312,17 +314,21 @@ function setupSubmissionHandler() {
         }
 
         const blob = new Blob([intArray], { type: 'image/png' });
+        console.log("📦 Uploading blob:", blob);
 
         return uploadBytes(fileRef, blob)
-          .then(() => getDownloadURL(fileRef))
+          .then(snapshot => {
+            console.log("✅ Upload success:", snapshot.metadata.fullPath);
+            return getDownloadURL(fileRef);
+          })
           .then(downloadURL => {
             sessionStorage.setItem('assignedCondition', cond);
             window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
           });
       })
       .catch(err => {
-        console.error("❌ Submission failed:", err);
-        alert("There was a problem uploading your data. Please try again.");
+        console.error("❌ Submission or upload failed:", err);
+        alert("There was a problem uploading your data. Please check your connection or try again.");
       });
     });
   });
