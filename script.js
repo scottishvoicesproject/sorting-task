@@ -267,14 +267,24 @@ function setupSubmissionHandler() {
     const gridRect = grid.getBoundingClientRect();
 
     let allInside = true;
+    const iconData = [];
+
     icons.forEach(icon => {
       const rect = icon.getBoundingClientRect();
       const inside = rect.left >= gridRect.left &&
                      rect.right <= gridRect.right &&
                      rect.top >= gridRect.top &&
                      rect.bottom <= gridRect.bottom;
+
       icon.classList.toggle('out-of-bounds', !inside);
       if (!inside) allInside = false;
+
+      iconData.push({
+        id: icon.dataset.id,
+        x: parseFloat(icon.getAttribute('data-x')) || 0,
+        y: parseFloat(icon.getAttribute('data-y')) || 0,
+        insideGrid: inside
+      });
     });
 
     if (!allInside) {
@@ -302,6 +312,7 @@ function setupSubmissionHandler() {
         condition: cond,
         timestamp,
         duration_seconds: duration,
+        icons: iconData,
         completion: "complete"
       })
       .then(docRef => {
@@ -321,12 +332,11 @@ function setupSubmissionHandler() {
           .then(snapshot => {
             console.log("✅ Upload complete:", snapshot.metadata.fullPath);
 
-            // Try updating Firestore with path
-            return updateDoc(doc(db, "submissions", docRef.id), { screenshot: filePath })
-              .catch(updateErr => {
-                console.warn("⚠️ Could not update Firestore with screenshot path:", updateErr);
-              })
-              .then(() => getDownloadURL(fileRef));
+            return updateDoc(doc(db, "submissions", docRef.id), {
+              screenshot: filePath
+            }).catch(updateErr => {
+              console.warn("⚠️ Could not update Firestore with screenshot path:", updateErr);
+            }).then(() => getDownloadURL(fileRef));
           });
       })
       .then(downloadURL => {
@@ -341,4 +351,3 @@ function setupSubmissionHandler() {
     });
   });
 }
-
