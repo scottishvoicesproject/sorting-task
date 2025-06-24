@@ -3,12 +3,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, collection, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// Firebase Config & Initialization
 const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
   authDomain: "github-b374d.firebaseapp.com",
   projectId: "github-b374d",
-  storageBucket: "github-b374d-storage-001.appspot.com"
+  storageBucket: "github-b374d-storage-001.appspot.com",  // ✅ Don't forget this comma
   messagingSenderId: "48472764273",
   appId: "1:48472764273:web:491df1cfe8aa57ee2590d0",
   measurementId: "G-YN6NKG5NH2"
