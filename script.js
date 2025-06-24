@@ -231,6 +231,7 @@ function setupManualFormFlow() {
 
     const age = parseInt(document.getElementById('age').value.trim());
     const gender = document.getElementById('gender').value;
+    const scottish = document.getElementById('scottish').value;
 
     if (!age || age < 4 || age > 17) {
       showError("Please enter a valid age between 4 and 17.");
@@ -242,6 +243,7 @@ function setupManualFormFlow() {
       return;
     }
 
+    sessionStorage.setItem('scottish', scottish);
     cond = getConditionByAgePriority(age);
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
@@ -261,7 +263,6 @@ function setupSubmissionHandler() {
   const submitBtn = document.getElementById('submit-button');
   if (!submitBtn) return;
 
-  // Hide loading screen in case user reloaded mid-submission
   const loadingOverlay = document.getElementById('submission-loading');
   if (loadingOverlay) loadingOverlay.style.display = 'none';
 
@@ -305,7 +306,9 @@ function setupSubmissionHandler() {
       const screenshotData = canvas.toDataURL('image/png');
       const age = parseInt(document.getElementById('age').value.trim());
       const gender = document.getElementById('gender').value;
-      const scottish = document.getElementById('scottish').value;
+      const scottish = document.getElementById('scottish')?.value || sessionStorage.getItem('scottish') || null;
+      sessionStorage.setItem('scottish', scottish);
+
       const start = Number(sessionStorage.getItem('taskStartTime')) || Date.now();
       const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
@@ -321,6 +324,8 @@ function setupSubmissionHandler() {
         completion: "complete"
       };
 
+      console.log("🔥 SUBMITTING TO FIRESTORE:", submissionData);
+
       addDoc(collection(db, "submissions"), submissionData)
       .then(docRef => {
         const filePath = `screenshots/${docRef.id}.png`;
@@ -333,6 +338,7 @@ function setupSubmissionHandler() {
         }
 
         const blob = new Blob([intArray], { type: 'image/png' });
+
         return uploadBytes(fileRef, blob)
           .then(() => updateDoc(doc(db, "submissions", docRef.id), {
             screenshot: filePath
