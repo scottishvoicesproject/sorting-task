@@ -1,7 +1,7 @@
 // Firebase SDK Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 // Firebase Config & Initialization
 const firebaseConfig = {
@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app); // Let Firebase infer the correct bucket
+const storage = getStorage(app);
 
 let cond = null;
 let audioPlaying = null;
@@ -33,7 +33,7 @@ const conditions = {
   F_SSEvsL2: ['MC','MM','ZY','KP','KK','JY','MW','RF','XN','RN','PR','JT']
 };
 
-// Age-based Condition Assignment Pool
+// Age-based Assignment
 const ageConditionTargets = {
   "4-6": { F_SSEvsL1: 8, F_SSEvsL2: 6, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 8, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 4 },
   "7-8": { F_SSEvsL1: 2, F_SSEvsL2: 0, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 2, M_SSEvsL2: 4, M_SSEvsP1: 4, M_SSEvsP2: 0 },
@@ -47,25 +47,14 @@ function getConditionByAgePriority(age) {
   const selectedRange = Object.keys(ageConditionTargets).find(range =>
     age >= parseInt(range.split('-')[0]) && age <= parseInt(range.split('-')[1])
   );
-
   const pool = selectedRange && ageConditionTargets[selectedRange];
-  if (!pool) {
-    console.warn("No matching pool for age:", age);
-    return getRandomCondition();
-  }
+  if (!pool) return getRandomCondition();
 
-  const available = Object.entries(pool)
-    .filter(([_, count]) => count > 0)
-    .map(([key]) => key);
-
-  if (available.length === 0) {
-    console.info(`No targets remaining in ${selectedRange}. Falling back.`);
-    return getRandomCondition();
-  }
+  const available = Object.entries(pool).filter(([_, count]) => count > 0).map(([key]) => key);
+  if (available.length === 0) return getRandomCondition();
 
   const chosen = available[Math.floor(Math.random() * available.length)];
   ageConditionTargets[selectedRange][chosen]--;
-  console.log(`Assigned condition: ${chosen} (age ${age}, group ${selectedRange})`);
   return chosen;
 }
 
@@ -135,12 +124,10 @@ function initSorting(conditionKey) {
     const speaker = createSpeakerDiv(initials);
     speaker.style.position = 'absolute';
     speaker.style.zIndex = '10';
-
     const x = i % 2 === 0 ? left : right;
     const y = 60 + (i % 2 === 0 ? leftRow++ : rightRow++) * step;
     speaker.style.left = `${x}px`;
     speaker.style.top = `${y}px`;
-
     wrapper.appendChild(speaker);
   });
 
@@ -150,9 +137,7 @@ function initSorting(conditionKey) {
     autoScroll: true,
     touchAction: 'none',
     listeners: {
-      start(event) {
-        event.target.classList.add('dragging');
-      },
+      start(event) { event.target.classList.add('dragging'); },
       move(event) {
         const el = event.target;
         let x = (parseFloat(el.getAttribute('data-x')) || 0) + event.dx;
@@ -161,9 +146,7 @@ function initSorting(conditionKey) {
         el.setAttribute('data-x', x);
         el.setAttribute('data-y', y);
       },
-      end(event) {
-        event.target.classList.remove('dragging');
-      }
+      end(event) { event.target.classList.remove('dragging'); }
     }
   });
 }
@@ -203,7 +186,6 @@ function setupInstructionToggles() {
   const hideBtn = document.getElementById('hide-instructions');
   const showBtn = document.getElementById('show-instructions');
   const instructions = document.getElementById('instructions');
-
   if (!hideBtn || !showBtn || !instructions) return;
 
   hideBtn.onclick = () => {
@@ -292,7 +274,6 @@ function setupSubmissionHandler() {
                      rect.right <= gridRect.right &&
                      rect.top >= gridRect.top &&
                      rect.bottom <= gridRect.bottom;
-
       icon.classList.toggle('out-of-bounds', !inside);
       if (!inside) allInside = false;
     });
@@ -333,12 +314,11 @@ function setupSubmissionHandler() {
         const blob = new Blob([intArray], { type: 'image/png' });
 
         return uploadBytes(fileRef, blob)
-          .then(() => updateDoc(doc(db, "submissions", docRef.id), { screenshot: filePath }))
-          .then(() => docRef.id);
-      })
-      .then(docId => {
-        sessionStorage.setItem('assignedCondition', cond);
-        window.location.href = `thankyou.html?cond=${cond}`;
+          .then(() => getDownloadURL(fileRef))
+          .then(downloadURL => {
+            sessionStorage.setItem('assignedCondition', cond);
+            window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
+          });
       })
       .catch(err => {
         console.error("❌ Submission failed:", err);
