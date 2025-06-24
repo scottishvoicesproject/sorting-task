@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
+const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
 
 let cond = null;
 let audioPlaying = null;
@@ -257,9 +257,6 @@ function setupManualFormFlow() {
     requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
   });
 }
-
-// NOTE: Make sure this line appears wherever you define storage
-const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
 
 function setupSubmissionHandler() {
   const submitBtn = document.getElementById('submit-button');
