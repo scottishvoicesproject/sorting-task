@@ -147,16 +147,16 @@
 
       const params = new URLSearchParams(window.location.search);
       const cond = params.get('cond');
+      const screenshot = params.get('screenshot');
       const speakers = conditions[cond] || [];
 
-      const imgData = sessionStorage.getItem('submissionScreenshot');
-      if (imgData) {
+      if (screenshot) {
         const label = document.createElement('h4');
         label.textContent = "Visual snapshot of your groupings:";
         document.getElementById('participant-view').appendChild(label);
 
         const img = new Image();
-        img.src = imgData;
+        img.src = screenshot;
         img.alt = "Screenshot of your submission";
         document.getElementById('participant-view').appendChild(img);
       }
@@ -169,18 +169,15 @@
         li.textContent = "No condition was found or recognized.";
         infoList.appendChild(li);
       } else {
-        const sorted = speakers
-          .map(code => {
-            const info = speakerInfo[code];
-            if (!info) return null;
-            const variety = (info.variety === "Scots" && isPronCondition) ? "Scots pronunciation" : info.variety;
-            return { code, region: info.region, variety };
-          })
-          .filter(Boolean)
-          .sort((a, b) => {
-            const r = a.region.localeCompare(b.region);
-            return r !== 0 ? r : a.variety.localeCompare(b.variety);
-          });
+        const sorted = speakers.map(code => {
+          const info = speakerInfo[code];
+          if (!info) return null;
+          const variety = (info.variety === "Scots" && isPronCondition) ? "Scots pronunciation" : info.variety;
+          return { code, region: info.region, variety };
+        }).filter(Boolean).sort((a, b) => {
+          const r = a.region.localeCompare(b.region);
+          return r !== 0 ? r : a.variety.localeCompare(b.variety);
+        });
 
         sorted.forEach(({ code, region, variety }) => {
           const li = document.createElement('li');
@@ -191,13 +188,9 @@
     </script>
 
     <div style="margin-top: 40px; text-align: center;">
-            <p class="fade-in" style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px;">
-        Thank you for taking part! 😊
-      </p>
-      <p class="fade-in" style="font-size: 1.2rem;">
-        You may now close this tab.
-      </p>
+      <p style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px;">Thank you for taking part! 😊</p>
+      <p style="font-size: 1.2rem;">You may now close this tab.</p>
     </div>
-  </div> <!-- closes thankyou-container -->
+  </div> <!-- thankyou-container -->
 </body>
 </html>
