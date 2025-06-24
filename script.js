@@ -42,14 +42,19 @@ const ageConditionTargets = {
   "16-17": { F_SSEvsL1: 6, F_SSEvsL2: 8, F_SSEvsP1: 8, F_SSEvsP2: 8, M_SSEvsL1: 6, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 2 }
 };
 
-function getConditionByAgePriority(age) {
+function getConditionByAgePriority(age, isScottish) {
+  if (!isScottish) return getRandomCondition();
+
   const selectedRange = Object.keys(ageConditionTargets).find(range =>
     age >= parseInt(range.split('-')[0]) && age <= parseInt(range.split('-')[1])
   );
   const pool = selectedRange && ageConditionTargets[selectedRange];
   if (!pool) return getRandomCondition();
 
-  const available = Object.entries(pool).filter(([_, count]) => count > 0).map(([key]) => key);
+  const available = Object.entries(pool)
+    .filter(([_, count]) => count > 0)
+    .map(([key]) => key);
+
   if (available.length === 0) return getRandomCondition();
 
   const chosen = available[Math.floor(Math.random() * available.length)];
@@ -206,7 +211,8 @@ function handleAutoStartFromURL() {
   const gender = params.get("gender");
 
   if (age && gender) {
-    cond = getConditionByAgePriority(age);
+    const isScottish = scottish === 'Yes';
+    cond = getConditionByAgePriority(age, isScottish);
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
       return;
@@ -244,7 +250,8 @@ function setupManualFormFlow() {
     }
 
     sessionStorage.setItem('scottish', scottish);
-    cond = getConditionByAgePriority(age);
+    const isScottish = scottish === 'Yes';
+    cond = getConditionByAgePriority(age, isScottish);
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
       return;
