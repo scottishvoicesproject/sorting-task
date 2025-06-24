@@ -288,6 +288,7 @@ function setupSubmissionHandler() {
       const screenshotData = canvas.toDataURL('image/png');
       const age = parseInt(document.getElementById('age').value.trim());
       const gender = document.getElementById('gender').value;
+      const scottish = document.getElementById('scottish').value;
       const start = Number(sessionStorage.getItem('taskStartTime')) || Date.now();
       const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
