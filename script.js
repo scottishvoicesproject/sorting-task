@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
   authDomain: "github-b374d.firebaseapp.com",
   projectId: "github-b374d",
-  storageBucket: "github-b374d-storage-001",  // ✅ Don't forget this comma
+  storageBucket: "github-b374d.firebasestorage.app",  // ✅ NEW: use the actual Firebase bucket
   messagingSenderId: "48472764273",
   appId: "1:48472764273:web:491df1cfe8aa57ee2590d0",
   measurementId: "G-YN6NKG5NH2"
@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app, "gs://github-b374d-storage-001");
+const storage = getStorage(app); // ✅ No need to pass a bucket — it’ll default to the one from config
 
 let cond = null;
 let audioPlaying = null;
