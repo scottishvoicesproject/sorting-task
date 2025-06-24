@@ -258,6 +258,9 @@ function setupManualFormFlow() {
   });
 }
 
+// NOTE: Make sure this line appears wherever you define storage
+const storage = getStorage(app, "gs://github-b374d-storage-001.appspot.com");
+
 function setupSubmissionHandler() {
   const submitBtn = document.getElementById('submit-button');
   if (!submitBtn) return;
@@ -293,7 +296,7 @@ function setupSubmissionHandler() {
       const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
 
-      console.log("🖼 Screenshot size:", screenshotData.length);
+      console.log("📸 Screenshot captured, size:", screenshotData.length);
 
       addDoc(collection(db, "submissions"), {
         age,
@@ -314,22 +317,30 @@ function setupSubmissionHandler() {
         }
 
         const blob = new Blob([intArray], { type: 'image/png' });
-        console.log("📦 Uploading blob:", blob);
+        console.log("⬆️ Uploading to Firebase Storage:", filePath);
 
         return uploadBytes(fileRef, blob)
           .then(snapshot => {
-            console.log("✅ Upload success:", snapshot.metadata.fullPath);
-            return getDownloadURL(fileRef);
-          })
-          .then(downloadURL => {
-            sessionStorage.setItem('assignedCondition', cond);
-            window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
+            console.log("✅ Upload complete:", snapshot.metadata.fullPath);
+
+            // Try updating Firestore with path
+            return updateDoc(doc(db, "submissions", docRef.id), { screenshot: filePath })
+              .catch(updateErr => {
+                console.warn("⚠️ Could not update Firestore with screenshot path:", updateErr);
+              })
+              .then(() => getDownloadURL(fileRef));
           });
       })
+      .then(downloadURL => {
+        console.log("🌐 Screenshot accessible at:", downloadURL);
+        sessionStorage.setItem('assignedCondition', cond);
+        window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
+      })
       .catch(err => {
-        console.error("❌ Submission or upload failed:", err);
-        alert("There was a problem uploading your data. Please check your connection or try again.");
+        console.error("❌ Final submission step failed:", err);
+        alert("There was a problem saving your work. Please check your connection and try again.");
       });
     });
   });
 }
+
