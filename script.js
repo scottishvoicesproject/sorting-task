@@ -261,6 +261,10 @@ function setupSubmissionHandler() {
   const submitBtn = document.getElementById('submit-button');
   if (!submitBtn) return;
 
+  // Hide loading screen in case user reloaded mid-submission
+  const loadingOverlay = document.getElementById('submission-loading');
+  if (loadingOverlay) loadingOverlay.style.display = 'none';
+
   submitBtn.addEventListener('click', () => {
     const grid = document.getElementById('sorting-container');
     const icons = document.querySelectorAll('.draggable');
@@ -292,7 +296,10 @@ function setupSubmissionHandler() {
       return;
     }
 
-    if (!confirm("Are you sure you want to submit the task?")) return;
+    const confirmed = confirm("Are you sure you want to submit the task?");
+    if (!confirmed) return;
+
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
     html2canvas(document.getElementById('task-wrapper')).then(canvas => {
       const screenshotData = canvas.toDataURL('image/png');
@@ -303,9 +310,7 @@ function setupSubmissionHandler() {
       const duration = Math.round((Date.now() - start) / 1000);
       const timestamp = new Date().toISOString();
 
-      console.log("📸 Screenshot captured, size:", screenshotData.length);
-
-      addDoc(collection(db, "submissions"), {
+      const submissionData = {
         age,
         gender,
         scottish,
@@ -314,7 +319,9 @@ function setupSubmissionHandler() {
         duration_seconds: duration,
         icons: iconData,
         completion: "complete"
-      })
+      };
+
+      addDoc(collection(db, "submissions"), submissionData)
       .then(docRef => {
         const filePath = `screenshots/${docRef.id}.png`;
         const fileRef = ref(storage, filePath);
@@ -326,26 +333,19 @@ function setupSubmissionHandler() {
         }
 
         const blob = new Blob([intArray], { type: 'image/png' });
-        console.log("⬆️ Uploading to Firebase Storage:", filePath);
-
         return uploadBytes(fileRef, blob)
-          .then(snapshot => {
-            console.log("✅ Upload complete:", snapshot.metadata.fullPath);
-
-            return updateDoc(doc(db, "submissions", docRef.id), {
-              screenshot: filePath
-            }).catch(updateErr => {
-              console.warn("⚠️ Could not update Firestore with screenshot path:", updateErr);
-            }).then(() => getDownloadURL(fileRef));
+          .then(() => updateDoc(doc(db, "submissions", docRef.id), {
+            screenshot: filePath
+          }))
+          .then(() => getDownloadURL(fileRef))
+          .then(downloadURL => {
+            sessionStorage.setItem('assignedCondition', cond);
+            window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
           });
       })
-      .then(downloadURL => {
-        console.log("🌐 Screenshot accessible at:", downloadURL);
-        sessionStorage.setItem('assignedCondition', cond);
-        window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
-      })
       .catch(err => {
-        console.error("❌ Final submission step failed:", err);
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        console.error("❌ Submission failed:", err);
         alert("There was a problem saving your work. Please check your connection and try again.");
       });
     });
