@@ -28,37 +28,37 @@
 
     <section>
       <h2>What will I be required to do?</h2>
-      <p>You will first answer demographic questions, then listen to voice recordings and group them based on speech similarity. You can replay audio and group however you like.</p>
+      <p>You will first answer demographic questions, then listen to voice recordings and group them based on how similar they sound. You may replay the recordings, group as many or as few as you like, and group sizes may vary.</p>
     </section>
 
     <section>
       <h2>How will you handle my data?</h2>
-      <p>Your anonymised data will only be accessible to the researchers and stored securely. Abertay University is the Data Controller (<a href="mailto:DataProtectionOfficer@abertay.ac.uk">DataProtectionOfficer@abertay.ac.uk</a>).</p>
+      <p>Your anonymised data will be securely stored and only accessible to the research team. Abertay University is the Data Controller (<a href="mailto:DataProtectionOfficer@abertay.ac.uk">DataProtectionOfficer@abertay.ac.uk</a>).</p>
     </section>
 
     <section>
       <h2>Retention of research data</h2>
-      <p>Anonymised data may be stored indefinitely. Consent forms and related research data will be retained according to institutional policy.</p>
+      <p>Your anonymised data may be stored indefinitely for research validation. Consent forms will be retained in accordance with Abertay University’s data retention policies.</p>
     </section>
 
     <section>
       <h2>Further Information</h2>
-      <p>Contact <a href="mailto:1903473@uad.ac.uk">Hajar Benharraf</a> or <a href="mailto:2103854@uad.ac.uk">Marta Brzoska</a> for more details.</p>
+      <p>For questions or concerns, please contact <a href="mailto:1903473@uad.ac.uk">Hajar Benharraf</a> or <a href="mailto:2103854@uad.ac.uk">Marta Brzoska</a>.</p>
     </section>
 
     <section>
       <h2>Consent Statement</h2>
-      <p>By ticking the box below and clicking “I Consent and Continue,” you confirm:</p>
+      <p>By selecting “Yes” and clicking the button below, you confirm:</p>
       <ul>
-        <li>You understand the information provided.</li>
-        <li>Your questions have been answered.</li>
-        <li>Your participation is voluntary, and you may withdraw any time during data collection.</li>
-        <li>You understand who accesses your data and how it is handled.</li>
+        <li>You understand the information provided</li>
+        <li>Your questions have been answered</li>
+        <li>Your participation is voluntary and you may withdraw at any time during the data collection phase</li>
+        <li>You understand who has access to your data and how it will be handled</li>
       </ul>
-      <p>More info: <a href="https://intranet.abertay.ac.uk/public/research-ethics-privacy-notice-information/" target="_blank">Privacy and complaints procedure</a></p>
+      <p>For more details on privacy and complaints, visit <a href="https://intranet.abertay.ac.uk/public/research-ethics-privacy-notice-information/" target="_blank">Abertay’s Research Ethics Information</a>.</p>
     </section>
 
-    <form action="index.html" style="margin-top: 1em;">
+    <form id="consent-form" style="margin-top: 1em;">
       <label>
         <input type="radio" name="consent" value="yes" required /> Yes
       </label><br>
@@ -68,5 +68,17 @@
       <button type="submit" class="blue-button">I Consent and Continue</button>
     </form>
   </div>
+
+  <script>
+    document.getElementById('consent-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const choice = document.querySelector('input[name="consent"]:checked')?.value;
+      if (choice === 'yes') {
+        window.location.href = 'index.html';
+      } else {
+        alert("You must provide consent to participate in this study. Feel free to close this window if you do not wish to take part.");
+      }
+    });
+  </script>
 </body>
 </html>
