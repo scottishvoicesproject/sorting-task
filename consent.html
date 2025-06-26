@@ -58,16 +58,18 @@
       <p>More details: <a href="https://intranet.abertay.ac.uk/public/research-ethics-privacy-notice-information/" target="_blank">Research Ethics & Privacy Notice</a>.</p>
     </section>
 
-    <form id="consent-form" class="consent-form">
-      <label class="consent-radio">
-        <input type="radio" name="consent" value="yes" required /> Yes
-      </label>
-      <label class="consent-radio">
-        <input type="radio" name="consent" value="no" required /> No
-      </label>
-      <button type="submit" class="blue-button">I Consent and Continue</button>
-    </form>
-  </div>
+  <form id="consent-form" class="consent-form">
+    <label class="consent-radio">
+      Yes
+      <input type="radio" name="consent" value="yes" required />
+    </label>
+    <label class="consent-radio">
+      No
+      <input type="radio" name="consent" value="no" required />
+    </label>
+    <button type="submit" class="blue-button">I Consent and Continue</button>
+  </form>
+
 
   <script>
     document.getElementById('consent-form').addEventListener('submit', function (e) {
