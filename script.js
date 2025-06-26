@@ -235,9 +235,13 @@ function setupManualFormFlow() {
     e.preventDefault();
     hideError();
 
-    const age = parseInt(document.getElementById('age').value.trim());
-    const gender = document.getElementById('gender').value;
-    const scottish = document.getElementById('scottish').value;
+    const ageInput = document.getElementById('age');
+    const genderInput = document.getElementById('gender');
+    const scottishInput = document.getElementById('scottish');
+
+    const age = parseInt(ageInput.value.trim());
+    const gender = genderInput.value;
+    const scottish = scottishInput.value;
 
     if (!age || age < 4 || age > 17) {
       showError("Please enter a valid age between 4 and 17.");
@@ -249,18 +253,25 @@ function setupManualFormFlow() {
       return;
     }
 
+    // Persist demographic info for use during submission
+    sessionStorage.setItem('age', age);
+    sessionStorage.setItem('gender', gender);
     sessionStorage.setItem('scottish', scottish);
+
     const isScottish = scottish === 'Yes';
     cond = getConditionByAgePriority(age, isScottish);
+
     if (!conditions[cond]) {
       showError("Something went wrong assigning your task. Please refresh and try again.");
       return;
     }
 
     sessionStorage.setItem('taskStartTime', Date.now());
+
     document.getElementById('intro-box').style.display = 'none';
     document.getElementById('sorting-section').style.display = 'flex';
     document.body.classList.add('task-active');
+
     checkOrientationWarning();
     requestAnimationFrame(() => requestAnimationFrame(() => initSorting(cond)));
   });
