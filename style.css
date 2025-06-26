@@ -241,3 +241,54 @@ select {
   70% { transform: scale(0.96); }
   100% { transform: scale(1); }
 }
+
+/* === Consent Page Styling === */
+
+.consent-section {
+  margin-top: 24px;
+  line-height: 1.6;
+  font-size: 0.98rem;
+}
+
+.consent-section h2 {
+  font-size: 1.1rem;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+  color: #0056b3;
+}
+
+.consent-section p,
+.consent-section li {
+  margin: 0.4em 0;
+}
+
+.consent-section ul {
+  padding-left: 1.2em;
+  margin: 0.5em 0;
+}
+
+.consent-section a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.consent-section a:hover {
+  text-decoration: underline;
+}
+
+.consent-radio {
+  display: block;
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.consent-radio input {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
+
+.consent-form button.blue-button {
+  margin-top: 20px;
+  font-size: 1.05rem;
+}
