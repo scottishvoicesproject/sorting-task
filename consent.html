@@ -7,78 +7,81 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="intro-box">
+  <div class="intro-box fade-in">
     <h1>Participant Information and Research Consent</h1>
 
-    <section>
+    <section class="consent-section">
       <p><strong>Project title:</strong> Scottish Voices: An Investigation of Perceived Speaker Similarity. (Ethics approval: EMS10022/10040)</p>
       <p><strong>Researchers’ names:</strong> Marta Brzoska and Hajar Benharraf (Abertay University)</p>
       <p><strong>Supervisor:</strong> Prof Vera Kempe (Abertay University)</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>What is the research about?</h2>
-      <p>This research project aims to explore how individuals group Scottish talkers by the way they speak.</p>
+      <p>This project explores how individuals group Scottish talkers by the way they speak.</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>Do I have to take part?</h2>
       <p>Participation is entirely voluntary. You may withdraw at any time during the study. Once you click ‘Submit Task’, your anonymised data cannot be withdrawn.</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>What will I be required to do?</h2>
-      <p>You will first answer demographic questions, then listen to voice recordings and group them based on how similar they sound. You may replay the recordings, group as many or as few as you like, and group sizes may vary.</p>
+      <p>You will answer demographic questions, then listen to voice recordings and group them by how similar they sound. You may replay recordings, create as many or few groups as you like, and vary group sizes.</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>How will you handle my data?</h2>
       <p>Your anonymised data will be securely stored and only accessible to the research team. Abertay University is the Data Controller (<a href="mailto:DataProtectionOfficer@abertay.ac.uk">DataProtectionOfficer@abertay.ac.uk</a>).</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>Retention of research data</h2>
-      <p>Your anonymised data may be stored indefinitely for research validation. Consent forms will be retained in accordance with Abertay University’s data retention policies.</p>
+      <p>Data may be stored indefinitely for research validation. Consent forms will be retained in accordance with Abertay University’s policies.</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>Further Information</h2>
-      <p>For questions or concerns, please contact <a href="mailto:1903473@uad.ac.uk">Hajar Benharraf</a> or <a href="mailto:2103854@uad.ac.uk">Marta Brzoska</a>.</p>
+      <p>Questions? Contact <a href="mailto:1903473@uad.ac.uk">Hajar Benharraf</a> or <a href="mailto:2103854@uad.ac.uk">Marta Brzoska</a>.</p>
     </section>
 
-    <section>
+    <section class="consent-section">
       <h2>Consent Statement</h2>
-      <p>By selecting “Yes” and clicking the button below, you confirm:</p>
+      <p>By selecting “Yes” and clicking continue, you confirm:</p>
       <ul>
         <li>You understand the information provided</li>
         <li>Your questions have been answered</li>
-        <li>Your participation is voluntary and you may withdraw at any time during the data collection phase</li>
-        <li>You understand who has access to your data and how it will be handled</li>
+        <li>Your participation is voluntary and you may withdraw at any time during data collection</li>
+        <li>You understand who can access your data and how it will be handled</li>
       </ul>
-      <p>For more details on privacy and complaints, visit <a href="https://intranet.abertay.ac.uk/public/research-ethics-privacy-notice-information/" target="_blank">Abertay’s Research Ethics Information</a>.</p>
+      <p>More details: <a href="https://intranet.abertay.ac.uk/public/research-ethics-privacy-notice-information/" target="_blank">Research Ethics & Privacy Notice</a>.</p>
     </section>
 
-    <form id="consent-form" style="margin-top: 1em;">
-      <label>
+    <form id="consent-form" class="consent-form">
+      <label class="consent-radio">
         <input type="radio" name="consent" value="yes" required /> Yes
-      </label><br>
-      <label>
+      </label>
+      <label class="consent-radio">
         <input type="radio" name="consent" value="no" required /> No
-      </label><br><br>
+      </label>
       <button type="submit" class="blue-button">I Consent and Continue</button>
     </form>
   </div>
 
-<script>
-  document.getElementById('consent-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const choice = document.querySelector('input[name="consent"]:checked')?.value;
-    if (choice === 'yes') {
-      sessionStorage.setItem('consented', 'true');
-      sessionStorage.setItem('consentResponse', 'yes');
-      window.location.href = 'index.html';
-    } else {
-      alert("You must provide consent to participate in this study. Feel free to close this window if you do not wish to take part.");
-    }
-  });
-</script>
+  <script>
+    document.getElementById('consent-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const choice = document.querySelector('input[name="consent"]:checked')?.value;
+      if (choice === 'yes') {
+        sessionStorage.setItem('consented', 'true');
+        sessionStorage.setItem('consentResponse', 'yes');
+        window.location.href = 'index.html';
+      } else {
+        alert("You must provide consent to participate. Feel free to close this tab if you don’t wish to continue.");
+      }
+    });
+  </script>
+</body>
+</html>
+
