@@ -296,7 +296,7 @@ select {
 /* Fix radio button vertical alignment */
 .consent-radio {
   display: flex;
-  flex-direction: row-reverse; /* this flips the order */
+  flex-direction: row; /* this flips the order */
   align-items: center;
   gap: 12px;
   margin-top: 14px;
