@@ -311,10 +311,10 @@ function setupSubmissionHandler() {
 
     html2canvas(document.getElementById('task-wrapper')).then(canvas => {
       const screenshotData = canvas.toDataURL('image/png');
-      const age = parseInt(document.getElementById('age').value.trim());
-      const gender = document.getElementById('gender').value;
-      const scottish = document.getElementById('scottish')?.value || sessionStorage.getItem('scottish') || null;
-      sessionStorage.setItem('scottish', scottish);
+      const age = parseInt(sessionStorage.getItem('age'));
+      const gender = sessionStorage.getItem('gender');
+      const scottish = sessionStorage.getItem('scottish');
+      const consent = sessionStorage.getItem('consentResponse') || 'yes';
 
       const start = Number(sessionStorage.getItem('taskStartTime')) || Date.now();
       const duration = Math.round((Date.now() - start) / 1000);
@@ -324,6 +324,7 @@ function setupSubmissionHandler() {
         age,
         gender,
         scottish,
+        consent,
         condition: cond,
         timestamp,
         duration_seconds: duration,
@@ -334,33 +335,44 @@ function setupSubmissionHandler() {
       console.log("🔥 SUBMITTING TO FIRESTORE:", submissionData);
 
       addDoc(collection(db, "submissions"), submissionData)
-      .then(docRef => {
-        const filePath = `screenshots/${docRef.id}.png`;
-        const fileRef = ref(storage, filePath);
+        .then(docRef => {
+          const filePath = `screenshots/${docRef.id}.png`;
+          const fileRef = ref(storage, filePath);
 
-        const byteString = atob(screenshotData.split(',')[1]);
-        const intArray = new Uint8Array(byteString.length);
-        for (let i = 0; i < byteString.length; i++) {
-          intArray[i] = byteString.charCodeAt(i);
-        }
+          const byteString = atob(screenshotData.split(',')[1]);
+          const intArray = new Uint8Array(byteString.length);
+          for (let i = 0; i < byteString.length; i++) {
+            intArray[i] = byteString.charCodeAt(i);
+          }
 
-        const blob = new Blob([intArray], { type: 'image/png' });
+          const blob = new Blob([intArray], { type: 'image/png' });
 
-        return uploadBytes(fileRef, blob)
-          .then(() => updateDoc(doc(db, "submissions", docRef.id), {
-            screenshot: filePath
-          }))
-          .then(() => getDownloadURL(fileRef))
-          .then(downloadURL => {
-            sessionStorage.setItem('assignedCondition', cond);
-            window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
-          });
-      })
-      .catch(err => {
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
-        console.error("❌ Submission failed:", err);
-        alert("There was a problem saving your work. Please check your connection and try again.");
-      });
+          return uploadBytes(fileRef, blob)
+            .then(() => updateDoc(doc(db, "submissions", docRef.id), {
+              screenshot: filePath
+            }))
+            .then(() => getDownloadURL(fileRef))
+            .then(downloadURL => {
+              sessionStorage.setItem('assignedCondition', cond);
+
+              // ⏱️ Failsafe: if redirect doesn't fire in time
+              setTimeout(() => {
+                alert("Your data was saved, but we couldn't reach the confirmation screen. You may now close this tab.");
+              }, 5000);
+
+              try {
+                window.location.href = `thankyou.html?cond=${cond}&screenshot=${encodeURIComponent(downloadURL)}`;
+              } catch (redirectError) {
+                console.error("❌ Redirect to thankyou.html failed:", redirectError);
+                alert("Your submission was saved, but we couldn't show the final page.");
+              }
+            });
+        })
+        .catch(err => {
+          if (loadingOverlay) loadingOverlay.style.display = 'none';
+          console.error("❌ Submission failed:", err);
+          alert("There was a problem saving your work. Please check your connection and try again.");
+        });
     });
   });
 }
