@@ -292,3 +292,19 @@ select {
   margin-top: 20px;
   font-size: 1.05rem;
 }
+
+/* Fix radio button vertical alignment */
+.consent-radio {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.consent-radio input[type="radio"] {
+  margin: 0;
+  transform: scale(1.25);
+}
+
