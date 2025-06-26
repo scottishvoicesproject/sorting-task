@@ -69,16 +69,16 @@
     </form>
   </div>
 
-  <script>
-    document.getElementById('consent-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const choice = document.querySelector('input[name="consent"]:checked')?.value;
-      if (choice === 'yes') {
-        window.location.href = 'index.html';
-      } else {
-        alert("You must provide consent to participate in this study. Feel free to close this window if you do not wish to take part.");
-      }
-    });
-  </script>
-</body>
-</html>
+<script>
+  document.getElementById('consent-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const choice = document.querySelector('input[name="consent"]:checked')?.value;
+    if (choice === 'yes') {
+      sessionStorage.setItem('consented', 'true');
+      sessionStorage.setItem('consentResponse', 'yes');
+      window.location.href = 'index.html';
+    } else {
+      alert("You must provide consent to participate in this study. Feel free to close this window if you do not wish to take part.");
+    }
+  });
+</script>
