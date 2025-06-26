@@ -280,14 +280,17 @@ select {
 .consent-options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  margin-top: 10px;
 }
 
 .consent-radio {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row-reverse; /* puts the radio button on the right */
   align-items: center;
+  gap: 12px;
   font-size: 1rem;
   font-weight: bold;
 }
@@ -299,6 +302,6 @@ select {
 
 .consent-button {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
