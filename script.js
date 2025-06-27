@@ -30,7 +30,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // 🔢 CLICK TRACKING LOGIC
-(function trackPageClick() {
+(function trackPageVisit() {
   const clickRef = doc(db, "clicks", "siteHome");
   updateDoc(clickRef, {
     clickCount: increment(1)
