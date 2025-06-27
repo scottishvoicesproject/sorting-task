@@ -1,7 +1,19 @@
 // Firebase SDK Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdWaaaC7z8NK8kd1sBiu6RIS6-BSt4r7I",
@@ -16,6 +28,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+// 🔢 CLICK TRACKING LOGIC
+(function trackPageClick() {
+  const clickRef = doc(db, "clicks", "siteHome");
+  updateDoc(clickRef, {
+    clickCount: increment(1)
+  }).catch((error) => {
+    console.warn("Click tracking failed:", error);
+  });
+})();
+
 
 let cond = null;
 let audioPlaying = null;
@@ -184,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
   handleAutoStartFromURL();
   setupManualFormFlow();
   setupSubmissionHandler();
+  trackPageVisit(); // ✅ Calls Firestore click counter
 });
 
 function setupInstructionToggles() {
@@ -253,7 +277,6 @@ function setupManualFormFlow() {
       return;
     }
 
-    // Persist demographic info for use during submission
     sessionStorage.setItem('age', age);
     sessionStorage.setItem('gender', gender);
     sessionStorage.setItem('scottish', scottish);
@@ -366,7 +389,6 @@ function setupSubmissionHandler() {
             .then(downloadURL => {
               sessionStorage.setItem('assignedCondition', cond);
 
-              // ⏱️ Failsafe: if redirect doesn't fire in time
               setTimeout(() => {
                 alert("Your data was saved, but we couldn't reach the confirmation screen. You may now close this tab.");
               }, 5000);
