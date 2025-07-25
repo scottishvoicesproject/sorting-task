@@ -73,16 +73,19 @@ function getConditionByAgePriority(age, isScottish) {
   const pool = selectedRange && ageConditionTargets[selectedRange];
   if (!pool) return getRandomCondition();
 
-  const available = Object.entries(pool)
-    .filter(([_, count]) => count > 0)
-    .map(([key]) => key);
+  // Only consider conditions that still need participants
+  const entries = Object.entries(pool).filter(([_, count]) => count > 0);
+  if (entries.length === 0) return getRandomCondition();
 
-  if (available.length === 0) return getRandomCondition();
+  // 🎯 Choose the condition with the highest remaining need
+  const [chosen] = entries.reduce((maxEntry, currentEntry) =>
+    currentEntry[1] > maxEntry[1] ? currentEntry : maxEntry
+  );
 
-  const chosen = available[Math.floor(Math.random() * available.length)];
   ageConditionTargets[selectedRange][chosen]--;
-    // ✅ Add this line for logging condition assignment
+
   console.log(`Age ${age} assigned to: ${chosen} (Remaining: ${ageConditionTargets[selectedRange][chosen]})`);
+
   return chosen;
 }
 
