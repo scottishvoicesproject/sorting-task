@@ -61,8 +61,7 @@ const ageConditionTargets = {
   "7-8": { F_SSEvsL1: 2, F_SSEvsL2: 0, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 2, M_SSEvsL2: 4, M_SSEvsP1: 4, M_SSEvsP2: 0 },
   "9-10": { M_SSEvsL1: 4 },
   "11-12": { F_SSEvsL1: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL2: 6, M_SSEvsP1: 4, M_SSEvsP2: 4 },
-  "13-15": { F_SSEvsL1: 10, F_SSEvsL2: 6, F_SSEvsP1: 10, F_SSEvsP2: 10, M_SSEvsL1: 6, M_SSEvsL2: 10, M_SSEvsP1: 10, M_SSEvsP2: 8 },
-  "16-17": { F_SSEvsL1: 6, F_SSEvsL2: 8, F_SSEvsP1: 8, F_SSEvsP2: 8, M_SSEvsL1: 6, M_SSEvsL2: 6, M_SSEvsP1: 6, M_SSEvsP2: 2 }
+  "13-17": { F_SSEvsL1: 2, F_SSEvsL2: 2, F_SSEvsP1: 2, F_SSEvsP2: 4, M_SSEvsL1: 0, M_SSEvsL2: 3, M_SSEvsP1: 2, M_SSEvsP2: 0 }
 };
 
 function getConditionByAgePriority(age, isScottish) {
@@ -82,6 +81,8 @@ function getConditionByAgePriority(age, isScottish) {
 
   const chosen = available[Math.floor(Math.random() * available.length)];
   ageConditionTargets[selectedRange][chosen]--;
+    // ✅ Add this line for logging condition assignment
+  console.log(`Age ${age} assigned to: ${chosen} (Remaining: ${ageConditionTargets[selectedRange][chosen]})`);
   return chosen;
 }
 
