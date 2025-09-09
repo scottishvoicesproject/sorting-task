@@ -61,7 +61,7 @@ const ageConditionTargets = {
   "7-8": { F_SSEvsL1: 2, F_SSEvsL2: 0, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL1: 2, M_SSEvsL2: 4, M_SSEvsP1: 4, M_SSEvsP2: 0 },
   "9-10": { M_SSEvsL1: 4 },
   "11-12": { F_SSEvsL1: 4, F_SSEvsP1: 4, F_SSEvsP2: 4, M_SSEvsL2: 6, M_SSEvsP1: 4, M_SSEvsP2: 4 },
-  "13-17": { F_SSEvsL1: 2, F_SSEvsL2: 2, F_SSEvsP1: 2, F_SSEvsP2: 0, M_SSEvsL1: 0, M_SSEvsL2: 2, M_SSEvsP1: 2, M_SSEvsP2: 0 }
+  "13-17": { F_SSEvsL1: 3, F_SSEvsL2: 3, F_SSEvsP1: 0, F_SSEvsP2: 0, M_SSEvsL1: 2, M_SSEvsL2: 3, M_SSEvsP1: 0, M_SSEvsP2: 0 }
 };
 
 function getConditionByAgePriority(age, isScottish) {
